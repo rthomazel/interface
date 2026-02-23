@@ -717,5 +717,9 @@
     "key": "shift+cmd+o",
     "command": "-workbench.action.gotoSymbol",
     "when": "!accessibilityHelpIsShown && !accessibleViewIsShown"
+  },
+  {
+    "key": "cmd+-",
+    "command": "-workbench.action.zoomOut"
   }
 ]

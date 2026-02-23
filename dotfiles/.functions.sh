@@ -474,12 +474,12 @@ jnm() {
 #----------------
 
 __npc() {
-  local branch=$1 backwards_flag="$2" today_date=$(date +"%b-%d" | tr '[:upper:]' '[:lower:]')
+  local branch=$1 backwards_flag="$2" today_date=$(date +"%b-%d" | tr '[:upper:]' '[:lower:]') prefix=px
 
   if [ "$backwards_flag" == "-" ]; then
-    jjb- "pc-$1-$today_date"
+    jjb- "$prefix-$1-$today_date"
   else
-    jjb "pc-$1-$today_date"
+    jjb "$prefix-$1-$today_date"
   fi
 }
 
@@ -488,7 +488,7 @@ __npc() {
 # new PC ticket bookmark on @
 npc() {
   if [[ $# != 1 ]]; then
-    echo "runs jj bookmark set pc-<ticket number> @"
+    echo "runs jj bookmark set px-<ticket number> @"
     echo "sufixes with today's date"
     return
   fi
@@ -501,7 +501,7 @@ npc() {
 # new PC ticket bookmark on @-
 npc-() {
   if [[ $# != 1 ]]; then
-    echo "runs jj bookmark set pc-<ticket number> @-"
+    echo "runs jj bookmark set px-<ticket number> @-"
     echo "sufixes with today's date"
     return
   fi
