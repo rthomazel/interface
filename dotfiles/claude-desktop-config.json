@@ -1,0 +1,26 @@
+{
+  "mcpServers": {
+    "filesystem": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-filesystem",
+        "/Users/thom.ribeiro/Desktop/server",
+        "/Users/thom.ribeiro/Desktop/member-server",
+        "/Users/thom.ribeiro/Desktop/client",
+        "/Users/thom.ribeiro/Desktop/member-client",
+        "/Users/thom.ribeiro/Desktop/scheduling",
+        "/Users/thom.ribeiro/Desktop/shared",
+        "/Users/thom.ribeiro/Desktop/go-athenahealth",
+        "/Users/thom.ribeiro/Desktop/go-common"
+      ]
+    }
+  },
+  "preferences": {
+    "quickEntryShortcut": "off",
+    "quickEntryDictationShortcut": "capslock",
+    "coworkScheduledTasksEnabled": false,
+    "sidebarMode": "chat",
+    "coworkWebSearchEnabled": true
+  }
+}
