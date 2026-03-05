@@ -12,10 +12,29 @@
         "/Users/thom.ribeiro/Desktop/scheduling",
         "/Users/thom.ribeiro/Desktop/shared",
         "/Users/thom.ribeiro/Desktop/go-athenahealth",
-        "/Users/thom.ribeiro/Desktop/go-common"
+        "/Users/thom.ribeiro/Desktop/go-common",
+        "/Users/thom.ribeiro/Desktop/jail-mcp",
+        "/Users/thom.ribeiro/Desktop/mcp-shell"
+      ]
+    },
+    "shell": {
+      "command": "node",
+      "args": [
+        "/Users/thom.ribeiro/Desktop/mcp-shell/build/index.js",
+        "/Users/thom.ribeiro/Desktop/server",
+        "/Users/thom.ribeiro/Desktop/member-server",
+        "/Users/thom.ribeiro/Desktop/client",
+        "/Users/thom.ribeiro/Desktop/member-client",
+        "/Users/thom.ribeiro/Desktop/scheduling",
+        "/Users/thom.ribeiro/Desktop/shared",
+        "/Users/thom.ribeiro/Desktop/go-athenahealth",
+        "/Users/thom.ribeiro/Desktop/go-common",
+        "/Users/thom.ribeiro/Desktop/jail-mcp",
+        "/Users/thom.ribeiro/Desktop/mcp-shell"
       ]
     }
   },
+  "isUsingBuiltInNodeForMcp": false,
   "preferences": {
     "quickEntryShortcut": "off",
     "quickEntryDictationShortcut": "capslock",
