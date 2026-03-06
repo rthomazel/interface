@@ -1,36 +1,15 @@
 {
   "mcpServers": {
-    "filesystem": {
-      "command": "npx",
+    "jail-mcp2": {
+      "command": "/Applications/Docker.app/Contents/Resources/bin/docker",
       "args": [
-        "-y",
-        "@modelcontextprotocol/server-filesystem",
-        "/Users/thom.ribeiro/Desktop/server",
-        "/Users/thom.ribeiro/Desktop/member-server",
-        "/Users/thom.ribeiro/Desktop/client",
-        "/Users/thom.ribeiro/Desktop/member-client",
-        "/Users/thom.ribeiro/Desktop/scheduling",
-        "/Users/thom.ribeiro/Desktop/shared",
-        "/Users/thom.ribeiro/Desktop/go-athenahealth",
-        "/Users/thom.ribeiro/Desktop/go-common",
-        "/Users/thom.ribeiro/Desktop/jail-mcp",
-        "/Users/thom.ribeiro/Desktop/mcp-shell"
-      ]
-    },
-    "shell": {
-      "command": "node",
-      "args": [
-        "/Users/thom.ribeiro/Desktop/mcp-shell/build/index.js",
-        "/Users/thom.ribeiro/Desktop/server",
-        "/Users/thom.ribeiro/Desktop/member-server",
-        "/Users/thom.ribeiro/Desktop/client",
-        "/Users/thom.ribeiro/Desktop/member-client",
-        "/Users/thom.ribeiro/Desktop/scheduling",
-        "/Users/thom.ribeiro/Desktop/shared",
-        "/Users/thom.ribeiro/Desktop/go-athenahealth",
-        "/Users/thom.ribeiro/Desktop/go-common",
-        "/Users/thom.ribeiro/Desktop/jail-mcp",
-        "/Users/thom.ribeiro/Desktop/mcp-shell"
+        "compose",
+        "-f",
+        "/Users/thom.ribeiro/Desktop/jail-mcp/docker-compose.user.yml",
+        "run",
+        "--rm",
+        "-i",
+        "jail-mcp"
       ]
     }
   },
@@ -39,8 +18,8 @@
     "quickEntryShortcut": "off",
     "quickEntryDictationShortcut": "capslock",
     "coworkScheduledTasksEnabled": true,
+    "ccdScheduledTasksEnabled": false,
     "sidebarMode": "chat",
-    "coworkWebSearchEnabled": true,
-    "ccdScheduledTasksEnabled": false
+    "coworkWebSearchEnabled": true
   }
 }

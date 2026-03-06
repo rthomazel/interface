@@ -1,36 +1,15 @@
 {
   "mcpServers": {
-    "filesystem": {
-      "command": "npx",
+    "jail_MPC": {
+      "command": "/Applications/Docker.app/Contents/Resources/bin/docker",
       "args": [
-        "-y",
-        "@modelcontextprotocol/server-filesystem",
-        "/home/vacation/Desktop/server",
-        "/home/vacation/Desktop/member-server",
-        "/home/vacation/Desktop/client",
-        "/home/vacation/Desktop/member-client",
-        "/home/vacation/Desktop/scheduling",
-        "/home/vacation/Desktop/shared",
-        "/home/vacation/Desktop/go-athenahealth",
-        "/home/vacation/Desktop/go-common",
-        "/home/vacation/Desktop/jail-mcp",
-        "/home/vacation/Desktop/mcp-shell"
-      ]
-    },
-    "shell": {
-      "command": "node",
-      "args": [
-        "/home/vacation/Desktop/mcp-shell/build/index.js",
-        "/home/vacation/Desktop/server",
-        "/home/vacation/Desktop/member-server",
-        "/home/vacation/Desktop/client",
-        "/home/vacation/Desktop/member-client",
-        "/home/vacation/Desktop/scheduling",
-        "/home/vacation/Desktop/shared",
-        "/home/vacation/Desktop/go-athenahealth",
-        "/home/vacation/Desktop/go-common",
-        "/home/vacation/Desktop/jail-mcp",
-        "/home/vacation/Desktop/mcp-shell"
+        "compose",
+        "-f",
+        "/Users/thom.ribeiro/Desktop/jail-mcp/docker-compose.user.yml",
+        "run",
+        "--rm",
+        "-i",
+        "jail-mcp"
       ]
     }
   },
