@@ -5,7 +5,7 @@
       "args": [
         "compose",
         "-f",
-        "/Users/thom.ribeiro/Desktop/jail-mcp/docker-compose.user.yml",
+        "/Users/thom.ribeiro/Desktop/jail-mcp/docker-compose.yml",
         "run",
         "--rm",
         "-i",
