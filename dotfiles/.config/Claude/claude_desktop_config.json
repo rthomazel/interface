@@ -15,6 +15,7 @@
   },
   "isUsingBuiltInNodeForMcp": false,
   "preferences": {
+    "menuBarEnabled": true,
     "quickEntryShortcut": "off",
     "quickEntryDictationShortcut": "capslock",
     "coworkScheduledTasksEnabled": true,
