@@ -1,11 +1,11 @@
 {
   "mcpServers": {
     "jail_MPC": {
-      "command": "/Applications/Docker.app/Contents/Resources/bin/docker",
+      "command": "docker",
       "args": [
         "compose",
         "-f",
-        "/Users/thom.ribeiro/Desktop/jail-mcp/docker-compose.user.yml",
+        "/home/vacation/Desktop/jail-mcp/docker-compose.user.yml",
         "run",
         "--rm",
         "-i",
