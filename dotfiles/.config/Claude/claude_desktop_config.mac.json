@@ -1,6 +1,6 @@
 {
   "mcpServers": {
-    "jail-mcp2": {
+    "jail_MPC": {
       "command": "/Applications/Docker.app/Contents/Resources/bin/docker",
       "args": [
         "compose",
@@ -18,7 +18,7 @@
     "quickEntryShortcut": "off",
     "quickEntryDictationShortcut": "capslock",
     "coworkScheduledTasksEnabled": true,
-    "ccdScheduledTasksEnabled": false,
+    "ccdScheduledTasksEnabled": true,
     "sidebarMode": "chat",
     "coworkWebSearchEnabled": true
   }
