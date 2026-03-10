@@ -5,7 +5,7 @@
       "args": [
         "compose",
         "-f",
-        "/home/vacation/Desktop/jail-mcp/docker-compose.user.yml",
+        "/home/vacation/Desktop/jail-mcp/docker-compose.yml",
         "run",
         "--rm",
         "-i",
@@ -18,7 +18,7 @@
     "quickEntryShortcut": "off",
     "quickEntryDictationShortcut": "capslock",
     "coworkScheduledTasksEnabled": true,
-    "ccdScheduledTasksEnabled": false,
+    "ccdScheduledTasksEnabled": true,
     "sidebarMode": "chat",
     "coworkWebSearchEnabled": true
   }
