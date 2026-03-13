@@ -1,0 +1,22 @@
+#!/usr/bin/env python3
+import sys, evdev, subprocess
+from evdev import InputDevice, categorize, ecodes
+
+if len(sys.argv) != 3:
+    print(f"Usage: {sys.argv[0]} <key> <device>")
+    print(f"  key:    e.g. KEY_F2")
+    print(f"  device: e.g. /dev/input/by-id/usb-Keychron_Keychron_Q10-if02-event-kbd")
+    sys.exit(1)
+
+key = sys.argv[1]
+device = InputDevice(sys.argv[2])
+
+for event in device.read_loop():
+    if event.type == ecodes.EV_KEY:
+        k = categorize(event)
+        if k.keycode == key:
+            if k.keystate == k.key_down:
+                subprocess.Popen(['/usr/bin/nerd-dictation', 'begin'])
+            elif k.keystate == k.key_up:
+                subprocess.Popen(['/usr/bin/nerd-dictation', 'end'])
+
