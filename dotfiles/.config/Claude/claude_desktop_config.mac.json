@@ -1,0 +1,25 @@
+{
+  "mcpServers": {
+    "jail_MPC": {
+      "command": "/Applications/Docker.app/Contents/Resources/bin/docker",
+      "args": [
+        "compose",
+        "-f",
+        "/Users/thom.ribeiro/Desktop/jail-mcp/docker-compose.yml",
+        "run",
+        "--rm",
+        "-i",
+        "jail-mcp"
+      ]
+    }
+  },
+  "isUsingBuiltInNodeForMcp": false,
+  "preferences": {
+    "quickEntryShortcut": "off",
+    "quickEntryDictationShortcut": "capslock",
+    "coworkScheduledTasksEnabled": true,
+    "ccdScheduledTasksEnabled": true,
+    "sidebarMode": "chat",
+    "coworkWebSearchEnabled": true
+  }
+}

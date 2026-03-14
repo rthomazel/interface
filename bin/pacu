@@ -61,8 +61,6 @@ extract_version() {
 }
 
 migrate_postgres() {
-  local initdb_args=(--encoding=UTF8 -D /var/lib/postgres/data) old_version
-
   msgln
   log $LINENO "manually migrating pg db across major versions..."
   log $LINENO "sudo required"
@@ -77,9 +75,9 @@ migrate_postgres() {
 
   # todo: this may be broken because my user cant access /var/lib/postgres, it may be possible to pass --dir args to commands
   # note: needs testing
-sudo -u postgres bash <<'EOF'
+  sudo -u postgres bash <<'EOF'
   cd /var/lib/postgres/tmp || exit 1
-  sudo -u postgres initdb "${initdb_args[@]}"
+  sudo -u postgres initdb --encoding=UTF8 -D /var/lib/postgres/data
   sudo -u postgres pg_upgrade -b "/opt/pgsql-${old_version}/bin" -B /usr/bin -d /var/lib/postgres/olddata -D /var/lib/postgres/data
 EOF
 
@@ -87,7 +85,7 @@ EOF
 }
 
 refresh_collations() {
-  local dbs=(comms comms_test hub hub_test member member_test vacation postgres)
+  local dbs=(comms comms_test hub hub_test member member_test postgres template1)
 
   log $LINENO collation update on "${dbs[*]}"
 
@@ -208,12 +206,12 @@ kexec_prompt() {
   local response base_name=vmlinuz-linux suffix="${1:-}"
   local kernel_file="/boot/$base_name$suffix" initrd_file="/boot/initramfs-linux$suffix.img"
 
-  if ! stat "$kernel_file" >/dev/null 2>&1; then
+  if ! sudo stat "$kernel_file" >/dev/null 2>&1; then
     warn $LINENO "kernel file not found: $kernel_file"
     return
   fi
 
-  if ! stat "$initrd_file" >/dev/null 2>&1; then
+  if ! sudo stat "$initrd_file" >/dev/null 2>&1; then
     warn $LINENO "initramfs file not found: $initrd_file"
     return
   fi
@@ -227,7 +225,7 @@ kexec_prompt() {
   fi
 }
 
-cleanup_backgrounded_processes() {
+cleanup_child_processes() {
   for pid in "${cleanup_processes[@]}"; do
     if ps -p "$pid" >/dev/null; then
       if ! kill -HUP "$pid"; then
@@ -259,4 +257,4 @@ cleanup "$pg_update"
 kexec_prompt ""
 success_message
 
-cleanup_backgrounded_processes
+cleanup_child_processes

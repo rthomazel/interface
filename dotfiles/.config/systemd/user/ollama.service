@@ -4,9 +4,16 @@ Wants=network-online.target
 After=network.target network-online.target
 
 [Service]
-ExecStart=%h/bin/ollama serve
-Restart=on-failure
-RestartSec=10
+ExecStart=/usr/bin/ollama serve
+Environment="ROCM_PATH=/opt/rocm"
+Environment="HSA_PATH=/opt/rocm"
+Environment="PATH=$PATH"
+# listen on all network interfaces, not just localhost (default)
+# makes local ollama visible to the docker bridge gateway
+Environment="OLLAMA_HOST=0.0.0.0" 
+Environment="OLLAMA_KEEP_ALIVE=1h"
+Restart=always
+RestartSec=3
 Type=simple
 
 [Install]

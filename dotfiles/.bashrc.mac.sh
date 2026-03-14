@@ -19,6 +19,7 @@ export PATH="\
 $HOME/bin:\
 /opt/homebrew/bin:\
 /opt/homebrew/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/bin:\
+/Applications/Docker.app/Contents/Resources/bin:\
 /usr/local/bin:\
 /bin:\
 /usr/bin:\
