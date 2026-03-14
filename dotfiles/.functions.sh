@@ -455,9 +455,6 @@ jno() {
 
 #----------------
 
-# todo: remove
-unalias jnm
-
 jnm() {
   if ! command jj root &>/dev/null; then
     _git_gcom
