@@ -16,10 +16,10 @@ trap 'err $LINENO' ERR
 
 readonly initial_working_dir=$(pwd)
 readonly vid_id=${1:-}
-readonly title=${2:-}
 readonly out_dir="/plex/music/youtube-sets"
 # lower = better quality, larger file; 0 is lossless, 51 is worst
 readonly crf=26
+title=${2:-}
 audio_fmt=""
 audio_ext=""
 video_fmt=""
@@ -46,6 +46,8 @@ validate_input() {
   if [ ! "$vid_id" ]; then
     help
   fi
+
+  title=${title//-/_}
 
   if [ ! "$title" ]; then
     help
