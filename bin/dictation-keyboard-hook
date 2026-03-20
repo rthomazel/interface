@@ -11,9 +11,7 @@ if len(sys.argv) != 3:
 key = sys.argv[1]
 device = InputDevice(sys.argv[2])
 
-subprocess.Popen(['/usr/bin/nerd-dictation', 'begin', '--numbers-as-digits'])
-time.sleep(10)
-subprocess.Popen(['/usr/bin/nerd-dictation', 'suspend'])
+subprocess.Popen(['/usr/bin/nerd-dictation', 'begin', '--numbers-as-digits', "--suspend-on-start", "--simulate-input-tool=YDOTOOL", "--idle-time=0", "--verbose=1"])
 
 for event in device.read_loop():
     if event.type == ecodes.EV_KEY:
