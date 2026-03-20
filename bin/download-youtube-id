@@ -88,7 +88,8 @@ download() {
     return
   fi
 
-  if ! yt-dlp -f "$format_id" "$vid_id" --output "%(title)s-%(release_date)s.%(ext)s" --remote-components ejs:github; then
+  # downloading big videos can max out /tmp
+  if ! TMPDIR=/plex/music/youtube-sets yt-dlp -f "$format_id" "$vid_id" --output "%(title)s-%(release_date)s.%(ext)s" --remote-components ejs:github; then
     fatal "$LINENO" "yt-dlp error"
   fi
 }
@@ -187,7 +188,7 @@ validate_input
 validate_plex_perms
 prepare_temp
 
-yt-dlp "$vid_id" --list-formats --remote-components ejs:github
+TMPDIR=/plex/music/youtube-sets yt-dlp "$vid_id" --list-formats --remote-components ejs:github
 
 prompt_audio_format
 prompt_video_format

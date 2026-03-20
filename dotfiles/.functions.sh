@@ -508,7 +508,7 @@ npc-() {
 
 #----------------
 
-#url decode and json format
+# url decode and json format
 urldecode_json() {
   if [ ! "$1" ]; then
     echo "urldecode_json '%7B%22foo%22%3A+%22bar%22%7D'"
@@ -516,4 +516,35 @@ urldecode_json() {
   fi
 
   python3 -c "import sys, urllib.parse; print(urllib.parse.unquote(sys.argv[1]))" "$1" | jq
+}
+
+#----------------
+
+# updates path with latest npm goodies
+mise_install_globals() {
+  {
+    mise use --global node@latest
+    mise use --global go@latest
+    mise use --global yarn@1.22.22
+    mise use --global npm@latest
+  } >/dev/null 2>&1
+
+  # reinstall npm globals
+  local packages=(cspell cspell@latest prettier prettier@latest commitlint @commitlint/cli@latest commitlint/config-conventional @commitlint/config-conventional@latest)
+
+  for ((i = 0; i < ${#packages[@]}; i++)); do
+    if ((i % 2 != 0)); then
+      continue
+    fi
+
+    name="${packages[i]}"
+    version="${packages[i + 1]}"
+
+    # command -v reports false positives on aliases
+    if ! which "$name" >/dev/null 2>&1; then
+      npm install --global "$version" >/dev/null 2>&1
+    fi
+  done
+
+  export PATH="$PATH:$HOME/.local/share/mise/installs/node/$(node -v | tr -d v)/bin"
 }

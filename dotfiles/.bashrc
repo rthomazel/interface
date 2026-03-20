@@ -48,11 +48,8 @@ src_dotfile "lib.sh" "$LINENO"
 src_dotfile "lib-git-prompt.sh" "$LINENO"
 src_dotfile "lib-prompt.sh" "$LINENO"
 
-# NVM
-unset PREFIX            # nvm hates this
-unset npm_config_prefix # nvm hates this
-export NVM_DIR="$HOME/.nvm"
-src "$NVM_DIR/nvm.sh" "$DOTFILES/.bashrc:$LINENO"
+# version manager, hooks into PROMPT_COMMAND
+eval "$(mise activate)"
 
 if is_me && [ -d "./Desktop" ] && ! command cd ./Desktop; then
   echo 'cd desktop failed'
@@ -78,12 +75,6 @@ export PROMPT_COMMAND
 
 UNDERLINE="\\[\\e[4m\\]"
 PROMPT_COMMAND="vcs_prompt '$(make_ps1 pre)' '$(make_ps1 post)' '$MAIN_COLOR$UNDERLINE%s$END'"
-
-# nvm
-unset PREFIX            # nvm hates this
-unset npm_config_prefix # nvm hates this
-export NVM_DIR="$HOME/.nvm"
-src "$NVM_DIR/nvm.sh" "$DOTFILES/.bashrc:$LINENO"
 
 if is_me && [ "$(basename "$PWD")" != Desktop ]; then
   # shellcheck disable=SC2164
@@ -112,7 +103,7 @@ src_dotfile ".functions.sh" "$LINENO"
 src "$HOME/Desktop/interface/priv/.bashrc" "$DOTFILES/.bashrc:$LINENO"
 
 # after PATH is set
-nvm use node >/dev/null
+mise_install_globals
 
 # start tmux on login only if not already in a tmux session,
 # if in a terminal emulator, and if the user is me
