@@ -154,7 +154,13 @@ mux() {
     return
   fi
 
-  ffmpeg -i ./*."$audio_ext" -i ./*."$video_ext" -crf "$crf" -ac 2 "$name.mp4"
+  # cpu
+  # ffmpeg -i ./*."$audio_ext" -i ./*."$video_ext" -crf "$crf" -ac 2 "$name.mp4"
+
+  # gpu using va
+  ffmpeg -vaapi_device /dev/dri/renderD128 -i ./*."$audio_ext" -i ./*."$video_ext" \
+    -c:v hevc_vaapi -vf format=nv12,hwupload \
+    -qp "$crf" -ac 2 "$name.mp4"
   mv "$name.mp4" "$out_dir"
 }
 
