@@ -523,7 +523,7 @@ urldecode_json() {
 # updates path with latest npm goodies
 mise_install_globals() {
   (
-    sleep 2
+    sleep 4
     warn $LINENO "updating mise managed binaries..."
   ) &
 
