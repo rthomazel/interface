@@ -548,3 +548,21 @@ mise_install_globals() {
 
   export PATH="$PATH:$HOME/.local/share/mise/installs/node/$(node -v | tr -d v)/bin"
 }
+
+#----------------
+
+save_session() {
+  echo "$PWD" "$@" >>"$HOME/Desktop/sessions.txt"
+}
+
+restore_session() {
+  local dir="$PWD"
+  local command
+  command=$(command grep "^$dir " "$HOME/Desktop/sessions.txt" | sed "s|^$dir ||")
+
+  if [[ -z "$command" ]]; then
+    echo "no session found for $dir"
+  fi
+
+  eval "$command"
+}
