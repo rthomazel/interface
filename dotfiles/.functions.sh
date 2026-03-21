@@ -522,6 +522,13 @@ urldecode_json() {
 
 # updates path with latest npm goodies
 mise_install_globals() {
+  (
+    sleep 2
+    warn $LINENO "updating mise managed binaries..."
+  ) &
+
+    local child=$!
+
   {
     mise use --global node@latest
     mise use --global go@latest
@@ -529,7 +536,7 @@ mise_install_globals() {
     mise use --global npm@latest
   } >/dev/null 2>&1
 
-  # reinstall npm globals
+  # reinstall missing npm globals
   local packages=(cspell cspell@latest prettier prettier@latest commitlint @commitlint/cli@latest commitlint/config-conventional @commitlint/config-conventional@latest)
 
   for ((i = 0; i < ${#packages[@]}; i++)); do
@@ -542,11 +549,16 @@ mise_install_globals() {
 
     # command -v reports false positives on aliases
     if ! which "$name" >/dev/null 2>&1; then
-      npm install --global "$version" >/dev/null 2>&1
+      if ! npm install --global "$version" >/dev/null 2>&1; then
+        warn $LINENO "npm install: failed: $version"
+      fi
     fi
   done
 
   export PATH="$PATH:$HOME/.local/share/mise/installs/node/$(node -v | tr -d v)/bin"
+
+  kill $child 2>/dev/null
+  wait $child 2>/dev/null
 }
 
 #----------------
