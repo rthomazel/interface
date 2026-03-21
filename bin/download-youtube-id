@@ -9,7 +9,7 @@
 # shellcheck disable=SC2155
 
 set -euo pipefail
-shopt -s globstar
+shopt -s globstar nullglob
 trap 'err $LINENO' ERR
 
 ### vars and functions ###
@@ -89,7 +89,8 @@ download() {
   fi
 
   # downloading big videos can max out /tmp
-  if ! TMPDIR=/plex/music/youtube-sets yt-dlp -f "$format_id" "$vid_id" --output "%(title)s-%(release_date)s.%(ext)s" --remote-components ejs:github; then
+  # ejs:github related to automated captcha challenges using deno
+  if ! yt-dlp -f "$format_id" "$vid_id" --output "%(title)s-%(release_date)s.%(ext)s" --remote-components ejs:github --paths "temp:/plex/tmp"; then
     fatal "$LINENO" "yt-dlp error"
   fi
 }
@@ -161,7 +162,7 @@ convert_MP3() {
   local name=$1
 
   if [ ! "$audio_fmt" ] || [ "$video_fmt" ]; then
-    log "$LINENO" "skip mp3 convert: expected audio only format"
+    log "$LINENO" "convert_MP3: skip, this looks like video"
     return
   fi
 
@@ -176,6 +177,12 @@ convert_MP3() {
   mv "$name.mp3" "$out_dir"
 }
 
+cleanup_tmp() {
+  for dir in /tmp/youtube_dl-*; do
+    rm -fr "$dir"
+  done
+}
+
 ### script ###
 
 check_dependencies
@@ -188,7 +195,7 @@ validate_input
 validate_plex_perms
 prepare_temp
 
-TMPDIR=/plex/music/youtube-sets yt-dlp "$vid_id" --list-formats --remote-components ejs:github
+yt-dlp "$vid_id" --list-formats --remote-components ejs:github --paths "temp:/plex/tmp"
 
 prompt_audio_format
 prompt_video_format
@@ -202,5 +209,8 @@ mux "$title-$vid_id"
 convert_MP3 "$title-$vid_id"
 
 validate_plex_perms
+cleanup_tmp
 
 cd "$initial_working_dir"
+
+info $LINENO ok "$out_dir/$title-$vid_id.mp4"
