@@ -24,6 +24,7 @@ audio_fmt=""
 audio_ext=""
 video_fmt=""
 video_ext=""
+tmp_dir=""
 
 check_dependencies() {
   if [ -z "$BASH_ENV" ]; then
@@ -74,11 +75,11 @@ validate_plex_perms() {
 }
 
 prepare_temp() {
-  local temp
-  temp=$(mktemp -d youtube_dl-XXXXXX -p /tmp)
+  # SSD filesystem, avoid bottlenecks
+  tmp_dir=$(mktemp -d download-youtube-id-XXXXXX -p "$HOME/.cache")
 
-  log $LINENO using temp "$temp"
-  cd "$temp"
+  log $LINENO using temp "$tmp_dir"
+  cd "$tmp_dir"
 }
 
 download() {
@@ -184,9 +185,7 @@ convert_MP3() {
 }
 
 cleanup_tmp() {
-  for dir in /tmp/youtube_dl-*; do
-    rm -fr "$dir"
-  done
+  rm -fr "$tmp_dir"
 }
 
 ### script ###
