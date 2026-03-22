@@ -45,3 +45,5 @@ alias mouse="rivalcfg"
 alias ol="ollama"
 # --audio fixes stuttering, --target peak allows hdr like experience, --demuxer was recommended by warnings
 alias mpv="mpv --audio-buffer=10 --audio-channels=2 --target-peak=1000 --demuxer-lavf-analyzeduration=100 --demuxer-lavf-probesize=10000000"
+# todo remove
+alias pacu="echo use system_up"
