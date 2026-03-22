@@ -208,6 +208,32 @@ cleanup_child_processes() {
   done
 }
 
+mise_install_globals() {
+  mise use --global node@latest
+  mise use --global go@latest
+  mise use --global yarn@1.22.22
+  mise use --global npm@latest
+
+  # reinstall missing npm globals
+  local packages=(cspell cspell@latest prettier prettier@latest commitlint @commitlint/cli@latest commitlint/config-conventional @commitlint/config-conventional@latest)
+
+  for ((i = 0; i < ${#packages[@]}; i++)); do
+    if ((i % 2 != 0)); then
+      continue
+    fi
+
+    name="${packages[i]}"
+    version="${packages[i + 1]}"
+
+    # command -v reports false positives on aliases
+    if ! which "$name" >/dev/null 2>&1; then
+      npm install --global "$version"
+    fi
+  done
+
+  # export PATH="$PATH:$HOME/.local/share/mise/installs/node/$(node -v | tr -d v)/bin"
+}
+
 ### script ###
 
 check_dependencies
@@ -218,6 +244,7 @@ services stop postgresql
 btrfs_check Data2TB Data4TB
 pg_update=$(postgres_up)
 
+mise_install_globals
 system_up
 services start postgresql
 refresh_collations
