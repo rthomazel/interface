@@ -209,9 +209,6 @@ alias gla="glo | head -10"
 
 # lazy-git
 
-# alias lg="lazy-git"
-alias lg="lazy-jujutsu"
-
 alias build="lg build"
 alias ci="lg ci"
 alias docs="lg docs"

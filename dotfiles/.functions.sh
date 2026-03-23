@@ -535,3 +535,16 @@ restore_session() {
 
   eval "$command"
 }
+
+#----------------
+
+unalias lg 2>/dev/null
+lg() {
+  if ! command jj root &>/dev/null; then
+    lazy-git "$@"
+    return $?
+  fi
+
+  lazy-jujutsu "$@"
+  return $?
+}
