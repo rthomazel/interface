@@ -102,9 +102,6 @@ fi
 src_dotfile ".functions.sh" "$LINENO"
 src "$HOME/Desktop/interface/priv/.bashrc" "$DOTFILES/.bashrc:$LINENO"
 
-# after PATH is set
-mise_install_globals
-
 # start tmux on login only if not already in a tmux session,
 # if in a terminal emulator, and if the user is me
 if [ ! "$TMUX" ] && term_emulator && is_me; then
