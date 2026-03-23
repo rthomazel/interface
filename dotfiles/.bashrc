@@ -41,7 +41,7 @@ export GPG_TTY=$(tty)
 export XDG_RUNTIME_DIR
 export WAYLAND_DISPLAY
 # see lazy-git
-export PUSH_REPOS="member-client interface priv hub-client server member-server shared go-athenahealth scheduling jail-mcp comms programming-problems"
+export PUSH_REPOS="member-client interface priv hub-client server server-1 server-2 server-3 server-4 member-server shared go-athenahealth scheduling jail-mcp comms programming-problems"
 
 # libs
 src_dotfile "lib.sh" "$LINENO"
