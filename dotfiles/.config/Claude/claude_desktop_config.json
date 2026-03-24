@@ -1,6 +1,6 @@
 {
   "mcpServers": {
-    "jail_MPC": {
+    "jailMPC": {
       "command": "docker",
       "args": [
         "compose",
@@ -17,9 +17,9 @@
   "preferences": {
     "quickEntryShortcut": "off",
     "quickEntryDictationShortcut": "capslock",
-    "coworkScheduledTasksEnabled": true,
-    "ccdScheduledTasksEnabled": true,
-    "sidebarMode": "task",
+    "coworkScheduledTasksEnabled": false,
+    "ccdScheduledTasksEnabled": false,
+    "sidebarMode": "chat",
     "coworkWebSearchEnabled": true
   }
 }
