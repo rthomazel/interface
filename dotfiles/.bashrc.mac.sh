@@ -2,7 +2,6 @@
 # shellcheck disable=SC2034 disable=SC1090
 
 # Completions, external scripts, git prompt
-src "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" "$DOTFILES/.bashrc.mac.sh:$LINENO"
 
 # Environment
 
@@ -15,7 +14,9 @@ fi
 export GOPATH=$HOME/go
 export GOBIN=$HOME/go/bin
 
+# todo setup mise shims in path
 export PATH="\
+$HOME/.local/share/mise/shims:\
 $HOME/bin:\
 /opt/homebrew/bin:\
 /opt/homebrew/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/bin:\

@@ -3,6 +3,7 @@
 # /bin symlinked to /usr/bin
 # /sbin symlinked to /usr/sbin
 export PATH="\
+$HOME/.local/share/mise/shims:\
 $HOME/bin:\
 /usr/local/sbin:\
 /usr/local/bin:\
@@ -14,10 +15,8 @@ $HOME/go/bin:\
 $HOME/.cargo/bin:\
 /usr/local/go/bin:\
 $HOME/Desktop/scripts-eleanor:\
-$HOME/Desktop/dir-rename/build:\
 $HOME/.local/bin:\
-/opt/rocm/bin:\
-/opt/android-sdk/platform-tools"
+/opt/rocm/bin"
 
 if [ ! "$(pgrep ssh-agent)" ]; then
   eval "$(ssh-agent)" >/dev/null

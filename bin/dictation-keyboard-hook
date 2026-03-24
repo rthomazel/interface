@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import sys, evdev, subprocess
+import sys, evdev, subprocess, time
 from evdev import InputDevice, categorize, ecodes
 
 if len(sys.argv) != 3:
@@ -11,12 +11,13 @@ if len(sys.argv) != 3:
 key = sys.argv[1]
 device = InputDevice(sys.argv[2])
 
+subprocess.Popen(['/usr/bin/nerd-dictation', 'begin', '--numbers-as-digits', "--suspend-on-start", "--simulate-input-tool=YDOTOOL", "--idle-time=0", "--verbose=1"])
+
 for event in device.read_loop():
     if event.type == ecodes.EV_KEY:
         k = categorize(event)
         if k.keycode == key:
             if k.keystate == k.key_down:
-                subprocess.Popen(['/usr/bin/nerd-dictation', 'begin'])
+                subprocess.Popen(['/usr/bin/nerd-dictation', 'resume'])
             elif k.keystate == k.key_up:
-                subprocess.Popen(['/usr/bin/nerd-dictation', 'end'])
-
+                subprocess.Popen(['/usr/bin/nerd-dictation', 'suspend'])

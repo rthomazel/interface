@@ -9,20 +9,22 @@
 # shellcheck disable=SC2155
 
 set -euo pipefail
-shopt -s globstar
+shopt -s globstar nullglob
 trap 'err $LINENO' ERR
 
 ### vars and functions ###
 
 readonly initial_working_dir=$(pwd)
 readonly vid_id=${1:-}
-readonly title=${2:-}
 readonly out_dir="/plex/music/youtube-sets"
+# lower = better quality, larger file; 0 is lossless, 51 is worst
+readonly crf=26
+title=${2:-}
 audio_fmt=""
 audio_ext=""
 video_fmt=""
 video_ext=""
-filename=""
+tmp_dir=""
 
 check_dependencies() {
   if [ -z "$BASH_ENV" ]; then
@@ -38,44 +40,46 @@ help() {
   msgln
   msgln output will be in "$out_dir"
   msgln note: youtube video id will be appended to title
+  exit 0
 }
 
 validate_input() {
   if [ ! "$vid_id" ]; then
     help
-    fatal "$LINENO" "no video id"
   fi
+
+  title=${title//-/_}
 
   if [ ! "$title" ]; then
     help
-    fatal "$LINENO" "no title"
   fi
 }
 
 validate_plex_perms() {
   if ! [[ "$out_dir" =~ ^/plex ]]; then
     debug $LINENO "output not a plex directory, skip"
-
     return
   fi
 
-  local not_plex=$(find $out_dir -not -user plex -or -not -group plex) sudo_timeout=10s
+  local sudo_timeout=10s
+  local not_plex
+  not_plex=$(find "$out_dir" -not -user plex -or -not -group plex)
 
   if [ "$not_plex" ]; then
     log $LINENO sudo required to change ownership of files to plex \(10s\)
 
-    if ! timeout --kill-after=$sudo_timeout $sudo_timeout sudo chown -R plex:plex $out_dir; then
+    if ! timeout --kill-after="$sudo_timeout" "$sudo_timeout" sudo chown -R plex:plex "$out_dir"; then
       true # ignore timeout here, it's optional
     fi
   fi
 }
 
 prepare_temp() {
-  local temp
-  temp=$(mktemp -d youtube_dl-XXXXXX -p /tmp)
+  # SSD filesystem, avoid bottlenecks
+  tmp_dir=$(mktemp -d download-youtube-id-XXXXXX -p "$HOME/.cache")
 
-  log $LINENO using temp "$temp"
-  cd "$temp"
+  log $LINENO using temp "$tmp_dir"
+  cd "$tmp_dir"
 }
 
 download() {
@@ -85,7 +89,9 @@ download() {
     return
   fi
 
-  if ! yt-dlp -f "$format_id" "$vid_id" --output "%(title)s-%(release_date)s.%(ext)s"; then
+  # downloading big videos can max out /tmp
+  # ejs:github related to automated captcha challenges using deno
+  if ! yt-dlp -f "$format_id" "$vid_id" --output "%(title)s-%(release_date)s.%(ext)s" --remote-components ejs:github --paths "temp:/plex/tmp"; then
     fatal "$LINENO" "yt-dlp error"
   fi
 }
@@ -120,47 +126,66 @@ prompt_video_format() {
 }
 
 validate_formats() {
-  local audio_fmt=$1 video_fmt=$2
-
   if [ "$audio_fmt" ] && ! [[ "$audio_fmt" =~ ^[0-9]+$ ]]; then
     fatal "$LINENO" "audio format must be a number"
+  fi
+
+  if [ "$audio_fmt" ] && [ ! "$audio_ext" ]; then
+    fatal "$LINENO" "audio extension required when audio format is set"
   fi
 
   if [ "$video_fmt" ] && ! [[ "$video_fmt" =~ ^[0-9]+$ ]]; then
     fatal "$LINENO" "video format must be a number"
   fi
 
+  if [ "$video_fmt" ] && [ ! "$video_ext" ]; then
+    fatal "$LINENO" "video extension required when video format is set"
+  fi
+
   if [ "$video_fmt" ] && [ ! "$audio_fmt" ]; then
     warn "$LINENO" "video might have no audio"
-    sleep 2
   fi
 }
 
 mux() {
-  local audio_fmt=$1 audio_ext=$2 video_fmt=$3 video_ext=$4 name=$5
+  local name=$1
 
   if [ ! "$audio_fmt" ] || [ ! "$video_fmt" ]; then
     log "$LINENO" "skip mux: expected audio and video format"
-    sleep 1
     return
   fi
 
-  ffmpeg -i ./*."$audio_ext" -i ./*."$video_ext" -crf 26 -ac 2 "$name.mp4"
+  # cpu
+  # ffmpeg -i ./*."$audio_ext" -i ./*."$video_ext" -crf "$crf" -ac 2 "$name.mp4"
+
+  # gpu using va
+  ffmpeg -vaapi_device /dev/dri/renderD128 -i ./*."$audio_ext" -i ./*."$video_ext" \
+    -c:v hevc_vaapi -vf format=nv12,hwupload \
+    -qp "$crf" -ac 2 "$name.mp4"
   mv "$name.mp4" "$out_dir"
 }
 
 convert_MP3() {
-  local audio_fmt=$1 video_fmt=$2 name=$3
+  local name=$1
 
   if [ ! "$audio_fmt" ] || [ "$video_fmt" ]; then
-    log "$LINENO" "skip mp3 convert: expected audio only format"
-    sleep 1
+    log "$LINENO" "convert_MP3: skip, this looks like video"
     return
   fi
 
-  # extension not needed, assume only one audio file
-  ffmpeg -i ./* -codec:a libmp3lame -q:a 0 "$name.mp3"
+  local audio_file
+  audio_file=$(find . -maxdepth 1 -type f | head -1)
+
+  if [ ! "$audio_file" ]; then
+    fatal "$LINENO" "no audio file found"
+  fi
+
+  ffmpeg -i "$audio_file" -codec:a libmp3lame -q:a 0 "$name.mp3"
   mv "$name.mp3" "$out_dir"
+}
+
+cleanup_tmp() {
+  rm -fr "$tmp_dir"
 }
 
 ### script ###
@@ -169,28 +194,28 @@ check_dependencies
 
 if requested_help "$*"; then
   help
-  exit 1
 fi
 
 validate_input
-# catch files from previous runs early
 validate_plex_perms
 prepare_temp
 
-yt-dlp "$vid_id" --list-formats
+yt-dlp "$vid_id" --list-formats --remote-components ejs:github --paths "temp:/plex/tmp"
 
 prompt_audio_format
 prompt_video_format
 
-validate_formats "$audio_fmt" "$video_fmt"
+validate_formats
 
 download "$audio_fmt"
 download "$video_fmt"
-filename="$title-$vid_id"
 
-mux "$audio_fmt" "$audio_ext" "$video_fmt" "$video_ext" "$filename"
-convert_MP3 "$audio_fmt" "$video_fmt" "$filename"
+mux "$title-$vid_id"
+convert_MP3 "$title-$vid_id"
 
 validate_plex_perms
+cleanup_tmp
 
 cd "$initial_working_dir"
+
+info $LINENO ok "$out_dir/$title-$vid_id.mp4"

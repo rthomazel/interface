@@ -508,7 +508,7 @@ npc-() {
 
 #----------------
 
-#url decode and json format
+# url decode and json format
 urldecode_json() {
   if [ ! "$1" ]; then
     echo "urldecode_json '%7B%22foo%22%3A+%22bar%22%7D'"
@@ -516,4 +516,35 @@ urldecode_json() {
   fi
 
   python3 -c "import sys, urllib.parse; print(urllib.parse.unquote(sys.argv[1]))" "$1" | jq
+}
+
+#----------------
+
+save_session() {
+  echo "$PWD" "$@" >>"$HOME/Desktop/sessions.txt"
+}
+
+restore_session() {
+  local dir="$PWD"
+  local command
+  command=$(command grep "^$dir " "$HOME/Desktop/sessions.txt" | sed "s|^$dir ||")
+
+  if [[ -z "$command" ]]; then
+    echo "no session found for $dir"
+  fi
+
+  eval "$command"
+}
+
+#----------------
+
+unalias lg 2>/dev/null
+lg() {
+  if ! command jj root &>/dev/null; then
+    lazy-git "$@"
+    return $?
+  fi
+
+  lazy-jujutsu "$@"
+  return $?
 }
