@@ -17,9 +17,9 @@
   "preferences": {
     "quickEntryShortcut": "off",
     "quickEntryDictationShortcut": "capslock",
-    "coworkScheduledTasksEnabled": false,
-    "ccdScheduledTasksEnabled": false,
-    "sidebarMode": "chat",
+    "coworkScheduledTasksEnabled": true,
+    "ccdScheduledTasksEnabled": true,
+    "sidebarMode": "task",
     "coworkWebSearchEnabled": true
   }
 }
