@@ -215,20 +215,10 @@ mise_install_globals() {
   mise use --global npm@latest
 
   # reinstall missing npm globals
-  local packages=(cspell cspell@latest prettier prettier@latest commitlint @commitlint/cli@latest commitlint/config-conventional @commitlint/config-conventional@latest)
+  local packages=(cspell@latest prettier@latest @commitlint/cli@latest @commitlint/config-conventional@latest)
 
   for ((i = 0; i < ${#packages[@]}; i++)); do
-    if ((i % 2 != 0)); then
-      continue
-    fi
-
-    name="${packages[i]}"
-    version="${packages[i + 1]}"
-
-    # command -v reports false positives on aliases
-    if ! which "$name" >/dev/null 2>&1; then
-      npm install --global "$version"
-    fi
+    npm install --global "${packages[i]}"
   done
 
   # export PATH="$PATH:$HOME/.local/share/mise/installs/node/$(node -v | tr -d v)/bin"
