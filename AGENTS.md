@@ -32,3 +32,4 @@ avoid single letter vars if their scope is not small.
 when we refactor, minimize renames unless asked for.
 run formatter as last step after making code changes.
 this is a jujutsu repo and do not make commits.
+lib-git-prompt.sh has been vendored and we can modify it.
