@@ -18,7 +18,7 @@
       "tab.activeBackground": "#000",
       "titleBar.activeBackground": "#000",
       "editorGutter.background": "#000",
-      "breadcrumb.background": "#000"
+      "breadcrumb.background": "#000",
     },
     "activityBarBadge.background": "#FF4081",
     "list.activeSelectionForeground": "#FF4081",
@@ -38,7 +38,7 @@
     "panelTitle.activeBorder": "#FF4081",
     "breadcrumb.activeSelectionForeground": "#FF4081",
     "menu.selectionForeground": "#FF4081",
-    "menubar.selectionForeground": "#FF4081"
+    "menubar.selectionForeground": "#FF4081",
   },
   "editor.tokenColorCustomizations": {
     "[GitHub Dark High Contrast]": {
@@ -46,8 +46,8 @@
       "functions": "#7e7fdd",
       "strings": "#8b907f",
       "keywords": "#c5ad97",
-      "types": "#6abe7f"
-    }
+      "types": "#6abe7f",
+    },
   },
   //
   // - - - - - - - - FONT - - - - - - - - -
@@ -68,31 +68,31 @@
   //
   "eslint.run": "onType",
   "eslint.options": {
-    "resolvePluginsRelativeTo": "."
+    "resolvePluginsRelativeTo": ".",
   },
   "[shellscript]": {
-    "editor.defaultFormatter": "lumirelle.shell-format-rev"
+    "editor.defaultFormatter": "lumirelle.shell-format-rev",
   },
   "[typescriptreact]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
   },
   "[javascript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
   },
   "[javascriptreact]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
   },
   "[typescript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
   },
   "[json]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
   },
   "[sql]": {
-    "editor.formatOnPaste": false
+    "editor.formatOnPaste": false,
   },
   "[yaml]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
   },
   "sql-formatter.uppercase": true,
   //
@@ -120,10 +120,10 @@
   "typescript.preferences.importModuleSpecifier": "non-relative",
   "typescript.preferences.importModuleSpecifierEnding": "minimal",
   "[html]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
   },
   "[jsonc]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
   },
   "typescript.implementationsCodeLens.enabled": true,
   "typescript.updateImportsOnFileMove.enabled": "always",
@@ -134,22 +134,68 @@
   "[go]": {
     "editor.formatOnSave": true,
     "editor.codeActionsOnSave": {
-      "source.organizeImports": "explicit"
-    }
+      "source.organizeImports": "explicit",
+    },
   },
   "go.testOnSave": false,
   "go.delveConfig": {
-    "debugAdapter": "dlv-dap"
+    "debugAdapter": "dlv-dap",
   },
   "go.testEnvFile": "${workspaceFolder}/.env",
   "go.testFlags": ["-race"],
   "go.lintTool": "golangci-lint",
   "go.lintFlags": ["--print-issued-lines=false"],
   "go.vetOnSave": "off",
-  "go.formatTool": "gofumpt",
+  "go.formatTool": "default",
   "gopls": {
     "ui.semanticTokens": true,
-    "build.buildFlags": ["-buildvcs=false"]
+    "build.buildFlags": ["-buildvcs=false"],
+
+    // Show inlay hints for parameter names, type params, etc.
+    "ui.inlayhints.parameterNames": true,
+    "ui.inlayhints.assignVariableTypes": true,
+    "ui.inlayhints.compositeLiteralFields": true,
+    "ui.inlayhints.compositeLiteralTypes": true,
+    "ui.inlayhints.constantValues": true,
+    "ui.inlayhints.functionTypeParameters": true,
+    "ui.inlayhints.rangeVariableTypes": true,
+
+    // Staticcheck: enables many extra linters beyond go vet
+    "ui.diagnostic.staticcheck": true,
+
+    // Analyses: fine-grained control over individual analyzers
+    "ui.diagnostic.analyses": {
+      "shadow": true, // warn on shadowed variables
+      "nilness": true, // detect nil dereferences
+      "unusedparams": true, // warn on unused function params
+      "unusedwrite": true, // warn on writes to vars never read
+      "useany": true, // suggest `any` instead of `interface{}`
+    },
+
+    // Completion options
+    "ui.completion.usePlaceholders": true, // fill in param placeholders on completion
+    "ui.completion.matcher": "Fuzzy", // fuzzy matching (vs "CaseInsensitive" or "CaseSensitive")
+
+    // Codelens: inline actionable buttons
+    "ui.codelenses": {
+      "gc_details": true, // toggle compiler optimization details
+      "run_govulncheck": true,
+      "tidy": true,
+      "vendor": true,
+      "generate": true,
+    },
+
+    // Format with gofumpt (stricter than gofmt) — requires gofumpt installed
+    "formatting.gofumpt": true,
+
+    // Automatically add missing imports and remove unused ones on save
+    // (usually controlled by editor settings, but can be forced here)
+    "ui.diagnostic.annotations": {
+      "bounds": true, // annotate slice bounds checks
+      "escape": true, // annotate heap escapes
+      "inline": true, // annotate inlining decisions
+      "nil": true,
+    },
   },
   "go.toolsManagement.autoUpdate": true,
   //
@@ -193,28 +239,28 @@
   "githubPullRequests.queries": [
     {
       "label": "Local Pull Request Branches",
-      "query": "default"
+      "query": "default",
     },
     {
       "label": "Waiting",
-      "query": "repo:${owner}/${repository} is:open review-requested:${user}"
+      "query": "repo:${owner}/${repository} is:open review-requested:${user}",
     },
     {
       "label": "Open",
-      "query": "repo:${owner}/${repository} is:open"
+      "query": "repo:${owner}/${repository} is:open",
     },
     {
       "label": "Assigned",
-      "query": "repo:${owner}/${repository} is:open assignee:${user}"
+      "query": "repo:${owner}/${repository} is:open assignee:${user}",
     },
     {
       "label": "Created",
-      "query": "repo:${owner}/${repository} is:open author:${user}"
+      "query": "repo:${owner}/${repository} is:open author:${user}",
     },
     {
       "label": "All Open",
-      "query": "default"
-    }
+      "query": "default",
+    },
   ],
   "githubPullRequests.fileListLayout": "flat",
   "githubPullRequests.pullBranch": "never",
@@ -222,7 +268,7 @@
     "*": true,
     "plaintext": false,
     "markdown": false,
-    "scminput": false
+    "scminput": false,
   },
   "cSpell.userWords": [
     "AIAPI",
@@ -293,7 +339,7 @@
     "Unnotified",
     "vamac",
     "Wrapf",
-    "zerolog"
+    "zerolog",
   ],
   "cSpell.maxDuplicateProblems": 2,
   "cSpell.spellCheckDelayMs": 2000,
@@ -308,10 +354,10 @@
     "css",
     "javascript",
     "typescript",
-    "shellscript"
+    "shellscript",
   ],
   "cSpell.enabledNotifications": {
-    "Lines too Long": false
+    "Lines too Long": false,
   },
   "window.commandCenter": false,
   "window.menuBarVisibility": "hidden",
@@ -328,15 +374,15 @@
     "editor.insertSpaces": true,
     "editor.tabSize": 2,
     "editor.autoIndent": "advanced",
-    "editor.defaultFormatter": "redhat.vscode-yaml"
+    "editor.defaultFormatter": "redhat.vscode-yaml",
   },
   "[github-actions-workflow]": {
-    "editor.defaultFormatter": "redhat.vscode-yaml"
+    "editor.defaultFormatter": "redhat.vscode-yaml",
   },
   "github.copilot.nextEditSuggestions.enabled": true,
   "[css]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  }
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+  },
   //
   // - - - - - - - - NEW - - - - - - - - -
   //
