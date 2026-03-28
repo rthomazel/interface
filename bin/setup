@@ -23,6 +23,14 @@ trap 'err $LINENO' ERR
 
 readonly install_dir="/usr/local/bin"
 
+run_privileged() {
+  if [ "$(id -u)" = "0" ]; then
+    "$@"
+  else
+    sudo "$@"
+  fi
+}
+
 print_manual_instructions() {
   msgln "Some tools are missing. Please install them manually:"
   msgln
@@ -55,7 +63,7 @@ install_shfmt() {
   log $LINENO "downloading shfmt $version"
   curl -sfL "$url" -o "$tmp"
   chmod +x "$tmp"
-  sudo mv "$tmp" "$install_dir/shfmt"
+  run_privileged mv "$tmp" "$install_dir/shfmt"
   log $LINENO "shfmt installed to $install_dir/shfmt"
 }
 
@@ -73,7 +81,7 @@ install_shellcheck() {
 
   log $LINENO "downloading shellcheck $version"
   curl -sfL "$url" | tar -xJ -C "$tmp_dir"
-  sudo mv "$tmp_dir/shellcheck-${version}/shellcheck" "$install_dir/shellcheck"
+  run_privileged mv "$tmp_dir/shellcheck-${version}/shellcheck" "$install_dir/shellcheck"
   rm -rf "$tmp_dir"
   log $LINENO "shellcheck installed to $install_dir/shellcheck"
 }
