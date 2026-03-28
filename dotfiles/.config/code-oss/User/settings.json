@@ -148,7 +148,8 @@
   "go.vetOnSave": "off",
   "go.formatTool": "gofumpt",
   "gopls": {
-    "ui.semanticTokens": true
+    "ui.semanticTokens": true,
+    "build.buildFlags": ["-buildvcs=false"]
   },
   "go.toolsManagement.autoUpdate": true,
   //

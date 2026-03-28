@@ -1,0 +1,114 @@
+#! /usr/bin/env bash
+# Copyright 2025 Raphael Thomazella. All rights reserved.
+# Use of this source code is governed by the BSD-3-Clause
+# license that can be found in the LICENSE file and online
+# at https://opensource.org/license/BSD-3-clause.
+#
+# Installs development tools required by this repo.
+# Self-contained: does not require $BASH_ENV.
+# Interactive shell: prints install instructions and exits.
+# Non-interactive: downloads and installs binaries from GitHub releases.
+
+set -euo pipefail
+shopt -s globstar
+
+### vars and functions ###
+
+msgln() { echo -e "$*"; }
+log() { echo -e "INFO ($0:${1}) ${*:2}" >&2; }
+err() { echo -e "ERROR ($0:${1})" >&2; }
+fatal() { err "$1" "${*:2}"; exit 1; }
+
+trap 'err $LINENO' ERR
+
+readonly install_dir="/usr/local/bin"
+
+print_manual_instructions() {
+  msgln "Some tools are missing. Please install them manually:"
+  msgln
+  msgln "  shfmt:      https://github.com/mvdan/sh/releases/latest"
+  msgln "  shellcheck: https://github.com/koalaman/shellcheck/releases/latest"
+  msgln
+  msgln "On Arch:  sudo pacman -S shfmt shellcheck"
+  msgln "On macOS: brew install shfmt shellcheck"
+}
+
+latest_version() {
+  local repo=$1
+
+  curl -sf "https://api.github.com/repos/$repo/releases/latest" \
+    | grep '"tag_name"' \
+    | sed -E 's/.*"tag_name": "(.*)".*/\1/'
+}
+
+install_shfmt() {
+  local version os arch url tmp
+
+  log $LINENO "fetching latest shfmt version"
+  version=$(latest_version mvdan/sh)
+
+  os=$(uname -s | tr '[:upper:]' '[:lower:]')
+  arch=$(uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/')
+  url="https://github.com/mvdan/sh/releases/download/${version}/shfmt_${version}_${os}_${arch}"
+  tmp=$(mktemp)
+
+  log $LINENO "downloading shfmt $version"
+  curl -sfL "$url" -o "$tmp"
+  chmod +x "$tmp"
+  sudo mv "$tmp" "$install_dir/shfmt"
+  log $LINENO "shfmt installed to $install_dir/shfmt"
+}
+
+install_shellcheck() {
+  local version os arch tarball url tmp_dir
+
+  log $LINENO "fetching latest shellcheck version"
+  version=$(latest_version koalaman/shellcheck)
+
+  os=$(uname -s | tr '[:upper:]' '[:lower:]')
+  arch=$(uname -m)
+  tarball="shellcheck-${version}.${os}.${arch}.tar.xz"
+  url="https://github.com/koalaman/shellcheck/releases/download/${version}/${tarball}"
+  tmp_dir=$(mktemp -d)
+
+  log $LINENO "downloading shellcheck $version"
+  curl -sfL "$url" | tar -xJ -C "$tmp_dir"
+  sudo mv "$tmp_dir/shellcheck-${version}/shellcheck" "$install_dir/shellcheck"
+  rm -rf "$tmp_dir"
+  log $LINENO "shellcheck installed to $install_dir/shellcheck"
+}
+
+install_tool() {
+  local tool=$1 install_fn=$2
+
+  if command -v "$tool" >/dev/null 2>&1; then
+    log $LINENO "$tool already installed"
+    return
+  fi
+
+  "$install_fn"
+}
+
+### script ###
+
+missing=false
+
+command -v shfmt >/dev/null 2>&1 || missing=true
+command -v shellcheck >/dev/null 2>&1 || missing=true
+
+if ! $missing; then
+  log $LINENO "all tools already installed"
+  exit 0
+fi
+
+# interactive shell: just tell the user
+if [[ $- == *i* ]]; then
+  print_manual_instructions
+  exit 0
+fi
+
+# non-interactive: download and install
+install_tool shfmt install_shfmt
+install_tool shellcheck install_shellcheck
+
+msgln "setup complete"
