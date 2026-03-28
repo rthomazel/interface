@@ -209,7 +209,7 @@ compress() {
     msg "creating tar.7z archive: $out"
 
     # tar stream → 7za via stdin (your exact pattern)
-    if ! tar -cf - "$src" | 7za a -si -mx=7 "$out" > /dev/null; then
+    if ! tar -cf - "$src" | 7za a -si -mx=7 "$out" >/dev/null; then
       err $LINENO "tar.7z compression failed"
       return 1
     fi
@@ -221,4 +221,3 @@ compress() {
 
   msg "done: $out"
 }
-
