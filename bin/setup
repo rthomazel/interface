@@ -24,7 +24,7 @@ fatal() {
 
 trap 'err $LINENO' ERR
 
-readonly install_dir="/root/bin"
+readonly install_dir="${1:-/root/bin}"
 
 run_privileged() {
   if [ "$(id -u)" = "0" ]; then
@@ -112,6 +112,7 @@ if ! $missing; then
   exit 0
 fi
 
+# todo: runing script as user doesn't trigger this
 # interactive shell: just tell the user
 if [[ $- == *i* ]]; then
   print_manual_instructions
