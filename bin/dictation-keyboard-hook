@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-import sys, evdev, subprocess, time
+"""Push-to-talk dictation: record while F2 held, transcribe on release."""
+import sys, subprocess, tempfile, os
 from evdev import InputDevice, categorize, ecodes
 
 if len(sys.argv) != 3:
@@ -11,13 +12,35 @@ if len(sys.argv) != 3:
 key = sys.argv[1]
 device = InputDevice(sys.argv[2])
 
-subprocess.Popen(['/usr/bin/nerd-dictation', 'begin', '--numbers-as-digits', "--suspend-on-start", "--simulate-input-tool=YDOTOOL", "--idle-time=0", "--verbose=1"])
+MODEL = "/usr/share/whisper.cpp-model-large-v3-turbo-q5_0/ggml-large-v3-turbo-q5_0.bin"
+
+recording = None
+wav = None
 
 for event in device.read_loop():
-    if event.type == ecodes.EV_KEY:
-        k = categorize(event)
-        if k.keycode == key:
-            if k.keystate == k.key_down:
-                subprocess.Popen(['/usr/bin/nerd-dictation', 'resume'])
-            elif k.keystate == k.key_up:
-                subprocess.Popen(['/usr/bin/nerd-dictation', 'suspend'])
+    if event.type != ecodes.EV_KEY:
+        continue
+    k = categorize(event)
+    if k.keycode != key:
+        continue
+
+    if k.keystate == k.key_down and recording is None:
+        wav = tempfile.mktemp(suffix=".wav")
+        recording = subprocess.Popen(["pw-record", "--rate=16000", "--channels=1", wav])
+
+    elif k.keystate == k.key_up and recording is not None:
+        recording.terminate()
+        recording.wait()
+        recording = None
+
+        result = subprocess.run(
+            ["whisper-cli", "-m", MODEL, "-f", wav,
+             "--no-timestamps", "--language", "auto", "--suppress-nst"],
+            capture_output=True, text=True
+        )
+        print(result.stderr, end="", flush=True)  # whisper logs visible in journal
+        text = result.stdout.strip()
+        if text:
+            subprocess.run(["ydotool", "type", "--key-delay=5", "--key-hold=0", "--", text + " "])
+        os.unlink(wav)
+        wav = None

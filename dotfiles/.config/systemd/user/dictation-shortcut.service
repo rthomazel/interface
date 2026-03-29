@@ -2,7 +2,7 @@
 Description=Dictation shortcut on key down and key up
 
 [Service]
-ExecStart=/usr/bin/python3 %h/bin/dictation-keyboard-hook KEY_F2 /dev/input/by-id/usb-Keychron_Keychron_Q10-if02-event-kbd
+ExecStart=%h/bin/dictation-keyboard-hook KEY_F2 /dev/input/by-id/usb-Keychron_Keychron_Q10-if02-event-kbd
 Restart=on-failure
 RestartSec=5
 StartLimitBurst=3
