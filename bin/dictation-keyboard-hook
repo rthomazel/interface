@@ -39,16 +39,11 @@ for event in device.read_loop():
         print(result.stdout, end="", flush=True)
         try:
             text = json.loads(result.stdout).get("text", "").strip()
-            print("\n|"+text+"|", flush=True)
         except json.JSONDecodeError:
             print(f"whisper-server parse error: {result.stdout}", flush=True)
             text = ""
         if text:
-            # save and restore clipboard to avoid clobbering it
-            prev = subprocess.run(["xclip", "-selection", "clipboard", "-o"], capture_output=True).stdout
-            subprocess.run(["xclip", "-selection", "clipboard"], input=text.encode())
-            # ctrl+v keycodes
-            subprocess.run(["ydotool", "key", "97:1", "47:1", "97:0", "47:0"])
-            subprocess.run(["xclip", "-selection", "clipboard"], input=prev)
+            subprocess.run(["wl-copy", text + " "])
+            subprocess.run(["ydotool", "key", "29:1", "47:1", "47:0", "29:0"])
         os.unlink(wav)
         wav = None
