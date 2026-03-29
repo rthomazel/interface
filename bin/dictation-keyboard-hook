@@ -44,6 +44,7 @@ for event in device.read_loop():
             text = ""
         if text:
             subprocess.run(["wl-copy", text + " "])
+            # ctrl+v keycodes, 1 is keydown
             subprocess.run(["ydotool", "key", "29:1", "47:1", "47:0", "29:0"])
         os.unlink(wav)
         wav = None

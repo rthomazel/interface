@@ -1,5 +1,6 @@
 [Unit]
 Description=Whisper.cpp inference server
+# note: ffmpeg is a dependency
 
 [Service]
 ExecStart=/usr/bin/whisper-server \

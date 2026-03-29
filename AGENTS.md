@@ -23,7 +23,7 @@ unalias foo 2>/dev/null
 foo() {
 ```
 this fixes weird bash errors when an alias and a function conflict.
-separate functions neatly using #----------------
+separate functions neatly using #----------------#
 
 ## Misc
 

@@ -24,7 +24,7 @@ fatal() {
 
 trap 'err $LINENO' ERR
 
-readonly install_dir="/usr/local/bin"
+readonly install_dir="/root/bin"
 
 run_privileged() {
   if [ "$(id -u)" = "0" ]; then
