@@ -1,4 +1,5 @@
 #! /usr/bin/env bash
+# shellcheck disable=SC1091
 # uninteractive bash env
 # BASH_ENV must be set to this script in bash config files
 

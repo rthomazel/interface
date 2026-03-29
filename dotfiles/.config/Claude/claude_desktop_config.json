@@ -1,6 +1,6 @@
 {
   "mcpServers": {
-    "jailMPC": {
+    "3_jailMCP": {
       "command": "docker",
       "args": [
         "compose",

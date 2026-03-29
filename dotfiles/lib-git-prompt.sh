@@ -3,7 +3,10 @@
 # bash/zsh git prompt support
 #
 # Copyright (C) 2006,2007 Shawn O. Pearce <spearce@spearce.org>
+# Copyright (C) 2025 R. Thomazella <thomazella9@gmail.com>
 # Distributed under the GNU General Public License, version 2.0.
+#
+# This file is a modified fork of the original git-prompt.sh.
 #
 # This script allows you to see repository status in your prompt.
 #
@@ -121,7 +124,7 @@ __git_ps1_show_upstream() {
       fi
       ;;
     svn-remote.*.url)
-      svn_remote[${#svn_remote[@]} + 1]="$value"
+      svn_remote[${#svn_remote[@]}+1]="$value"
       svn_url_pattern="$svn_url_pattern\\|$value"
       upstream=svn+git # default upstream is SVN if available, else git
       ;;
@@ -145,21 +148,21 @@ __git_ps1_show_upstream() {
     # get the upstream from the "git-svn-id: ..." in a commit message
     # (git-svn uses essentially the same procedure internally)
     local -a svn_upstream
-    svn_upstream=($(git log --first-parent -1 \
-      --grep="^git-svn-id: \(${svn_url_pattern#??}\)" 2>/dev/null))
+    mapfile -t svn_upstream < <(git log --first-parent -1 \
+      --grep="^git-svn-id: \(${svn_url_pattern#??}\)" 2>/dev/null)
     if [[ 0 -ne ${#svn_upstream[@]} ]]; then
-      svn_upstream=${svn_upstream[${#svn_upstream[@]} - 2]}
-      svn_upstream=${svn_upstream%@*}
+      local svn_upstream_str=${svn_upstream[${#svn_upstream[@]}-2]}
+      svn_upstream_str=${svn_upstream_str%@*}
       local n_stop="${#svn_remote[@]}"
       for ((n = 1; n <= n_stop; n++)); do
-        svn_upstream=${svn_upstream#${svn_remote[$n]}}
+        svn_upstream_str=${svn_upstream_str#"${svn_remote[$n]}"}
       done
 
-      if [[ -z "${svn_upstream[0]}" ]]; then
+      if [[ -z "$svn_upstream_str" ]]; then
         # default branch name for checkouts with no layout:
         upstream=${GIT_SVN_ID:-git-svn}
       else
-        upstream=${svn_upstream#/}
+        upstream=${svn_upstream_str#/}
       fi
     elif [[ "svn+git" == "$upstream" ]]; then
       upstream="@{upstream}"
@@ -331,7 +334,7 @@ __git_ps1() {
   local printf_format=' (%s)'
   if git describe --contains --all HEAD >/dev/null 2>&1; then
     GIT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
-    GIT_UPSTREAM="$(git rev-parse --abbrev-ref "$GIT_BRANCH"@{upstream} 2>/dev/null)"
+    GIT_UPSTREAM="$(git rev-parse --abbrev-ref "${GIT_BRANCH}@{upstream}" 2>/dev/null)"
     export GIT_BRANCH
     export GIT_UPSTREAM
   fi

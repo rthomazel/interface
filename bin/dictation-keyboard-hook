@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-import sys, evdev, subprocess, time
+"""Push-to-talk dictation: record while F2 held, transcribe via whisper-server on release."""
+import sys, subprocess, tempfile, os, json, signal
 from evdev import InputDevice, categorize, ecodes
 
 if len(sys.argv) != 3:
@@ -11,13 +12,39 @@ if len(sys.argv) != 3:
 key = sys.argv[1]
 device = InputDevice(sys.argv[2])
 
-subprocess.Popen(['/usr/bin/nerd-dictation', 'begin', '--numbers-as-digits', "--suspend-on-start", "--simulate-input-tool=YDOTOOL", "--idle-time=0", "--verbose=1"])
+SERVER = "http://127.0.0.1:8765/inference"
+recording = None
 
 for event in device.read_loop():
-    if event.type == ecodes.EV_KEY:
-        k = categorize(event)
-        if k.keycode == key:
-            if k.keystate == k.key_down:
-                subprocess.Popen(['/usr/bin/nerd-dictation', 'resume'])
-            elif k.keystate == k.key_up:
-                subprocess.Popen(['/usr/bin/nerd-dictation', 'suspend'])
+    if event.type != ecodes.EV_KEY:
+        continue
+    k = categorize(event)
+    if k.keycode != key:
+        continue
+
+    if k.keystate == k.key_down and recording is None:
+        wav = tempfile.mktemp(suffix=".wav")
+        recording = subprocess.Popen(["pw-record", "--rate=16000", "--channels=1", wav])
+
+    elif k.keystate == k.key_up and recording is not None:
+        recording.send_signal(signal.SIGINT)
+        recording.wait()
+        recording = None
+
+        result = subprocess.run(
+            ["curl", "-sf", "-F", f"file=@{wav}", SERVER],
+            capture_output=True, text=True
+        )
+        print(result.stderr, end="", flush=True)
+        print(result.stdout, end="", flush=True)
+        try:
+            text = json.loads(result.stdout).get("text", "").strip()
+        except json.JSONDecodeError:
+            print(f"whisper-server parse error: {result.stdout}", flush=True)
+            text = ""
+        if text:
+            subprocess.run(["wl-copy", text + " "])
+            # ctrl+v keycodes, 1 is keydown
+            subprocess.run(["ydotool", "key", "29:1", "47:1", "47:0", "29:0"])
+        os.unlink(wav)
+        wav = None

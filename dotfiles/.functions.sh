@@ -131,10 +131,26 @@ yad() {
 
 #- - - - - - - - - - -
 
-# when there's no repo, call ls instead
-jss() {
+# todo: remove
+unalias gd 2>/dev/null
+
+gd() {
   if ! command jj root &>/dev/null; then
-    _git_gss "$@"
+    command git diff "$@"
+    return $?
+  fi
+
+  command jj diff "$@"
+}
+
+#- - - - - - - - - - -
+
+# when there's no repo, call ls instead
+# todo: remove
+unalias gss 2>/dev/null
+gss() {
+  if ! command jj root &>/dev/null; then
+    _git_gss
     return $?
   fi
 
@@ -396,10 +412,10 @@ __jj_bookmark_set() {
 #----------------
 
 # jj bookmark set on @
-jjb() {
+jb() {
   if [[ $# == 0 ]]; then
-    echo "jjb bookmark set on @"
-    echo "'jjb foobar' jj bookmark set foobar --revision @"
+    echo "jb bookmark set on @"
+    echo "'jb foobar' jj bookmark set foobar --revision @"
     return
   fi
 
@@ -409,10 +425,10 @@ jjb() {
 #----------------
 
 # jj bookmark set on @-
-jjb-() {
+jb-() {
   if [[ $# == 0 ]]; then
-    echo "jjb- bookmark set on @-"
-    echo "'jjb- foobar' jj bookmark set foobar --revision @- --allow-backwards"
+    echo "jb- bookmark set on @-"
+    echo "'jb- foobar' jj bookmark set foobar --revision @- --allow-backwards"
     return
   fi
 
@@ -421,8 +437,20 @@ jjb-() {
 
 #----------------
 
+# jj bookmark track --remote=origin
+jbt() {
+  if [[ $# == 0 ]]; then
+    echo "jbt <bookmark> — jj bookmark track <bookmark> --remote=origin"
+    return
+  fi
+
+  jj bookmark track "$1" --remote=origin
+}
+
+#----------------
+
 # jj rebase --source $1 --destination $2
-jjrb() {
+jrb() {
   if [[ $# != 2 ]]; then
     echo "jj rebase --source \$1 --destination \$2"
     return
@@ -474,9 +502,9 @@ __npc() {
   local branch=$1 backwards_flag="$2" today_date=$(date +"%b-%d" | tr '[:upper:]' '[:lower:]') prefix=px
 
   if [ "$backwards_flag" == "-" ]; then
-    jjb- "$prefix-$1-$today_date"
+    jb- "$prefix-$1-$today_date"
   else
-    jjb "$prefix-$1-$today_date"
+    jb "$prefix-$1-$today_date"
   fi
 }
 
