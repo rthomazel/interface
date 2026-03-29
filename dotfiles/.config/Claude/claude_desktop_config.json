@@ -1,12 +1,13 @@
 {
   "mcpServers": {
-    "__jailMCP": {
+    "3_jailMCP": {
       "command": "docker",
       "args": [
         "compose",
         "-f",
         "/home/vacation/Desktop/jail-mcp/docker-compose.yml",
         "run",
+        "--rm",
         "-i",
         "jail-mcp"
       ]
@@ -16,8 +17,8 @@
   "preferences": {
     "quickEntryShortcut": "off",
     "quickEntryDictationShortcut": "capslock",
-    "coworkScheduledTasksEnabled": true,
-    "ccdScheduledTasksEnabled": true,
+    "coworkScheduledTasksEnabled": false,
+    "ccdScheduledTasksEnabled": false,
     "sidebarMode": "chat",
     "coworkWebSearchEnabled": true
   }
