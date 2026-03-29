@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Push-to-talk dictation: record while F2 held, transcribe via whisper-server on release."""
-import sys, subprocess, tempfile, os, json, signal, glob
+import sys, subprocess, tempfile, os, json, signal
 from evdev import InputDevice, categorize, ecodes
 
 if len(sys.argv) != 3:
@@ -13,25 +13,6 @@ key = sys.argv[1]
 device = InputDevice(sys.argv[2])
 
 SERVER = "http://127.0.0.1:8765/inference"
-_x_env = {}
-
-def get_x_env():
-    """Discover DISPLAY and XAUTHORITY from the running user session, cached."""
-    global _x_env
-    if _x_env:
-        return _x_env
-    for pid_env in glob.glob("/proc/*/environ"):
-        try:
-            with open(pid_env, "rb") as f:
-                pairs = f.read().split(b"\x00")
-            d = {k.decode(): v.decode() for p in pairs if b"=" in p for k, _, v in [p.partition(b"=")]}
-            if "DISPLAY" in d and "XAUTHORITY" in d:
-                _x_env = {"DISPLAY": d["DISPLAY"], "XAUTHORITY": d["XAUTHORITY"]}
-                return _x_env
-        except (PermissionError, FileNotFoundError):
-            continue
-    return {}
-
 recording = None
 
 for event in device.read_loop():
@@ -63,11 +44,11 @@ for event in device.read_loop():
             print(f"whisper-server parse error: {result.stdout}", flush=True)
             text = ""
         if text:
-            env = {**os.environ, **get_x_env()}
             # save and restore clipboard to avoid clobbering it
-            prev = subprocess.run(["xclip", "-selection", "clipboard", "-o"], capture_output=True, env=env).stdout
-            subprocess.run(["xclip", "-selection", "clipboard"], input=text.encode(), env=env)
-            subprocess.run(["xdotool", "key", "ctrl+v"], env=env)
-            subprocess.run(["xclip", "-selection", "clipboard"], input=prev, env=env)
+            prev = subprocess.run(["xclip", "-selection", "clipboard", "-o"], capture_output=True).stdout
+            subprocess.run(["xclip", "-selection", "clipboard"], input=text.encode())
+            # ctrl+v keycodes
+            subprocess.run(["ydotool", "key", "97:1", "47:1", "97:0", "47:0"])
+            subprocess.run(["xclip", "-selection", "clipboard"], input=prev)
         os.unlink(wav)
         wav = None
