@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Push-to-talk dictation: record while F2 held, transcribe on release."""
-import sys, subprocess, tempfile, os
+import sys, subprocess, tempfile, os, threading
 from evdev import InputDevice, categorize, ecodes
 
 if len(sys.argv) != 3:
@@ -17,6 +17,19 @@ MODEL = "/usr/share/whisper.cpp-model-large-v3-turbo-q5_0/ggml-large-v3-turbo-q5
 recording = None
 wav = None
 
+def transcribe(wav):
+    result = subprocess.run(
+        ["whisper-cli", "-m", MODEL, "-f", wav,
+         "--no-timestamps", "--language", "auto", "--suppress-nst"],
+        capture_output=True, text=True
+    )
+    print(result.stderr, end="", flush=True)
+    print(result.stdout, end="", flush=True)
+    text = result.stdout.strip()
+    if text:
+        subprocess.run(["ydotool", "type", "--key-delay=5", "--key-hold=0", "--", text + " "])
+    os.unlink(wav)
+
 for event in device.read_loop():
     if event.type != ecodes.EV_KEY:
         continue
@@ -32,15 +45,5 @@ for event in device.read_loop():
         recording.terminate()
         recording.wait()
         recording = None
-
-        result = subprocess.run(
-            ["whisper-cli", "-m", MODEL, "-f", wav,
-             "--no-timestamps", "--language", "auto", "--suppress-nst"],
-            capture_output=True, text=True
-        )
-        print(result.stderr, end="", flush=True)  # whisper logs visible in journal
-        text = result.stdout.strip()
-        if text:
-            subprocess.run(["ydotool", "type", "--key-delay=5", "--key-hold=0", "--", text + " "])
-        os.unlink(wav)
+        threading.Thread(target=transcribe, args=(wav,), daemon=True).start()
         wav = None
