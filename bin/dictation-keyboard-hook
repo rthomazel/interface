@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-"""Push-to-talk dictation: record while F2 held, transcribe on release."""
-import sys, subprocess, tempfile, os, threading
+"""Push-to-talk dictation: record while F2 held, transcribe via whisper-server on release."""
+import sys, subprocess, tempfile, os, threading, json, signal
 from evdev import InputDevice, categorize, ecodes
 
 if len(sys.argv) != 3:
@@ -12,20 +12,25 @@ if len(sys.argv) != 3:
 key = sys.argv[1]
 device = InputDevice(sys.argv[2])
 
-MODEL = "/usr/share/whisper.cpp-model-large-v3-turbo-q5_0/ggml-large-v3-turbo-q5_0.bin"
+SERVER = "http://127.0.0.1:8765/inference"
 
 recording = None
 wav = None
 
 def transcribe(wav):
     result = subprocess.run(
-        ["whisper-cli", "-m", MODEL, "-f", wav,
-         "--no-timestamps", "--language", "auto", "--suppress-nst"],
+        ["curl", "-sf",
+         "-F", f"file=@{wav}",
+         SERVER],
         capture_output=True, text=True
     )
     print(result.stderr, end="", flush=True)
     print(result.stdout, end="", flush=True)
-    text = result.stdout.strip()
+    try:
+        text = json.loads(result.stdout).get("text", "").strip()
+    except json.JSONDecodeError:
+        print(f"whisper-server parse error: {result.stdout}", flush=True)
+        text = ""
     if text:
         subprocess.run(["ydotool", "type", "--key-delay=5", "--key-hold=0", "--", text + " "])
     os.unlink(wav)
@@ -42,7 +47,7 @@ for event in device.read_loop():
         recording = subprocess.Popen(["pw-record", "--rate=16000", "--channels=1", wav])
 
     elif k.keystate == k.key_up and recording is not None:
-        recording.terminate()
+        recording.send_signal(signal.SIGINT)
         recording.wait()
         recording = None
         threading.Thread(target=transcribe, args=(wav,), daemon=True).start()

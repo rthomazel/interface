@@ -1,0 +1,13 @@
+[Unit]
+Description=Whisper.cpp inference server
+
+[Service]
+ExecStart=/usr/bin/whisper-server \
+    -m /usr/share/whisper.cpp-model-large-v3-turbo-q5_0/ggml-large-v3-turbo-q5_0.bin \
+    --host 127.0.0.1 --port 8765 \
+    --language auto --suppress-nst --no-timestamps --convert
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=default.target
