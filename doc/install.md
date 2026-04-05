@@ -207,6 +207,122 @@ If a target parent directory does not exist, it is created. A warning is printed
 If an unexpected error occurs during commit (after validation passed), the program exits
 immediately. The next run skips already-completed operations and picks up where it left off.
 
+
+## Testing
+
+### Test config — `src/install/test.rc`
+
+A dedicated `test.rc` exercises every action and edge case. It is designed to run safely
+in a temp directory without touching real system paths. Use it after any change to the
+install program.
+
+```bash
+mkdir -p /tmp/install-test
+go run ./src/install -config src/install/test.rc -c
+```
+
+The test config covers:
+
+```
+# no user declared — should warn and run as current user
+system linux
+
+# check: one present binary, one missing
+check
+
+bash         pacman -S bash
+this-binary-does-not-exist pacman -S this-binary-does-not-exist
+
+# assert: one passing, one failing
+assert
+
+test -d /tmp
+/tmp should always exist
+
+test -d /tmp/this-does-not-exist
+hint for a failing assert
+
+# message: should always print
+message
+
+This is a test message.
+It spans multiple lines.
+
+# mkdir: new dir and already-existing dir (idempotent)
+mkdir
+
+/tmp/install-test/newdir
+/tmp/install-test/newdir
+
+# link: new link, already-correct link (skip), broken link (cleanup + relink)
+link
+
+/tmp/install-test/newdir
+/tmp/install-test/link-to-newdir
+
+/tmp/install-test/newdir
+/tmp/install-test/link-to-newdir
+
+# copy: new copy, already-identical copy (skip), mismatched copy (error)
+copy
+
+/etc/hostname
+/tmp/install-test/hostname-copy
+
+/etc/hostname
+/tmp/install-test/hostname-copy
+
+# user block that will be skipped (prints end-of-run warning)
+user nonexistent-user
+
+link
+
+/etc/hostname
+/tmp/install-test/should-not-exist
+
+# system block that will be skipped silently
+system mac
+
+message
+
+This should not print on Linux.
+```
+
+Expected outcomes to verify manually:
+- Warning printed for missing user declaration at top
+- `check` fails listing the missing binary with its hint, does not abort before checking all
+- `assert` fails listing the failing assertion with its hint, does not abort before checking all
+- `message` always prints
+- `mkdir` creates the new dir; second call skips silently
+- `link` creates the link; second call skips (already correct); broken link triggers warning then relink
+- `copy` copies the file; second call skips (checksums match); mismatched copy errors
+- End-of-run warning lists `nonexistent-user` block was skipped
+- Mac `message` block does not print
+
+### Unit tests
+
+The parts most prone to bugs and regressions are:
+
+**`config.go` — parser.** The parser handles the most complex logic: context switching
+(user/system mid-file), blank line and comment stripping, pair validation for link/copy,
+even-line validation for assert, and the interaction between inherited vs explicit system
+context. A bug here silently misroutes operations to the wrong user or system. Unit test
+cases should cover: no user declared, user mid-file change, system mid-file change,
+comments and blank lines interleaved, malformed pairs (odd count), malformed assert
+(odd count), unknown action keyword.
+
+**`link.go` — link and copy.** Idempotency logic is easy to get wrong. Unit test cases:
+new link, already-correct link (skip), broken link (cleanup + relink), link pointing
+elsewhere (error), new copy, identical copy (skip, checksum match), differing copy (error),
+missing source (error), missing target parent (mkdir then proceed).
+
+**`check.go` — check and assert.** Failure collection must not short-circuit. Test that
+all lines are evaluated even when early lines fail. Assert even-line validation. Test
+that assert runs shell expressions correctly and captures non-zero exit.
+
+Tests live alongside source files in `src/install/` using the standard `_test.go` convention.
+Where filesystem access is needed, use `t.TempDir()` to keep tests hermetic.
+
 ## File layout
 
 ```
