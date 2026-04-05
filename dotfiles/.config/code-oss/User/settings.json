@@ -71,7 +71,7 @@
     "resolvePluginsRelativeTo": ".",
   },
   "[shellscript]": {
-    "editor.defaultFormatter": "lumirelle.shell-format-rev",
+    "editor.defaultFormatter": "foxundermoon.shell-format",
   },
   "[typescriptreact]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode",
