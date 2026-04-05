@@ -218,3 +218,7 @@ src/install/
 ├── check.go     # check, assert, message operations
 └── system.go    # enable, reload, chmod operations
 ```
+
+## todo once completed and tested
+
+delete t0filer, migrate config files
