@@ -17,9 +17,12 @@
   "preferences": {
     "quickEntryShortcut": "off",
     "quickEntryDictationShortcut": "capslock",
-    "coworkScheduledTasksEnabled": true,
-    "ccdScheduledTasksEnabled": true,
-    "sidebarMode": "task",
+    "localAgentModeTrustedFolders": [
+      "/usr/lib/claude-desktop-bin/app.asar"
+    ],
+    "coworkScheduledTasksEnabled": false,
+    "ccdScheduledTasksEnabled": false,
+    "sidebarMode": "chat",
     "coworkWebSearchEnabled": true
   }
 }
