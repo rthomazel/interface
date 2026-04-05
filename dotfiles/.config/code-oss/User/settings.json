@@ -18,7 +18,7 @@
       "tab.activeBackground": "#000",
       "titleBar.activeBackground": "#000",
       "editorGutter.background": "#000",
-      "breadcrumb.background": "#000",
+      "breadcrumb.background": "#000"
     },
     "activityBarBadge.background": "#FF4081",
     "list.activeSelectionForeground": "#FF4081",
@@ -38,7 +38,7 @@
     "panelTitle.activeBorder": "#FF4081",
     "breadcrumb.activeSelectionForeground": "#FF4081",
     "menu.selectionForeground": "#FF4081",
-    "menubar.selectionForeground": "#FF4081",
+    "menubar.selectionForeground": "#FF4081"
   },
   "editor.tokenColorCustomizations": {
     "[GitHub Dark High Contrast]": {
@@ -46,8 +46,8 @@
       "functions": "#7e7fdd",
       "strings": "#8b907f",
       "keywords": "#c5ad97",
-      "types": "#6abe7f",
-    },
+      "types": "#6abe7f"
+    }
   },
   //
   // - - - - - - - - FONT - - - - - - - - -
@@ -68,31 +68,52 @@
   //
   "eslint.run": "onType",
   "eslint.options": {
-    "resolvePluginsRelativeTo": ".",
+    "resolvePluginsRelativeTo": "."
   },
   "[shellscript]": {
-    "editor.defaultFormatter": "foxundermoon.shell-format",
+    "editor.defaultFormatter": "foxundermoon.shell-format"
   },
   "[typescriptreact]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[javascript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[javascriptreact]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[typescript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[json]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[sql]": {
-    "editor.formatOnPaste": false,
+    "editor.formatOnPaste": false
   },
   "[yaml]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[css]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[html]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[dockercompose]": {
+    "editor.insertSpaces": true,
+    "editor.tabSize": 2,
+    "editor.autoIndent": "advanced",
+    "editor.defaultFormatter": "redhat.vscode-yaml"
+  },
+  "[go]": {
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "explicit"
+    }
   },
   "sql-formatter.uppercase": true,
   //
@@ -107,39 +128,24 @@
   // - - - - - - - - BASH - - - - - - - - -
   //
   "shellcheck.customArgs": ["-x"],
-  //
   "shellformat.path": "/usr/bin/shfmt",
   "shellformat.flag": "-i 2 -ln bash",
   "shellformat.useEditorConfig": true,
   //
   // - - - - - - - - JS/TS - - - - - - - - -
   //
-  "javascript.validate.enable": false,
-  "javascript.updateImportsOnFileMove.enabled": "always",
-  "javascript.preferences.importModuleSpecifier": "non-relative",
-  "typescript.preferences.importModuleSpecifier": "non-relative",
-  "typescript.preferences.importModuleSpecifierEnding": "minimal",
-  "[html]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
-  },
-  "[jsonc]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
-  },
-  "typescript.implementationsCodeLens.enabled": true,
-  "typescript.updateImportsOnFileMove.enabled": "always",
+  "js/ts.validate.enable": false,
+  "js/ts.updateImportsOnFileMove.enabled": "always",
+  "js/ts.preferences.importModuleSpecifier": "non-relative",
+  "js/ts.preferences.importModuleSpecifierEnding": "minimal",
+  "js/ts.implementationsCodeLens.enabled": true,
   //
   // - - - - - - - - GO - - - - - - - - -
   //
   "go.useLanguageServer": true,
-  "[go]": {
-    "editor.formatOnSave": true,
-    "editor.codeActionsOnSave": {
-      "source.organizeImports": "explicit",
-    },
-  },
   "go.testOnSave": false,
   "go.delveConfig": {
-    "debugAdapter": "dlv-dap",
+    "debugAdapter": "dlv-dap"
   },
   "go.testEnvFile": "${workspaceFolder}/.env",
   "go.testFlags": ["-race"],
@@ -245,19 +251,18 @@
       "ST1023": true,
       "appendclipped": true,
       "shadow": true,
-      "slicesdelete": true,
+      "slicesdelete": true
     },
 
-    // apparent conflict with extension
-    // "hints": {
-    //   "assignVariableTypes": true,
-    //   "parameterNames": true,
-    //   "compositeLiteralFields": true,
-    //   "compositeLiteralTypes": false,
-    //   "constantValues": true,
-    //   "functionTypeParameters": true,
-    //   "rangeVariableTypes": false,
-    // },
+    "hints": {
+      "assignVariableTypes": true,
+      "parameterNames": true,
+      "compositeLiteralFields": true,
+      "compositeLiteralTypes": false,
+      "constantValues": true,
+      "functionTypeParameters": true,
+      "rangeVariableTypes": false
+    },
 
     // Completion options
     "usePlaceholders": true, // fill in param placeholders on completion
@@ -268,7 +273,7 @@
       "run_govulncheck": true,
       "tidy": true,
       "vendor": true,
-      "generate": true,
+      "generate": true
     },
 
     // Format with gofumpt (stricter than gofmt) — requires gofumpt installed
@@ -280,8 +285,8 @@
       "bounds": true, // annotate slice bounds checks
       "escape": true, // annotate heap escapes
       "inline": true, // annotate inlining decisions
-      "nil": true,
-    },
+      "nil": true
+    }
   },
   "go.toolsManagement.autoUpdate": true,
   //
@@ -325,28 +330,28 @@
   "githubPullRequests.queries": [
     {
       "label": "Local Pull Request Branches",
-      "query": "default",
+      "query": "default"
     },
     {
       "label": "Waiting",
-      "query": "repo:${owner}/${repository} is:open review-requested:${user}",
+      "query": "repo:${owner}/${repository} is:open review-requested:${user}"
     },
     {
       "label": "Open",
-      "query": "repo:${owner}/${repository} is:open",
+      "query": "repo:${owner}/${repository} is:open"
     },
     {
       "label": "Assigned",
-      "query": "repo:${owner}/${repository} is:open assignee:${user}",
+      "query": "repo:${owner}/${repository} is:open assignee:${user}"
     },
     {
       "label": "Created",
-      "query": "repo:${owner}/${repository} is:open author:${user}",
+      "query": "repo:${owner}/${repository} is:open author:${user}"
     },
     {
       "label": "All Open",
-      "query": "default",
-    },
+      "query": "default"
+    }
   ],
   "githubPullRequests.fileListLayout": "flat",
   "githubPullRequests.pullBranch": "never",
@@ -354,8 +359,13 @@
     "*": true,
     "plaintext": false,
     "markdown": false,
-    "scminput": false,
+    "scminput": false
   },
+  "[github-actions-workflow]": {
+    "editor.defaultFormatter": "redhat.vscode-yaml"
+  },
+  "github.copilot.nextEditSuggestions.enabled": true,
+  "github.copilot.nextEditSuggestions.eagerness": "medium",
   "cSpell.userWords": [
     "AIAPI",
     "aiplugin",
@@ -425,7 +435,7 @@
     "Unnotified",
     "vamac",
     "Wrapf",
-    "zerolog",
+    "zerolog"
   ],
   "cSpell.maxDuplicateProblems": 2,
   "cSpell.spellCheckDelayMs": 2000,
@@ -440,10 +450,10 @@
     "css",
     "javascript",
     "typescript",
-    "shellscript",
+    "shellscript"
   ],
   "cSpell.enabledNotifications": {
-    "Lines too Long": false,
+    "Lines too Long": false
   },
   "window.commandCenter": false,
   "window.menuBarVisibility": "hidden",
@@ -455,27 +465,5 @@
   "update.mode": "manual",
   "redhat.telemetry.enabled": true,
   "security.workspace.trust.untrustedFiles": "open",
-  "explorer.confirmPasteNative": false,
-  "[dockercompose]": {
-    "editor.insertSpaces": true,
-    "editor.tabSize": 2,
-    "editor.autoIndent": "advanced",
-    "editor.defaultFormatter": "redhat.vscode-yaml",
-  },
-  "[github-actions-workflow]": {
-    "editor.defaultFormatter": "redhat.vscode-yaml",
-  },
-  "github.copilot.nextEditSuggestions.enabled": true,
-  "[css]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
-  },
-  "go.inlayHints.assignVariableTypes": true,
-  "go.inlayHints.compositeLiteralFields": true,
-  "go.inlayHints.constantValues": true,
-  "go.inlayHints.functionTypeParameters": true,
-  "go.inlayHints.parameterNames": true,
-  "go.inlayHints.rangeVariableTypes": true,
-  //
-  // - - - - - - - - NEW - - - - - - - - -
-  //
+  "explorer.confirmPasteNative": false
 }

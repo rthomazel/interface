@@ -20,9 +20,9 @@
     "localAgentModeTrustedFolders": [
       "/usr/lib/claude-desktop-bin/app.asar"
     ],
-    "coworkScheduledTasksEnabled": false,
-    "ccdScheduledTasksEnabled": false,
-    "sidebarMode": "chat",
+    "coworkScheduledTasksEnabled": true,
+    "ccdScheduledTasksEnabled": true,
+    "sidebarMode": "code",
     "coworkWebSearchEnabled": true
   }
 }
