@@ -61,8 +61,8 @@
   "terminal.integrated.splitCwd": "inherited",
   "editor.fontFamily": "PragmataPro Liga",
   "editor.fontWeight": "normal",
-  "editor.lineHeight": 21,
-  "editor.fontSize": 14,
+  "editor.lineHeight": 20,
+  "editor.fontSize": 13,
   //
   // - - - - - - - - FORMATTER & LINTER - - - - - - - - -
   //
@@ -366,6 +366,7 @@
     "plaintext": false,
     "markdown": false,
     "scminput": false,
+    "go": false,
   },
   "[github-actions-workflow]": {
     "editor.defaultFormatter": "redhat.vscode-yaml",
