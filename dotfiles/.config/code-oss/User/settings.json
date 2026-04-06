@@ -71,7 +71,7 @@
     "resolvePluginsRelativeTo": ".",
   },
   "[shellscript]": {
-    "editor.defaultFormatter": "lumirelle.shell-format-rev",
+    "editor.defaultFormatter": "foxundermoon.shell-format",
   },
   "[typescriptreact]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode",
@@ -94,6 +94,27 @@
   "[yaml]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode",
   },
+  "[css]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+  },
+  "[html]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+  },
+  "[dockercompose]": {
+    "editor.insertSpaces": true,
+    "editor.tabSize": 2,
+    "editor.autoIndent": "advanced",
+    "editor.defaultFormatter": "redhat.vscode-yaml",
+  },
+  "[go]": {
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "explicit",
+    },
+  },
   "sql-formatter.uppercase": true,
   //
   // - - - - - - - - GIT - - - - - - - - -
@@ -107,36 +128,20 @@
   // - - - - - - - - BASH - - - - - - - - -
   //
   "shellcheck.customArgs": ["-x"],
-  //
-  "shellformat.path": "/usr/local/bin/shfmt",
+  "shellformat.path": "/usr/bin/shfmt",
   "shellformat.flag": "-i 2 -ln bash",
   "shellformat.useEditorConfig": true,
   //
   // - - - - - - - - JS/TS - - - - - - - - -
   //
-  "javascript.validate.enable": false,
-  "javascript.updateImportsOnFileMove.enabled": "always",
-  "javascript.preferences.importModuleSpecifier": "non-relative",
-  "typescript.preferences.importModuleSpecifier": "non-relative",
-  "typescript.preferences.importModuleSpecifierEnding": "minimal",
-  "[html]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
-  },
-  "[jsonc]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
-  },
-  "typescript.implementationsCodeLens.enabled": true,
-  "typescript.updateImportsOnFileMove.enabled": "always",
+  "js/ts.updateImportsOnFileMove.enabled": "always",
+  "js/ts.preferences.importModuleSpecifier": "non-relative",
+  "js/ts.preferences.importModuleSpecifierEnding": "minimal",
+  "js/ts.implementationsCodeLens.enabled": true,
   //
   // - - - - - - - - GO - - - - - - - - -
   //
   "go.useLanguageServer": true,
-  "[go]": {
-    "editor.formatOnSave": true,
-    "editor.codeActionsOnSave": {
-      "source.organizeImports": "explicit",
-    },
-  },
   "go.testOnSave": false,
   "go.delveConfig": {
     "debugAdapter": "dlv-dap",
@@ -144,40 +149,132 @@
   "go.testEnvFile": "${workspaceFolder}/.env",
   "go.testFlags": ["-race"],
   "go.lintTool": "golangci-lint",
-  "go.lintFlags": ["--print-issued-lines=false"],
   "go.vetOnSave": "off",
   "go.formatTool": "default",
+  "go.inlayHints.assignVariableTypes": true,
+  "go.inlayHints.parameterNames": true,
+  "go.inlayHints.compositeLiteralFields": true,
+  "go.inlayHints.compositeLiteralTypes": false,
+  "go.inlayHints.constantValues": true,
+  "go.inlayHints.functionTypeParameters": true,
+  "go.inlayHints.rangeVariableTypes": false,
   "gopls": {
-    "ui.semanticTokens": true,
-    "build.buildFlags": ["-buildvcs=false"],
-
-    // Show inlay hints for parameter names, type params, etc.
-    "ui.inlayhints.parameterNames": true,
-    "ui.inlayhints.assignVariableTypes": true,
-    "ui.inlayhints.compositeLiteralFields": true,
-    "ui.inlayhints.compositeLiteralTypes": true,
-    "ui.inlayhints.constantValues": true,
-    "ui.inlayhints.functionTypeParameters": true,
-    "ui.inlayhints.rangeVariableTypes": true,
+    "semanticTokens": true,
+    "buildFlags": ["-buildvcs=false"],
 
     // Staticcheck: enables many extra linters beyond go vet
-    "ui.diagnostic.staticcheck": true,
+    "staticcheck": true,
 
     // Analyses: fine-grained control over individual analyzers
-    "ui.diagnostic.analyses": {
-      "shadow": true, // warn on shadowed variables
+    "analyses": {
       "nilness": true, // detect nil dereferences
       "unusedparams": true, // warn on unused function params
       "unusedwrite": true, // warn on writes to vars never read
       "useany": true, // suggest `any` instead of `interface{}`
+      "QF1001": true,
+      "QF1005": true,
+      "QF1006": true,
+      "QF1007": true,
+      "QF1008": true,
+      "QF1011": true,
+      "S1002": true,
+      "S1005": true,
+      "S1006": true,
+      "S1008": true,
+      "S1011": true,
+      "S1016": true,
+      "S1021": true,
+      "S1025": true,
+      "S1029": true,
+      "SA1000": true,
+      "SA1002": true,
+      "SA1003": true,
+      "SA1007": true,
+      "SA1010": true,
+      "SA1011": true,
+      "SA1014": true,
+      "SA1015": true,
+      "SA1017": true,
+      "SA1018": true,
+      "SA1020": true,
+      "SA1021": true,
+      "SA1023": true,
+      "SA1024": true,
+      "SA1025": true,
+      "SA1026": true,
+      "SA1027": true,
+      "SA1028": true,
+      "SA1029": true,
+      "SA1030": true,
+      "SA1031": true,
+      "SA1032": true,
+      "SA2002": true,
+      "SA2003": true,
+      "SA4005": true,
+      "SA4006": true,
+      "SA4008": true,
+      "SA4009": true,
+      "SA4010": true,
+      "SA4012": true,
+      "SA4015": true,
+      "SA4017": true,
+      "SA4018": true,
+      "SA4023": true,
+      "SA4031": true,
+      "SA5000": true,
+      "SA5002": true,
+      "SA5005": true,
+      "SA5007": true,
+      "SA5010": true,
+      "SA5011": true,
+      "SA5012": true,
+      "SA6000": true,
+      "SA6001": true,
+      "SA6002": true,
+      "SA6003": true,
+      "SA9001": true,
+      "SA9003": true,
+      "SA9005": true,
+      "SA9007": true,
+      "SA9008": true,
+      "ST1000": true,
+      "ST1001": true,
+      "ST1003": true,
+      "ST1005": true,
+      "ST1006": true,
+      "ST1008": true,
+      "ST1011": true,
+      "ST1012": true,
+      "ST1013": true,
+      "ST1015": true,
+      "ST1016": true,
+      "ST1017": true,
+      "ST1018": true,
+      "ST1019": true,
+      "ST1020": true,
+      "ST1021": true,
+      "ST1022": true,
+      "ST1023": true,
+      "appendclipped": true,
+      "shadow": true,
+      "slicesdelete": true,
     },
 
+    // "hints": {
+    //   "assignVariableTypes": true,
+    //   "parameterNames": true,
+    //   "compositeLiteralFields": true,
+    //   "compositeLiteralTypes": false,
+    //   "constantValues": true,
+    //   "functionTypeParameters": true,
+    //   "rangeVariableTypes": false,
+    // },
+
     // Completion options
-    "ui.completion.usePlaceholders": true, // fill in param placeholders on completion
-    "ui.completion.matcher": "Fuzzy", // fuzzy matching (vs "CaseInsensitive" or "CaseSensitive")
+    "usePlaceholders": true, // fill in param placeholders on completion
 
     // Codelens: inline actionable buttons
-    "ui.codelenses": {
+    "codelenses": {
       "gc_details": true, // toggle compiler optimization details
       "run_govulncheck": true,
       "tidy": true,
@@ -186,11 +283,11 @@
     },
 
     // Format with gofumpt (stricter than gofmt) — requires gofumpt installed
-    "formatting.gofumpt": true,
+    "gofumpt": true,
 
     // Automatically add missing imports and remove unused ones on save
     // (usually controlled by editor settings, but can be forced here)
-    "ui.diagnostic.annotations": {
+    "annotations": {
       "bounds": true, // annotate slice bounds checks
       "escape": true, // annotate heap escapes
       "inline": true, // annotate inlining decisions
@@ -270,6 +367,11 @@
     "markdown": false,
     "scminput": false,
   },
+  "[github-actions-workflow]": {
+    "editor.defaultFormatter": "redhat.vscode-yaml",
+  },
+  "github.copilot.nextEditSuggestions.enabled": true,
+  "github.copilot.nextEditSuggestions.eagerness": "medium",
   "cSpell.userWords": [
     "AIAPI",
     "aiplugin",
@@ -344,20 +446,21 @@
   "cSpell.maxDuplicateProblems": 2,
   "cSpell.spellCheckDelayMs": 2000,
   "cSpell.maxNumberOfProblems": 5,
-  "#cSpell.enableFiletypes#": [
-    "go",
-    "plaintext",
-    "markdown",
-    "json",
-    "yaml",
-    "html",
-    "css",
-    "javascript",
-    "typescript",
-    "shellscript",
-  ],
   "cSpell.enabledNotifications": {
     "Lines too Long": false,
+  },
+  "cSpell.enabledFileTypes": {
+    "ruby": true,
+    "go": true,
+    "plaintext": true,
+    "markdown": true,
+    "json": true,
+    "yaml": true,
+    "html": true,
+    "css": true,
+    "javascript": true,
+    "typescript": true,
+    "shellscript": true,
   },
   "window.commandCenter": false,
   "window.menuBarVisibility": "hidden",
@@ -370,20 +473,4 @@
   "redhat.telemetry.enabled": true,
   "security.workspace.trust.untrustedFiles": "open",
   "explorer.confirmPasteNative": false,
-  "[dockercompose]": {
-    "editor.insertSpaces": true,
-    "editor.tabSize": 2,
-    "editor.autoIndent": "advanced",
-    "editor.defaultFormatter": "redhat.vscode-yaml",
-  },
-  "[github-actions-workflow]": {
-    "editor.defaultFormatter": "redhat.vscode-yaml",
-  },
-  "github.copilot.nextEditSuggestions.enabled": true,
-  "[css]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
-  },
-  //
-  // - - - - - - - - NEW - - - - - - - - -
-  //
 }

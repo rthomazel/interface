@@ -63,14 +63,14 @@ validate_plex_perms() {
 
   local sudo_timeout=10s
   local not_plex
-  not_plex=$(find "$out_dir" -not -user plex -or -not -group plex)
+  not_plex=$(find "$out_dir" -not -group plex)
 
   if [ "$not_plex" ]; then
     log $LINENO sudo required to change ownership of files to plex \(10s\)
 
-    if ! timeout --kill-after="$sudo_timeout" "$sudo_timeout" sudo chown -R plex:plex "$out_dir"; then
-      true # ignore timeout here, it's optional
-    fi
+    for file in $not_plex; do
+      timeout --kill-after="$sudo_timeout" "$sudo_timeout" sudo chown :plex "$file" || true
+    done
   fi
 }
 

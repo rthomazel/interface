@@ -220,8 +220,11 @@ mise_install_globals() {
   for ((i = 0; i < ${#packages[@]}; i++)); do
     npm install --global "${packages[i]}"
   done
+}
 
-  # export PATH="$PATH:$HOME/.local/share/mise/installs/node/$(node -v | tr -d v)/bin"
+cleanup_packages() {
+  # 19GB of build dependencies of llama.cpp
+  yay --remove --recursive --recursive rocm-hip-sdk
 }
 
 ### script ###
@@ -240,6 +243,7 @@ services start postgresql
 refresh_collations
 
 cleanup "$pg_update"
+cleanup_packages
 kexec_prompt ""
 success_message
 

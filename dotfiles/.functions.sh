@@ -131,9 +131,6 @@ yad() {
 
 #- - - - - - - - - - -
 
-# todo: remove
-unalias gd 2>/dev/null
-
 gd() {
   if ! command jj root &>/dev/null; then
     command git diff "$@"
@@ -146,8 +143,6 @@ gd() {
 #- - - - - - - - - - -
 
 # when there's no repo, call ls instead
-# todo: remove
-unalias gss 2>/dev/null
 gss() {
   if ! command jj root &>/dev/null; then
     _git_gss
@@ -559,6 +554,7 @@ restore_session() {
 
   if [[ -z "$command" ]]; then
     echo "no session found for $dir"
+    claude
   fi
 
   eval "$command"
@@ -566,7 +562,6 @@ restore_session() {
 
 #----------------
 
-unalias lg 2>/dev/null
 lg() {
   if ! command jj root &>/dev/null; then
     lazy-git "$@"

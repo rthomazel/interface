@@ -1,6 +1,7 @@
 # etc/ — System Configuration
 
 Files here are symlinked (or hardlinked for `fstab`) into `/etc`. Requires root for install.
+Note: all `/etc` symlinks resolve through `/home/vacation/` — root must be able to traverse it. Ensure `chmod o+x /home/vacation` is set, otherwise systemd and other root processes silently fail to read unit files and configs at boot.
 Note: `/etc/fstab` must be a **hardlink**, not a symlink — the kernel reads it before symlinks resolve.
 
 ## Filesystem & Boot
@@ -68,6 +69,8 @@ SDDM display manager config. Key settings:
 - `RebootWatchdogSec=15` — reboot watchdog on system reboot
 
 ### `systemd/system/` — Root system units
+
+Timer units depend on `home-vacation.mount` — symlink targets resolve through `/home/vacation/`, which is a btrfs subvolume mounted at boot. Without this dependency, timers may activate before the mount is up and silently fail to schedule.
 
 | Unit                      | Purpose                                                                                                  |
 | ------------------------- | -------------------------------------------------------------------------------------------------------- |

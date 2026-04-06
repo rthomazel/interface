@@ -1,7 +1,7 @@
 [Unit]
 Description=btrfs snapshot system timer
-After=time-set.target
-Wants=time-set.target
+After=time-set.target home-vacation.mount
+Wants=time-set.target home-vacation.mount
 
 [Timer]
 OnCalendar=hourly

@@ -1,6 +1,8 @@
 # Static information about the filesystems.
 # See fstab(5) for details.
-# Hardlink to /etc/fstab, symbolic *breaks*
+
+# symbolic linking into /etc doesn't work, subvol not mounted when kernel needs fstab
+# hard link fails because subvol counts as a cross device link
 
 #############################################################################################################################################
 # <file system>           <dir>                      <type>     <options>                                              <dump><pass>
@@ -17,7 +19,7 @@
 #
 ########################################################## auto #############################################################################
 #
-LABEL=EFI-BLUE        /boot                                 vfat       auto,rw,umask=111,dmask=000                                0 2
+LABEL=EFI-SAMSUNG     /boot                                 vfat       auto,rw,umask=133,dmask=033                                0 2
 ######################
 LABEL=Data2TB         /media/data                           btrfs      defaults,noatime,compress=lzo                              0 0
 LABEL=Data2TB         /home/vacation/.ollama                btrfs      subvol=/toplevel/@.ollama,defaults,noatime,compress=lzo    0 0
@@ -26,22 +28,22 @@ LABEL=Data4TB         /media/data4tb                        btrfs      defaults,
 LABEL=Data4TB         /plex                                 btrfs      subvol=/toplevel/@plex,defaults,noatime,compress=lzo       0 0
 LABEL=Data4TB         /home/vacation/Videos/plex            btrfs      subvol=/toplevel/@plex,defaults,noatime,compress=lzo       0 0
 ######################
-LABEL=Archlinux       /toplevel                             btrfs      subvol=/,defaults,noatime,compress=lzo                     0 0
-LABEL=Archlinux       /home/vacation                        btrfs      subvol=/@vacation,defaults,noatime,compress=lzo            0 0
-LABEL=Archlinux       /home/vacation/.local/share/lutris    btrfs      subvol=/@lutris,defaults,noatime,compress=lzo              0 0
-LABEL=Archlinux       /home/vacation/.local/share/Steam     btrfs      subvol=/@steam,defaults,noatime,compress=lzo               0 0
-LABEL=Archlinux       /var/lib/postgres                     btrfs      subvol=/@postgres,defaults,noatime,compress=lzo            0 0
-LABEL=Archlinux       /home/vacation/.cache                 btrfs      subvol=/@.cache,defaults,noatime,compress=lzo              0 0
-LABEL=Archlinux       /var/lib/docker                       btrfs      subvol=/@docker,defaults,noatime,compress=lzo              0 0
+LABEL=ArchAM5         /toplevel                             btrfs      subvol=/,defaults,noatime,compress=lzo                     0 0
+LABEL=ArchAM5         /home/vacation                        btrfs      subvol=/@vacation,defaults,noatime,compress=lzo            0 0
+LABEL=ArchAM5         /home/vacation/.local/share/lutris    btrfs      subvol=/@lutris,defaults,noatime,compress=lzo              0 0
+LABEL=ArchAM5         /home/vacation/.local/share/Steam     btrfs      subvol=/@steam,defaults,noatime,compress=lzo               0 0
+LABEL=ArchAM5         /var/lib/postgres                     btrfs      subvol=/@postgres,defaults,noatime,compress=lzo            0 0
+LABEL=ArchAM5         /home/vacation/.cache                 btrfs      subvol=/@.cache,defaults,noatime,compress=lzo              0 0
+LABEL=ArchAM5         /var/lib/docker                       btrfs      subvol=/@docker,defaults,noatime,compress=lzo              0 0
 #
 ####################################### noauto ###############################################################################################
 #
-LABEL=EFI-2TB         /mnt/efi2tb          vfat       noauto,user,rw,umask=111,dmask=000                        0 2
-LABEL=EFI-4TB         /mnt/efi4tb          vfat       noauto,user,rw,umask=111,dmask=000                        0 2
+LABEL=EFI-2TB         /mnt/efi2tb          vfat       noauto,user,rw,umask=133,dmask=000                        0 2
+LABEL=EFI-4TB         /mnt/efi4tb          vfat       noauto,user,rw,umask=133,dmask=000                        0 2
 LABEL=External        /media/external      exfat      defaults,noauto,user,exec                                 0 2
 #
 ####################################### system  ##############################################################################################
 #
 hugetlbfs             /dev/hugepages       hugetlbfs  mode=01770,gid=kvm                                        0 0
 /swap/swapfile        none                 swap       defaults,pri=0                                            0 0
-LABEL=Archlinux       /swap                btrfs      subvol=/@swap,defaults,noatime,compress=lzo               0 0
+LABEL=ArchAM5         /swap                btrfs      subvol=/@swap,defaults,noatime,compress=lzo               0 0
