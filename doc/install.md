@@ -1,16 +1,17 @@
 # install — Dotfiles Install Program
 
-A `go run`-able install program at `src/install/`. Replaces t0filer for the `interface` repo.
+A `go run`-able install program at `src/install/`.
+Replaces t0filer for the `interface` repo.
 Processes `install.rc` and applies file operations to the system.
 
 ## Usage
 
 ```bash
-go run ./src/install                        # dry run (default, no changes)
-go run ./src/install -c                     # commit changes
-sudo go run ./src/install -c               # commit changes as root
-go run ./src/install -config path/to/rc    # use a specific config file (default: install.rc)
-go run ./src/install -v                    # print version
+go run ./src/install -commit              # commit changes
+go run ./src/install                      # dry run (default, no changes)
+sudo go run ./src/install -commit         # commit changes as root
+go run ./src/install -config path/to/rc   # use a specific config file (default: install.rc)
+go run ./src/install -v                   # print version
 ```
 
 ## Config file — `install.rc`
@@ -35,17 +36,17 @@ Blank lines are ignored. Lines starting with `#` are comments and are ignored.
 
 ### Actions
 
-| Action    | Args                       | Description                                              |
-| --------- | -------------------------- | -------------------------------------------------------- |
-| `check`   | `binary install-cmd`/line  | Verify binary exists; collect all failures, abort at end |
-| `assert`  | command and hint in pairs  | Run a shell command; collect all failures, abort at end  |
-| `message` | free text, multi-line      | Print a block of text to the user                        |
-| `mkdir`   | one path/line              | Create directory and parents if it does not exist        |
-| `link`    | path pairs                 | Create symlink; source first, link target second         |
-| `copy`    | path pairs                 | Copy file; skipped if target exists and checksums match  |
-| `enable`  | one unit/line              | `systemctl enable --now <unit>`                          |
-| `chmod`   | `mode path`/line           | Apply permission mode to path                            |
-| `reload`  | none                       | `systemctl daemon-reload`                                |
+| Action    | Args                      | Description                                              |
+| --------- | ------------------------- | -------------------------------------------------------- |
+| `check`   | `binary install-cmd`/line | Verify binary exists; collect all failures, abort at end |
+| `assert`  | command and hint in pairs | Run a shell command; collect all failures, abort at end  |
+| `message` | free text, multi-line     | Print a block of text to the user                        |
+| `mkdir`   | one path/line             | Create directory and parents if it does not exist        |
+| `link`    | path pairs                | Create symlink; source first, link target second         |
+| `copy`    | path pairs                | Copy file; skipped if target exists and checksums match  |
+| `enable`  | one unit/line             | `systemctl enable --now <unit>`                          |
+| `chmod`   | `mode path`/line          | Apply permission mode to path                            |
+| `reload`  | none                      | `systemctl daemon-reload`                                |
 
 `$HOME` in paths is expanded to the current user home directory.
 `enable`, `chmod`, and `reload` are Linux-only and implicitly skipped on other systems.
@@ -67,6 +68,7 @@ golangci-lint see https://golangci-lint.run/welcome/install
 ```
 
 Output on failure:
+
 ```
 check: missing binaries
   git           pacman -S git
@@ -178,15 +180,17 @@ in both dry run and commit modes. If validation finds errors, the program exits 
 touching anything. This surfaces all problems upfront rather than failing halfway through.
 
 Validation checks:
+
 - Source file exists
 - Target parent directory exists (or will be created via `mkdir`)
-- For `link`: if target exists, verify it already points to the correct source
+- For `link`: if target exists, verify it is a link and already points to the correct source
 - For `copy`: if target exists, checksum both files; identical = already done
 - For `assert`: line count is even
 
 ### Idempotent
 
 Re-running is safe. Each operation detects its already-complete state and skips:
+
 - `link`: target is already a symlink to the correct source → skip
 - `copy`: target exists and checksums match → skip
 - `mkdir`: directory already exists → skip
@@ -196,6 +200,8 @@ Re-running is safe. Each operation detects its already-complete state and skips:
 ### Broken link cleanup
 
 Before linking, any broken symlink at the target path is removed. A warning is printed.
+If a regular file occupies the path of the link, error
+if a link exists, it must point to the correct target, if not remove and re-create.
 
 ### Directory creation
 
@@ -207,6 +213,13 @@ If a target parent directory does not exist, it is created. A warning is printed
 If an unexpected error occurs during commit (after validation passed), the program exits
 immediately. The next run skips already-completed operations and picks up where it left off.
 
+### etc/
+
+Because of complex boot time filesystem mounting order, and the current layout of /home/vacation as a sub volume, etc/ files should be copied not linked, by user root.
+
+### git hooks
+
+Hooks for commit and pull should re-run install to verify targets of copy and link are still accurate with new source files.
 
 ## Testing
 
@@ -289,6 +302,7 @@ This should not print on Linux.
 ```
 
 Expected outcomes to verify manually:
+
 - Warning printed for missing user declaration at top
 - `check` fails listing the missing binary with its hint, does not abort before checking all
 - `assert` fails listing the failing assertion with its hint, does not abort before checking all
