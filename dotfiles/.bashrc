@@ -9,7 +9,7 @@ src() {
   local path=$1 fileLine=$2
 
   # shellcheck disable=SC1090
-  if ! source "$path" 2>/dev/null; then
+  if ! source "$path"; then
     echo "$fileLine" source "$path": not found
   fi
 }
