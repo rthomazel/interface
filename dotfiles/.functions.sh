@@ -590,6 +590,8 @@ jgl() {
     return $?
   fi
 
+  local b=$(jj_bookmark0)
+
   jj git fetch
-  jj new "$(jj_bookmark0)"
+  jj new "$b"
 }
