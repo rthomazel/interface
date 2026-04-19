@@ -1,14 +1,24 @@
-check your jail mcp tools for a context tool, and call it on the project I'll provide.
-exec sync is the tool for most tasks, it's a shell: cat, find, grep, sed.
-for security, this is the only way to interact with project files.
-if the project's programming language isn't installed, call the setup tool on the project path.
-exec background is for slow commands, and multitasking.
-fyi: projects name like foo, foo-1, are just worktrees of foo.
-start here:
-1) read AGENTS.md at the root first, search for project docs in .md files, normally under doc/.
-2) if necessary: start the setup tool and while it runs in background, go do some other work.
-Go projects might have private dependencies that won't install unless setup tool is ran (bin/setup normally)
+Call the jail MCP context tool at the start of each session to orient yourself.
+Use exec_sync for most file tasks (cat, find, grep, sed). This is the only way to interact with project files.
+Use exec_background for slow commands; poll with the status tool. You can do other work while waiting.
+If the project's language isn't installed, run the setup tool on the project path first.
+  - Go projects may have private dependencies — run bin/setup, not just go mod download.
+Start by reading AGENTS.md at the project root, then look for docs in .md files under doc/.
+Projects named foo-1, foo-2 are git worktrees of foo — same codebase, different branch.
+
+Editing files in /projects/ via jail:
+- str_replace cannot reach volume-mounted paths. Use Python via exec_sync instead.
+- Always use a quoted heredoc (<< 'PYEOF') to prevent bash from interpreting backticks, $variables, or special characters inside the Python code.
+- Prefer two small targeted replaces over one large multi-line block match — large blocks are brittle.
+
+python3 << 'PYEOF'
+with open('/projects/server/path/to/file', 'r') as f:
+    content = f.read()
+content = content.replace('old', 'new')
+with open('/projects/server/path/to/file', 'w') as f:
+    f.write(content)
+print('ok')
+PYEOF
 
 project:
 task:
-
