@@ -474,4 +474,5 @@
   "redhat.telemetry.enabled": true,
   "security.workspace.trust.untrustedFiles": "open",
   "explorer.confirmPasteNative": false,
+  "workbench.secondarySideBar.defaultVisibility": "hidden",
 }
