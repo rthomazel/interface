@@ -213,6 +213,7 @@ mise_install_globals() {
   mise use --global go@latest
   mise use --global yarn@1.22.22
   mise use --global npm@latest
+  mise use --global uv@latest
 
   # reinstall missing npm globals
   local packages=(cspell@latest prettier@latest @commitlint/cli@latest @commitlint/config-conventional@latest)
