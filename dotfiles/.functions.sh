@@ -595,3 +595,29 @@ jgl() {
   jj git fetch
   jj new "$b"
 }
+
+#----------------
+
+# cat and copy to clipboard a prompt file under the prompts directory.
+# If an argument is given, it is used as a prefix to find the prompt file.
+# If no argument is given, lists available prompt files without extensions.
+prompt() {
+  local dir="$HOME/Desktop/interface/doc/prompts"
+  if [[ -n "$1" ]]; then
+    local file
+    file=$(find "$dir" -maxdepth 1 -type f -name "$1*" | head -1)
+
+    if [[ -n "$file" ]]; then
+      command cat "$file"
+      pbc < <(cat "$file")
+    else
+      while IFS= read -r f; do
+        basename "$f" | sed 's/\.[^.]*$//'
+      done < <(find "$dir" -maxdepth 1 -type f)
+    fi
+  else
+    while IFS= read -r f; do
+      basename "$f" | sed 's/\.[^.]*$//'
+    done < <(find "$dir" -maxdepth 1 -type f)
+  fi
+}
