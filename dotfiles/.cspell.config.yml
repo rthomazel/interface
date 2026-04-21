@@ -44,7 +44,6 @@ words:
   - argn
   - artis
   - Asam
-  - tbls
   - ASPM
   - athenadepartmentid
   - BARC
@@ -54,7 +53,6 @@ words:
   - blazingly
   - btrfs
   - busid
-  - tbls
   - cfprefsd
   - CIWA
   - CIWAB
@@ -127,6 +125,7 @@ words:
   - Kexts
   - Komplete
   - krunner
+  - Laguardia
   - LARRIS
   - ldns
   - ldvalue
@@ -175,8 +174,10 @@ words:
   - stretchr
   - Strs
   - sysu
+  - tbls
   - tcodes0
   - teramoto
+  - Termius
   - testdb
   - thom
   - thomazella
