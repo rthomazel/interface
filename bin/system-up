@@ -223,6 +223,12 @@ mise_install_globals() {
   done
 }
 
+# Mise configuration file is sim linked into its /root.
+# Install packages globally for root.
+mise_root_update() {
+  sudo mise install
+}
+
 cleanup_packages() {
   # 19GB of build dependencies of llama.cpp
   yay --remove --recursive --recursive rocm-hip-sdk
@@ -239,6 +245,7 @@ btrfs_check Data2TB Data4TB
 pg_update=$(postgres_up)
 
 mise_install_globals
+mise_root_update
 system_up
 services start postgresql
 refresh_collations
