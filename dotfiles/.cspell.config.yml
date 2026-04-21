@@ -57,6 +57,7 @@ words:
   - CIWA
   - CIWAB
   - commitlintrc
+  - Convo
   - coreutils
   - cpio
   - CPUPM
@@ -198,6 +199,7 @@ words:
   - vacuumdb
   - vite
   - VRTL
+  - webui
   - wneessen
   - Wrapfl
   - XCPM
