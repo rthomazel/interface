@@ -116,6 +116,7 @@ words:
   - IOUSB
   - IPIC
   - iterm
+  - jailmcphttp
   - jrb
   - kaue
   - kazuo
@@ -126,6 +127,7 @@ words:
   - Kexts
   - Komplete
   - krunner
+  - kwin
   - Laguardia
   - LARRIS
   - ldns
@@ -137,6 +139,7 @@ words:
   - lzma
   - mackup
   - MCFG
+  - mcpo
   - meds
   - Mgmt
   - Mikey
@@ -210,4 +213,3 @@ words:
   - zram
   - zswap
   - ZYMA
-  - kwin
