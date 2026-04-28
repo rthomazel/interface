@@ -20,7 +20,7 @@ src_dotfile() {
 }
 
 export DOTFILES="$HOME/Desktop/interface/dotfiles"
-export GOPRIVATE="github.com/eleanorhealth/\* github.com/tcodes0/\*"
+export GOPRIVATE="github.com/eleanorhealth/* github.com/tcodes0/*"
 export BASH_ENV="$HOME/.bash_env"
 export CMD_COLOR=true
 export T0_COLOR=true
