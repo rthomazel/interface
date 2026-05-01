@@ -18,6 +18,7 @@ export GOBIN=$HOME/go/bin
 export PATH="\
 $HOME/.local/share/mise/shims:\
 $HOME/bin:\
+$HOME/.local/bin:\
 /opt/homebrew/bin:\
 /opt/homebrew/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/bin:\
 /Applications/Docker.app/Contents/Resources/bin:\
