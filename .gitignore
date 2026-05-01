@@ -9,6 +9,8 @@ bin/t0filer
 bin/ollama
 bin/forex
 bin/presentvalue
+bin/jail-mcp
+bin/jailmcphttp
 dotfiles/**/.uuid
 **/.DS_Store
 dotfiles/.config/jj/repos/*

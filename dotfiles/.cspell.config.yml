@@ -57,6 +57,7 @@ words:
   - CIWA
   - CIWAB
   - commitlintrc
+  - Convo
   - coreutils
   - cpio
   - CPUPM
@@ -68,6 +69,7 @@ words:
   - Debugf
   - devmode
   - DMAR
+  - dotenv
   - DSDT
   - EDID
   - ehff
@@ -88,6 +90,7 @@ words:
   - GLAN
   - glslang
   - godotenv
+  - gofumpt
   - goqu
   - gosec
   - gotestfmt
@@ -113,6 +116,7 @@ words:
   - IOUSB
   - IPIC
   - iterm
+  - jailmcphttp
   - jrb
   - kaue
   - kazuo
@@ -123,6 +127,8 @@ words:
   - Kexts
   - Komplete
   - krunner
+  - kwin
+  - Laguardia
   - LARRIS
   - ldns
   - ldvalue
@@ -133,6 +139,7 @@ words:
   - lzma
   - mackup
   - MCFG
+  - mcpo
   - meds
   - Mgmt
   - Mikey
@@ -166,12 +173,15 @@ words:
   - rocm
   - SEVDSQ
   - SSDT
+  - sslmode
   - SSRS
   - stretchr
   - Strs
   - sysu
+  - tbls
   - tcodes0
   - teramoto
+  - Termius
   - testdb
   - thom
   - thomazella
@@ -192,6 +202,7 @@ words:
   - vacuumdb
   - vite
   - VRTL
+  - webui
   - wneessen
   - Wrapfl
   - XCPM

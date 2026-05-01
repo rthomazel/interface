@@ -9,7 +9,7 @@ src() {
   local path=$1 fileLine=$2
 
   # shellcheck disable=SC1090
-  if ! source "$path" 2>/dev/null; then
+  if ! source "$path"; then
     echo "$fileLine" source "$path": not found
   fi
 }
@@ -20,7 +20,7 @@ src_dotfile() {
 }
 
 export DOTFILES="$HOME/Desktop/interface/dotfiles"
-export GOPRIVATE="github.com/eleanorhealth/\* github.com/tcodes0/\*"
+export GOPRIVATE="github.com/eleanorhealth/* github.com/tcodes0/*"
 export BASH_ENV="$HOME/.bash_env"
 export CMD_COLOR=true
 export T0_COLOR=true
@@ -41,7 +41,7 @@ export GPG_TTY=$(tty)
 export XDG_RUNTIME_DIR
 export WAYLAND_DISPLAY
 # see lazy-git
-export PUSH_REPOS="member-client go-common interface priv hub-client server server-1 server-2 server-3 server-4 member-server shared go-athenahealth scheduling jail-mcp comms programming-problems"
+export PUSH_REPOS="member-client go-common interface priv hub-client server server-1 member-server shared go-athenahealth scheduling jail-mcp comms programming-problems online-start go compose-files"
 
 # libs
 src_dotfile "lib.sh" "$LINENO"

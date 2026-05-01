@@ -91,7 +91,7 @@ download() {
 
   # downloading big videos can max out /tmp
   # ejs:github related to automated captcha challenges using deno
-  if ! yt-dlp -f "$format_id" "$vid_id" --output "${prefix}%(title)s-%(release_date)s.%(ext)s" --remote-components ejs:github --paths "temp:/plex/tmp"; then
+  if ! yt-dlp -f "$format_id" --output "${prefix}%(title)s-%(release_date)s.%(ext)s" --remote-components ejs:github --paths "temp:/plex/tmp" -- "$vid_id"; then
     fatal "$LINENO" "yt-dlp error"
   fi
 }
@@ -187,7 +187,7 @@ validate_input
 validate_plex_perms
 prepare_temp
 
-yt-dlp "$vid_id" --list-formats --remote-components ejs:github --paths "temp:/plex/tmp"
+yt-dlp --list-formats --remote-components ejs:github --paths "temp:/plex/tmp" -- "$vid_id"
 
 prompt_audio_format
 prompt_video_format
