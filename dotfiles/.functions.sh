@@ -544,13 +544,13 @@ urldecode_json() {
 #----------------
 
 save_session() {
-  echo "$PWD" "$@" >>"$HOME/Desktop/sessions.txt"
+  echo "$PWD" "$@" >>"$HOME/Desktop/txt/sessions.txt"
 }
 
 restore_session() {
   local dir="$PWD"
   local command
-  command=$(command grep "^$dir " "$HOME/Desktop/sessions.txt" | sed "s|^$dir ||")
+  command=$(command grep "^$dir " "$HOME/Desktop/txt/sessions.txt" | sed "s|^$dir ||")
 
   if [[ -z "$command" ]]; then
     echo "no session found for $dir"
