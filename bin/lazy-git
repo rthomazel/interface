@@ -85,6 +85,7 @@ commit() {
     fatal $LINENO "usage: lg <type> <scope> <commit subject>"
   fi
 
+  subject="${subject,}"
   local commit_msg="$type($scope): $subject"
   if [[ "$scope" =~ ^.$ ]]; then
     commit_msg="$type: $subject"

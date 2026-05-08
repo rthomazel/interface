@@ -34,6 +34,7 @@ words:
   - ACPI
   - AGDP
   - AHCI
+  - aichat
   - aliasg
   - alnum
   - alsa
@@ -157,6 +158,7 @@ words:
   - Nower
   - OBAT
   - ollama
+  - openwebui
   - pacu
   - PAWSS
   - pgdialect
