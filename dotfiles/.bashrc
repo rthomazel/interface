@@ -88,7 +88,7 @@ if macos; then
   src_dotfile ".bashrc.mac.sh" "$LINENO"
   src_dotfile ".aliases.mac.sh" "$LINENO"
   src_dotfile ".functions.mac.sh" "$LINENO"
-  src /opt/homebrew/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.bash.inc "$DOTFILES/.bashrc:$LINENO"
+  src /opt/homebrew/Caskroom/gcloud-cli/latest/google-cloud-sdk/path.bash.inc "$DOTFILES/.bashrc:$LINENO"
 else
   src_dotfile ".bashrc.linux.sh" "$LINENO"
   src_dotfile ".aliases.linux.sh" "$LINENO"
