@@ -10,17 +10,17 @@ PROJECTS_DIR="${PROJECTS_DIR:-$(cd "$SCRIPT_DIR/../Desktop" && pwd)}"
 
 declare -A FUNCS
 
-FUNCS[server]="setup_toolchain setup_env_file setup_eleanor_go_auth setup_gpg_signing go_download fix_run_permissions"
-FUNCS[comms]="setup_toolchain setup_env_file setup_eleanor_go_auth setup_gpg_signing go_download"
-FUNCS[scheduling]="setup_toolchain setup_env_file setup_eleanor_go_auth setup_gpg_signing go_download"
-FUNCS["go-common"]="setup_toolchain setup_env_file setup_eleanor_go_auth setup_gpg_signing go_download"
-FUNCS["member-server"]="setup_toolchain setup_env_file setup_eleanor_go_auth setup_gpg_signing go_download"
-FUNCS[client]="setup_toolchain setup_env_file setup_eleanor_node_auth setup_gpg_signing yarn_install"
-FUNCS["member-client"]="setup_toolchain setup_env_file setup_eleanor_node_auth setup_gpg_signing yarn_install"
+FUNCS[server]="setup_toolchain setup_env_file eleanor_go_download setup_gpg_signing fix_run_permissions"
+FUNCS[comms]="setup_toolchain setup_env_file eleanor_go_download setup_gpg_signing"
+FUNCS[scheduling]="setup_toolchain setup_env_file eleanor_go_download setup_gpg_signing"
+FUNCS["go-common"]="setup_toolchain setup_env_file eleanor_go_download setup_gpg_signing"
+FUNCS["member-server"]="setup_toolchain setup_env_file eleanor_go_download setup_gpg_signing"
+FUNCS[client]="setup_toolchain setup_env_file eleanor_node_download setup_gpg_signing"
+FUNCS["member-client"]="setup_toolchain setup_env_file eleanor_node_download setup_gpg_signing"
 FUNCS[go]="setup_toolchain setup_gpg_signing go_download fix_run_permissions"
 FUNCS["go-athenahealth"]="setup_toolchain setup_gpg_signing go_download"
 FUNCS["jail-mcp"]="setup_toolchain setup_gpg_signing fix_run_permissions"
-FUNCS[shared]="setup_toolchain setup_gpg_signing yarn_install"
+FUNCS[shared]="setup_toolchain setup_gpg_signing js_install"
 FUNCS["compose-files"]="setup_toolchain setup_env_file setup_gpg_signing fix_run_permissions"
 
 #----------------#
@@ -84,6 +84,26 @@ check_or_commit() {
 	rm "$tmp"
 }
 
+usage() {
+	cat <<'EOF'
+Usage: install-setup [OPTIONS] [PROJECT...]
+
+Assembles bin/setup for one or more projects from canonical function fragments
+and checks for drift against the current file on disk.
+
+Arguments:
+  PROJECT    One or more project names to check (default: all projects).
+             Known projects: client, comms, compose-files, go, go-athenahealth,
+             go-common, jail-mcp, member-client, member-server, scheduling,
+             server, shared.
+
+Options:
+  --commit   Write the assembled script to <project>/bin/setup and chmod +x.
+             Default (no flag): check-only — reports drift and exits non-zero.
+  -h, --help Print this help text and exit.
+EOF
+}
+
 main() {
 	local commit=false
 	local projects=()
@@ -93,6 +113,10 @@ main() {
 	for arg in "$@"; do
 		case $arg in
 		--commit) commit=true ;;
+		-h | --help)
+			usage
+			return 0
+			;;
 		*) projects+=("$arg") ;;
 		esac
 	done

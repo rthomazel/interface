@@ -13,6 +13,18 @@ Centralized source for `bin/setup` scripts deployed across all projects.
 Each function file contains exactly one shell function definition.
 Branch logic lives inside the function — the footer is a flat unconditional call list.
 
+## Environments
+
+Assembled `bin/setup` scripts run in three environments:
+
+| Environment           | `GITHUB_TOKEN`                       | Notes                                                                          |
+| --------------------- | ------------------------------------ | ------------------------------------------------------------------------------ |
+| Local dev machine     | Not set                              | SSH configured for private repos; token-dependent steps are skipped gracefully |
+| Cloud agent container | Injected (`CLAUDE_CODE_REMOTE=true`) | Token available at runtime without `.env`                                      |
+| Jail agent container  | Sourced from `.env`                  | Functions that need the token source `$ENV_FILE` themselves                    |
+
+All assembled scripts are idempotent — safe to re-run at any time.
+
 ## Usage
 
 ```sh
@@ -36,6 +48,7 @@ bin/install-setup --commit server comms
 3. Run `bin/install-setup` to verify, `--commit` to deploy.
 
 Design rules for functions:
+
 - **No external dependencies** — only bash builtins, standard Unix tools, and tools the function itself installs.
 - **No hard failures** — optional steps must be guarded with `|| true` or `|| echo ... >&2`; let the caller's `set -e` catch only genuine unrecoverable errors.
 - **Conditionals contained** — branch logic lives inside the function; the assembled footer is always a flat unconditional call list.
