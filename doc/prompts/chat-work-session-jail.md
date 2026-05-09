@@ -9,7 +9,8 @@ If the project's language isn't installed, run the setup tool on the project pat
   Start by reading AGENTS.md at the project root, then look for docs in .md files under doc/.
 
 Editing files via jail:
-- str_replace cannot reach volume-mounted paths. Use Python via exec_sync instead.
+
+- Use Python via exec_sync.
 - Always use a quoted heredoc (<< 'PYEOF') to prevent bash from interpreting backticks, $variables, or special characters inside the Python code.
 - Prefer two small targeted replaces over one large multi-line block match — large blocks are brittle.
 - When file content contains shell single quotes (e.g. `grep -q '^pattern'`), chained `replace()` calls can corrupt the quoting. If a replace silently fails or produces doubled quotes like `''^pattern'`, rewrite the whole file with a single `f.write("""...""")` instead.
