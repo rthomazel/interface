@@ -1,3 +1,4 @@
+# shellcheck shell=bash
 # Installs mise if missing, runs mise install, activates shims in PATH. Always call first.
 setup_toolchain() {
 	if ! command -v mise &>/dev/null; then

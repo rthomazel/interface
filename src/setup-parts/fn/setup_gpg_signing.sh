@@ -1,3 +1,4 @@
+# shellcheck shell=bash
 # Imports GPG key and configures git signing; skips if no key.
 setup_gpg_signing() {
 	if [[ -z "${GPG_PRIVATE_KEY:-}" ]]; then

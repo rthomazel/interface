@@ -1,3 +1,4 @@
+# shellcheck shell=bash
 # Configures GOPRIVATE and git HTTPS auth for Eleanor Health Go projects. Humans should use SSH instead.
 setup_eleanor_go_auth() {
 	# shellcheck disable=SC1090

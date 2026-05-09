@@ -1,3 +1,4 @@
+# shellcheck shell=bash
 # Copies .env-default to .env if missing
 setup_env_file() {
 	if [[ ! -f "$ENV_FILE" && -f "$SCRIPT_DIR/../.env-default" ]]; then

@@ -1,3 +1,4 @@
+# shellcheck shell=bash
 # Reroutes Go modules through goproxy.io if needed, then runs go mod download and go install tool.
 go_download() {
 	if ! curl -s --max-time 3 https://storage.googleapis.com >/dev/null 2>&1; then

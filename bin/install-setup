@@ -10,8 +10,8 @@ PROJECTS_DIR="${PROJECTS_DIR:-$(cd "$SCRIPT_DIR/../Desktop" && pwd)}"
 
 declare -A FUNCS
 
-FUNCS[server]="setup_toolchain setup_env_file setup_eleanor_go_auth setup_gpg_signing go_download tbls_doc fix_run_permissions"
-FUNCS[comms]="setup_toolchain setup_env_file setup_eleanor_go_auth setup_gpg_signing go_download tbls_doc"
+FUNCS[server]="setup_toolchain setup_env_file setup_eleanor_go_auth setup_gpg_signing go_download fix_run_permissions"
+FUNCS[comms]="setup_toolchain setup_env_file setup_eleanor_go_auth setup_gpg_signing go_download"
 FUNCS[scheduling]="setup_toolchain setup_env_file setup_eleanor_go_auth setup_gpg_signing go_download"
 FUNCS["go-common"]="setup_toolchain setup_env_file setup_eleanor_go_auth setup_gpg_signing go_download"
 FUNCS["member-server"]="setup_toolchain setup_env_file setup_eleanor_go_auth setup_gpg_signing go_download"
