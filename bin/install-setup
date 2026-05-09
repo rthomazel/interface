@@ -1,0 +1,116 @@
+#! /usr/bin/env bash
+
+set -euo pipefail
+shopt -s globstar
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PARTS_DIR="$SCRIPT_DIR/../src/setup-parts"
+PROJECTS_DIR="${PROJECTS_DIR:-$(cd "$SCRIPT_DIR/../Desktop" && pwd)}"
+
+#----------------#
+
+declare -A FUNCS
+
+FUNCS[server]="install_toolchain fix_goproxy_if_needed setup_env_file setup_goprivate setup_eleanor_go_auth install_prettier setup_gpg_signing go_download tbls_doc fix_run_permissions"
+FUNCS[comms]="install_toolchain fix_goproxy_if_needed setup_env_file setup_goprivate setup_eleanor_go_auth install_prettier setup_gpg_signing go_download tbls_doc"
+FUNCS[scheduling]="install_toolchain fix_goproxy_if_needed setup_env_file setup_goprivate setup_eleanor_go_auth install_prettier setup_gpg_signing go_download"
+FUNCS["go-common"]="install_toolchain fix_goproxy_if_needed setup_env_file setup_goprivate setup_eleanor_go_auth install_prettier setup_gpg_signing go_download"
+FUNCS["member-server"]="install_toolchain fix_goproxy_if_needed setup_env_file setup_goprivate setup_eleanor_go_auth install_prettier setup_gpg_signing go_download"
+FUNCS[client]="install_toolchain setup_env_file setup_eleanor_node_auth setup_gpg_signing yarn_install"
+FUNCS["member-client"]="install_toolchain setup_env_file setup_eleanor_node_auth setup_gpg_signing yarn_install"
+FUNCS[go]="install_toolchain fix_goproxy_if_needed install_prettier setup_gpg_signing go_download fix_run_permissions"
+FUNCS["go-athenahealth"]="install_toolchain fix_goproxy_if_needed install_prettier setup_gpg_signing go_download"
+FUNCS["jail-mcp"]="install_toolchain fix_goproxy_if_needed setup_gpg_signing fix_run_permissions"
+FUNCS[shared]="install_toolchain setup_gpg_signing yarn_install"
+FUNCS["compose-files"]="install_toolchain setup_env_file setup_gpg_signing fix_run_permissions"
+
+#----------------#
+
+assemble() {
+	local project=$1
+	local funcs="${FUNCS[$project]}"
+	local fn
+
+	cat "$PARTS_DIR/header.sh"
+	echo
+	for fn in $funcs; do
+		cat "$PARTS_DIR/fn/${fn}.sh"
+		echo
+	done
+	for fn in $funcs; do
+		echo "$fn"
+	done
+	echo
+	echo 'echo "setup complete"'
+}
+
+check_or_commit() {
+	local project=$1
+	local commit=$2
+	local target="$PROJECTS_DIR/$project/bin/setup"
+	local tmp
+	tmp=$(mktemp /tmp/install-setup.XXXXXX)
+
+	assemble "$project" >"$tmp"
+
+	if [[ ! -f "$target" ]]; then
+		if [[ "$commit" == "true" ]]; then
+			cp "$tmp" "$target"
+			chmod +x "$target"
+			echo "$project: created"
+		else
+			echo "$project: bin/setup not found at $target" >&2
+			rm "$tmp"
+			return 1
+		fi
+		rm "$tmp"
+		return 0
+	fi
+
+	if diff -q "$target" "$tmp" >/dev/null 2>&1; then
+		echo "$project: up to date"
+		rm "$tmp"
+		return 0
+	fi
+
+	if [[ "$commit" == "true" ]]; then
+		cp "$tmp" "$target"
+		chmod +x "$target"
+		echo "$project: updated"
+	else
+		echo "$project: drift detected, review: $tmp"
+		return 1
+	fi
+
+	rm "$tmp"
+}
+
+main() {
+	local commit=false
+	local projects=()
+	local exit_code=0
+	local arg
+
+	for arg in "$@"; do
+		case $arg in
+		--commit) commit=true ;;
+		*) projects+=("$arg") ;;
+		esac
+	done
+
+	if [[ ${#projects[@]} -eq 0 ]]; then
+		mapfile -t projects < <(printf '%s\n' "${!FUNCS[@]}" | sort)
+	fi
+
+	for project in "${projects[@]}"; do
+		if [[ -z "${FUNCS[$project]+_}" ]]; then
+			echo "error: unknown project '$project'" >&2
+			exit_code=1
+			continue
+		fi
+		check_or_commit "$project" "$commit" || exit_code=1
+	done
+
+	return $exit_code
+}
+
+main "$@"
