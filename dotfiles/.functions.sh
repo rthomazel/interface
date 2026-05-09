@@ -363,30 +363,30 @@ vcs_prompt() {
 #- - - - - - - - - - -
 
 jj_prompt() {
-  local change_id description change_id_parent description_parent bookmarks=() temp temp2
+  local change_id description change_id_parent description_parent jj_bookmarks=() temp temp2
 
   temp=$(command jj log --color=always --no-graph --limit 1 --template 'change_id.shortest()  ++" desc:"++ description ++" "++ parents.map(|c| c.change_id().shortest() ++" desc:"++ c.description()) ++" "++ description ++ "\n"')
   read -r change_id description change_id_parent description_parent <<<"$temp"
 
   # color=always produces strings unsuitable for anything but display, they contain escape sequences
   temp2=$(jj log --revisions 'ancestors(@) & bookmarks()' --template 'bookmarks ++ " "' --color=always --no-graph)
-  read -ra bookmarks <<<"$temp2"
+  read -ra jj_bookmarks <<<"$temp2"
 
   # remove prefix to erase empty descriptions
   description=${description/desc:/}
   description_parent=${description_parent/desc:/}
   # set empty if second parent bookmark is main or master
-  bookmarks[1]=${bookmarks[1]/main/}
-  bookmarks[1]=${bookmarks[1]/master/}
+  jj_bookmarks[1]=${jj_bookmarks[1]/main/}
+  jj_bookmarks[1]=${jj_bookmarks[1]/master/}
 
   # local repo_root
 
   # if repo_root=$(command jj root 2>/dev/null); then
-  #   track_jj_bookmarks "$repo_root" "${bookmarks[0]}"
+  #   track_jj_bookmarks "$repo_root" "${jj_bookmarks[0]}"
   # fi
 
   local light_black="\\[\\e[33;90m\\]" green="\\[\\e[33;32m\\]"
-  local format="${bookmarks[0]} ${bookmarks[1]} $green@$END$change_id $description $green@-$END$change_id_parent $light_black$description_parent$END"
+  local format="${jj_bookmarks[0]} ${jj_bookmarks[1]} $green@$END$change_id $description $green@-$END$change_id_parent $light_black$description_parent$END"
 
   # strip double spaces
   format=${format//  / }
@@ -544,13 +544,13 @@ urldecode_json() {
 #----------------
 
 save_session() {
-  echo "$PWD" "$@" >>"$HOME/Desktop/sessions.txt"
+  echo "$PWD" "$@" >>"$HOME/Desktop/txt/sessions.txt"
 }
 
 restore_session() {
   local dir="$PWD"
   local command
-  command=$(command grep "^$dir " "$HOME/Desktop/sessions.txt" | sed "s|^$dir ||")
+  command=$(command grep "^$dir " "$HOME/Desktop/txt/sessions.txt" | sed "s|^$dir ||")
 
   if [[ -z "$command" ]]; then
     echo "no session found for $dir"
@@ -570,4 +570,54 @@ lg() {
 
   lazy-jujutsu "$@"
   return $?
+}
+
+#----------------
+
+jj_bookmark0() {
+  read -ra bookmark _ < <(jj log --revisions 'ancestors(@) & bookmarks()' --template 'bookmarks ++ " "' --no-graph)
+  printf "%s" "${bookmark[0]}"
+}
+
+#----------------
+
+# jj "git pull"
+# JJ git fetch changes the bookmark to the most current one. We want to stay on the current bookmark.
+# So after fetch we switch back.
+jgl() {
+  if ! command jj root &>/dev/null; then
+    git pull
+    return $?
+  fi
+
+  local b=$(jj_bookmark0)
+
+  jj git fetch
+  jj new "$b"
+}
+
+#----------------
+
+# cat and copy to clipboard a prompt file under the prompts directory.
+# If an argument is given, it is used as a prefix to find the prompt file.
+# If no argument is given, lists available prompt files without extensions.
+prompt() {
+  local dir="$HOME/Desktop/interface/doc/prompts"
+  if [[ -n "$1" ]]; then
+    local file
+    file=$(find "$dir" -maxdepth 1 -type f -name "$1*" | head -1)
+
+    if [[ -n "$file" ]]; then
+      command cat "$file"
+      pbc < <(cat "$file")
+    else
+      while IFS= read -r f; do
+        basename "$f" | sed 's/\.[^.]*$//'
+      done < <(find "$dir" -maxdepth 1 -type f)
+    fi
+  else
+    while IFS= read -r f; do
+      basename "$f" | sed 's/\.[^.]*$//'
+    done < <(find "$dir" -maxdepth 1 -type f)
+  fi
 }

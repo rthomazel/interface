@@ -246,6 +246,7 @@ alias jn="jj new"
 alias jsq="jj squash -m"
 alias jre="jj resolve"
 alias jbf="jj bookmark forget"
+alias jd="jj diff"
 
 # general
 alias la='ls -A'

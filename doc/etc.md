@@ -1,8 +1,12 @@
 # etc/ — System Configuration
 
 Files here are symlinked (or hardlinked for `fstab`) into `/etc`. Requires root for install.
-Note: all `/etc` symlinks resolve through `/home/vacation/` — root must be able to traverse it. Ensure `chmod o+x /home/vacation` is set, otherwise systemd and other root processes silently fail to read unit files and configs at boot.
+Note: all `/etc` symlinks resolve through `/home/vacation/` — root must be able to traverse it.
+Ensure `chmod o+x /home/vacation` is set, otherwise systemd and other root processes silently fail to read unit files and configs at boot.
 Note: `/etc/fstab` must be a **hardlink**, not a symlink — the kernel reads it before symlinks resolve.
+Note: due to how the system mounts partitions at boot, and how /home/vacation is its own btrfs subvolume mount, files in etc/ might be unavailable at boot, leading to weird bugs.
+The proposed solution for this is to use an install script that copies files to /etc with correct ownership and permissions.
+Git hook into pull and commit, maintain hashes of all files, maybe adjacent to the files themselves but gitignored, and determine if file needs to be reinstalled.
 
 ## Filesystem & Boot
 
