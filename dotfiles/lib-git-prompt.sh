@@ -124,7 +124,7 @@ __git_ps1_show_upstream() {
       fi
       ;;
     svn-remote.*.url)
-      svn_remote[${#svn_remote[@]}+1]="$value"
+      svn_remote[${#svn_remote[@]} + 1]="$value"
       svn_url_pattern="$svn_url_pattern\\|$value"
       upstream=svn+git # default upstream is SVN if available, else git
       ;;
@@ -151,7 +151,7 @@ __git_ps1_show_upstream() {
     mapfile -t svn_upstream < <(git log --first-parent -1 \
       --grep="^git-svn-id: \(${svn_url_pattern#??}\)" 2>/dev/null)
     if [[ 0 -ne ${#svn_upstream[@]} ]]; then
-      local svn_upstream_str=${svn_upstream[${#svn_upstream[@]}-2]}
+      local svn_upstream_str=${svn_upstream[${#svn_upstream[@]} - 2]}
       svn_upstream_str=${svn_upstream_str%@*}
       local n_stop="${#svn_remote[@]}"
       for ((n = 1; n <= n_stop; n++)); do
@@ -195,28 +195,38 @@ __git_ps1_show_upstream() {
   if [[ -z "$verbose" ]]; then
     case "$count" in
     "") # no upstream
-      p="" ;;
+      p=""
+      ;;
     "0	0") # equal to upstream
-      p="=" ;;
+      p="="
+      ;;
     "0	"*) # ahead of upstream
-      p=">" ;;
+      p=">"
+      ;;
     *"	0") # behind upstream
-      p="<" ;;
+      p="<"
+      ;;
     *) # diverged from upstream
-      p="<>" ;;
+      p="<>"
+      ;;
     esac
   else
     case "$count" in
     "") # no upstream
-      p="" ;;
+      p=""
+      ;;
     "0	0") # equal to upstream
-      p=" =" ;;
+      p=" ="
+      ;;
     "0	"*) # ahead of upstream
-      p=" +${count#0	}" ;;
+      p=" +${count#0	}"
+      ;;
     *"	0") # behind upstream
-      p=" -${count%	0}" ;;
+      p=" -${count%	0}"
+      ;;
     *) # diverged from upstream
-      p=" +${count#*	}-${count%	*}" ;;
+      p=" +${count#*	}-${count%	*}"
+      ;;
     esac
     if [[ -n "$count" && -n "$name" ]]; then
       __git_ps1_upstream_name=$(git rev-parse \

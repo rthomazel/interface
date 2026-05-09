@@ -721,5 +721,9 @@
   {
     "key": "cmd+-",
     "command": "-workbench.action.zoomOut"
+  },
+  {
+    "key": "shift+cmd+8",
+    "command": "workbench.view.extension.test"
   }
 ]

@@ -213,6 +213,7 @@ mise_install_globals() {
   mise use --global go@latest
   mise use --global yarn@1.22.22
   mise use --global npm@latest
+  mise use --global uv@latest
 
   # reinstall missing npm globals
   local packages=(cspell@latest prettier@latest @commitlint/cli@latest @commitlint/config-conventional@latest)
@@ -220,6 +221,12 @@ mise_install_globals() {
   for ((i = 0; i < ${#packages[@]}; i++)); do
     npm install --global "${packages[i]}"
   done
+}
+
+# Mise configuration file is sim linked into its /root.
+# Install packages globally for root.
+mise_root_update() {
+  sudo mise install
 }
 
 cleanup_packages() {
@@ -238,6 +245,7 @@ btrfs_check Data2TB Data4TB
 pg_update=$(postgres_up)
 
 mise_install_globals
+mise_root_update
 system_up
 services start postgresql
 refresh_collations

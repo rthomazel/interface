@@ -1,0 +1,8 @@
+@import 'colors.css';
+
+/* overrides */
+@define-color window_bg_color #000000;
+@define-color view_bg_color #000000;
+@define-color headerbar_bg_color #000000;
+@define-color card_bg_color #0a0a0a;
+@define-color popover_bg_color #0a0a0a;

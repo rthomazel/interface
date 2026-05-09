@@ -11,6 +11,78 @@
         "-i",
         "jail-mcp"
       ]
+    },
+    "local_hub": {
+      "command": "uvx",
+      "args": [
+        "pgsql-mcp-server",
+        "--dsn",
+        "postgresql://postgres:@localhost:5432/hub"
+      ]
+    },
+    "local_member": {
+      "command": "uvx",
+      "args": [
+        "pgsql-mcp-server",
+        "--dsn",
+        "postgresql://postgres:@localhost:5432/member"
+      ]
+    },
+    "local_hub_test": {
+      "command": "uvx",
+      "args": [
+        "pgsql-mcp-server",
+        "--dsn",
+        "postgresql://postgres:@localhost:5432/hub_test"
+      ]
+    },
+    "local_member_test": {
+      "command": "uvx",
+      "args": [
+        "pgsql-mcp-server",
+        "--dsn",
+        "postgresql://postgres:@localhost:5432/member_test"
+      ]
+    },
+    "local_comms_docker": {
+      "command": "uvx",
+      "args": [
+        "pgsql-mcp-server",
+        "--dsn",
+        "postgresql://postgres:password@localhost:3501/comms"
+      ]
+    },
+    "qa_hub": {
+      "command": "uvx",
+      "args": [
+        "pgsql-mcp-server",
+        "--dsn",
+        "postgresql://thom.ribeiro%40eleanorhealth.com@/hub?host=/Users/thom.ribeiro/.eleanor_sql_sockets/ele-qa-436057:us-east1:eleanor-postgres"
+      ]
+    },
+    "qa_scheduling": {
+      "command": "uvx",
+      "args": [
+        "pgsql-mcp-server",
+        "--dsn",
+        "postgresql://thom.ribeiro%40eleanorhealth.com@/scheduling?host=/Users/thom.ribeiro/.eleanor_sql_sockets/ele-qa-436057:us-east1:eleanor-postgres"
+      ]
+    },
+    "qa_member": {
+      "command": "uvx",
+      "args": [
+        "pgsql-mcp-server",
+        "--dsn",
+        "postgresql://thom.ribeiro%40eleanorhealth.com@/member?host=/Users/thom.ribeiro/.eleanor_sql_sockets/ele-qa-436057:us-east1:eleanor-postgres"
+      ]
+    },
+    "qa_comms": {
+      "command": "uvx",
+      "args": [
+        "pgsql-mcp-server",
+        "--dsn",
+        "postgresql://thom.ribeiro%40eleanorhealth.com@/comms?host=/Users/thom.ribeiro/.eleanor_sql_sockets/ele-qa-436057:us-east1:eleanor-postgres"
+      ]
     }
   },
   "isUsingBuiltInNodeForMcp": false,

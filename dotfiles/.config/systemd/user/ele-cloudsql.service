@@ -1,0 +1,14 @@
+[Unit]
+Description=Google Cloud SQL Proxy for Eleanor projects
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/home/vacation/Desktop/scripts-eleanor/ele-cloudsql.sh
+Restart=on-failure
+RestartSec=5
+# Ensure the PATH includes the directory where cloud-sql-proxy lives
+Environment="PATH=/home/vacation/bin:/usr/local/bin:/usr/bin:/bin"
+
+[Install]
+WantedBy=default.target
