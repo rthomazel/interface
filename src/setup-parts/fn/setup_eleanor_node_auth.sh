@@ -1,5 +1,8 @@
 # Writes .npmrc and configures git for Eleanor Health Node projects; skips if no token.
 setup_eleanor_node_auth() {
+	# shellcheck disable=SC1090
+	[[ -z "${GITHUB_TOKEN:-}" && -f "$ENV_FILE" ]] && . "$ENV_FILE"
+
 	if [[ -z "${GITHUB_TOKEN:-}" ]]; then
 		echo "info: GITHUB_TOKEN not set, skipping Eleanor Health Node auth" >&2
 		echo "info: for private @eleanorhealth packages, configure .npmrc manually:" >&2

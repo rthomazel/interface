@@ -1,5 +1,11 @@
-# Configures git HTTPS auth for Eleanor Health Go projects; skips if no token. Humans should use SSH instead.
+# Configures GOPRIVATE and git HTTPS auth for Eleanor Health Go projects. Humans should use SSH instead.
 setup_eleanor_go_auth() {
+	# shellcheck disable=SC1090
+	[[ -z "${GITHUB_TOKEN:-}" && -f "$ENV_FILE" ]] && . "$ENV_FILE"
+
+	export GOPRIVATE="github.com/eleanorhealth/*"
+	[[ -n "${CLAUDE_ENV_FILE:-}" ]] && echo "GOPRIVATE=github.com/eleanorhealth/*" >>"$CLAUDE_ENV_FILE"
+
 	# Humans: do not set GITHUB_TOKEN; configure SSH access instead.
 	if [[ -z "${GITHUB_TOKEN:-}" ]]; then
 		echo "info: GITHUB_TOKEN not set, skipping Eleanor Health Go auth" >&2

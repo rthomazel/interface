@@ -10,18 +10,18 @@ PROJECTS_DIR="${PROJECTS_DIR:-$(cd "$SCRIPT_DIR/../Desktop" && pwd)}"
 
 declare -A FUNCS
 
-FUNCS[server]="install_toolchain fix_goproxy_if_needed setup_env_file setup_goprivate setup_eleanor_go_auth install_prettier setup_gpg_signing go_download tbls_doc fix_run_permissions"
-FUNCS[comms]="install_toolchain fix_goproxy_if_needed setup_env_file setup_goprivate setup_eleanor_go_auth install_prettier setup_gpg_signing go_download tbls_doc"
-FUNCS[scheduling]="install_toolchain fix_goproxy_if_needed setup_env_file setup_goprivate setup_eleanor_go_auth install_prettier setup_gpg_signing go_download"
-FUNCS["go-common"]="install_toolchain fix_goproxy_if_needed setup_env_file setup_goprivate setup_eleanor_go_auth install_prettier setup_gpg_signing go_download"
-FUNCS["member-server"]="install_toolchain fix_goproxy_if_needed setup_env_file setup_goprivate setup_eleanor_go_auth install_prettier setup_gpg_signing go_download"
-FUNCS[client]="install_toolchain setup_env_file setup_eleanor_node_auth setup_gpg_signing yarn_install"
-FUNCS["member-client"]="install_toolchain setup_env_file setup_eleanor_node_auth setup_gpg_signing yarn_install"
-FUNCS[go]="install_toolchain fix_goproxy_if_needed install_prettier setup_gpg_signing go_download fix_run_permissions"
-FUNCS["go-athenahealth"]="install_toolchain fix_goproxy_if_needed install_prettier setup_gpg_signing go_download"
-FUNCS["jail-mcp"]="install_toolchain fix_goproxy_if_needed setup_gpg_signing fix_run_permissions"
-FUNCS[shared]="install_toolchain setup_gpg_signing yarn_install"
-FUNCS["compose-files"]="install_toolchain setup_env_file setup_gpg_signing fix_run_permissions"
+FUNCS[server]="setup_toolchain setup_env_file setup_eleanor_go_auth setup_gpg_signing go_download tbls_doc fix_run_permissions"
+FUNCS[comms]="setup_toolchain setup_env_file setup_eleanor_go_auth setup_gpg_signing go_download tbls_doc"
+FUNCS[scheduling]="setup_toolchain setup_env_file setup_eleanor_go_auth setup_gpg_signing go_download"
+FUNCS["go-common"]="setup_toolchain setup_env_file setup_eleanor_go_auth setup_gpg_signing go_download"
+FUNCS["member-server"]="setup_toolchain setup_env_file setup_eleanor_go_auth setup_gpg_signing go_download"
+FUNCS[client]="setup_toolchain setup_env_file setup_eleanor_node_auth setup_gpg_signing yarn_install"
+FUNCS["member-client"]="setup_toolchain setup_env_file setup_eleanor_node_auth setup_gpg_signing yarn_install"
+FUNCS[go]="setup_toolchain setup_gpg_signing go_download fix_run_permissions"
+FUNCS["go-athenahealth"]="setup_toolchain setup_gpg_signing go_download"
+FUNCS["jail-mcp"]="setup_toolchain setup_gpg_signing fix_run_permissions"
+FUNCS[shared]="setup_toolchain setup_gpg_signing yarn_install"
+FUNCS["compose-files"]="setup_toolchain setup_env_file setup_gpg_signing fix_run_permissions"
 
 #----------------#
 
