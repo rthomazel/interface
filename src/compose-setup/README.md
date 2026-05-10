@@ -43,6 +43,16 @@ bin/compose-setup --commit
 bin/compose-setup --commit server comms
 ```
 
+## Formatting
+
+All shell files use 2-space indentation, enforced by `.editorconfig` at the repo root.
+Run shfmt from the repo root so it picks up the config:
+
+```sh
+cd /path/to/interface
+shfmt -w src/compose-setup/*.sh bin/compose-setup
+```
+
 ## Adding a function
 
 1. Create `<name>.sh` in `src/compose-setup/` with one function definition and a single-line comment above it.

@@ -16,4 +16,4 @@ jobs:
         run: |
           find bin dotfiles -type f -print0 \
           | xargs -0 grep -lZE '^#! ?/usr/bin/env bash|^#!/usr/bin/env bash|^#! ?/bin/bash' \
-          | xargs -0 shfmt -i 2 -ln bash -d
+          | xargs -0 shfmt -ln bash -d
