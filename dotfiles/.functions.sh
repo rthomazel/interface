@@ -635,3 +635,25 @@ prompt() {
     done < <(find "$dir" -maxdepth 1 -type f)
   fi
 }
+
+#----------------
+
+inf() {
+  local rc="$HOME/.config/github.com.rthomazel/.infrc"
+  local project
+  project=$(basename "$PWD")
+
+  if [[ ! -f "$rc" ]]; then
+    infisical "$@"
+    return
+  fi
+
+  local project_id
+  project_id=$(grep "^${project}:" "$rc" | awk '{print $2}')
+
+  if [[ -n "$project_id" ]]; then
+    infisical "$@" --projectId="$project_id"
+  else
+    infisical "$@"
+  fi
+}
