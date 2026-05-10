@@ -3,7 +3,7 @@
 set -euo pipefail
 shopt -s globstar
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PARTS_DIR="$SCRIPT_DIR/../src/setup-parts"
+PARTS_DIR="$SCRIPT_DIR/../src/compose-setup"
 PROJECTS_DIR="${PROJECTS_DIR:-$(cd "$SCRIPT_DIR/../Desktop" && pwd)}"
 
 #----------------#
@@ -21,7 +21,7 @@ FUNCS[go]="setup_toolchain setup_gpg_signing go_download fix_run_permissions"
 FUNCS["go-athenahealth"]="setup_toolchain setup_gpg_signing go_download"
 FUNCS["jail-mcp"]="setup_toolchain setup_gpg_signing fix_run_permissions"
 FUNCS[shared]="setup_toolchain setup_gpg_signing js_install"
-FUNCS["compose-files"]="setup_toolchain setup_env_file setup_gpg_signing fix_run_permissions"
+FUNCS["compose-files"]="setup_toolchain setup_gpg_signing fix_run_permissions"
 
 #----------------#
 
@@ -33,7 +33,7 @@ assemble() {
 	cat "$PARTS_DIR/header.sh"
 	echo
 	for fn in $funcs; do
-		cat "$PARTS_DIR/fn/${fn}.sh"
+		cat "$PARTS_DIR/${fn}.sh"
 		echo
 	done
 	for fn in $funcs; do
@@ -48,7 +48,7 @@ check_or_commit() {
 	local commit=$2
 	local target="$PROJECTS_DIR/$project/bin/setup"
 	local tmp
-	tmp=$(mktemp /tmp/install-setup.XXXXXX)
+	tmp=$(mktemp /tmp/compose-setup.XXXXXX)
 
 	assemble "$project" >"$tmp"
 
@@ -86,7 +86,7 @@ check_or_commit() {
 
 usage() {
 	cat <<'EOF'
-Usage: install-setup [OPTIONS] [PROJECT...]
+Usage: compose-setup [OPTIONS] [PROJECT...]
 
 Assembles bin/setup for one or more projects from canonical function fragments
 and checks for drift against the current file on disk.

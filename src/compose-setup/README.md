@@ -1,13 +1,15 @@
-# setup-parts
+# compose-setup
 
 Centralized source for `bin/setup` scripts deployed across all projects.
 
+Assembled by `bin/compose-setup`.
+
 ## How it works
 
-`bin/install-setup` assembles a `bin/setup` for each project by concatenating:
+`bin/compose-setup` assembles a `bin/setup` for each project by concatenating:
 
 1. `header.sh` — shebang, strict mode, `SCRIPT_DIR`, `ENV_FILE`
-2. One function file per entry in `FUNCS[project]` from `fn/`
+2. One function file per entry in `FUNCS[project]`
 3. A footer: each function name on its own line, then `echo "setup complete"`
 
 Each function file contains exactly one shell function definition.
@@ -29,23 +31,23 @@ All assembled scripts are idempotent — safe to re-run at any time.
 
 ```sh
 # Check all projects for drift (default, no writes)
-bin/install-setup
+bin/compose-setup
 
 # Check specific projects
-bin/install-setup server comms
+bin/compose-setup server comms
 
 # Deploy all
-bin/install-setup --commit
+bin/compose-setup --commit
 
 # Deploy specific
-bin/install-setup --commit server comms
+bin/compose-setup --commit server comms
 ```
 
 ## Adding a function
 
-1. Create `fn/<name>.sh` with one function definition and a single-line comment above it.
-2. Add `<name>` to `FUNCS[project]` for each project that needs it in `bin/install-setup`.
-3. Run `bin/install-setup` to verify, `--commit` to deploy.
+1. Create `<name>.sh` in `src/compose-setup/` with one function definition and a single-line comment above it.
+2. Add `<name>` to `FUNCS[project]` for each project that needs it in `bin/compose-setup`.
+3. Run `bin/compose-setup` to verify, `--commit` to deploy.
 
 Design rules for functions:
 
@@ -55,13 +57,13 @@ Design rules for functions:
 
 ## Adding a project
 
-1. Add an entry to `FUNCS` in `bin/install-setup`.
-2. Run `bin/install-setup --commit <project>`.
+1. Add an entry to `FUNCS` in `bin/compose-setup`.
+2. Run `bin/compose-setup --commit <project>`.
 
 ## Function index
 
-<!-- AGENTS: run the snippet below from src/setup-parts/, display output as Markdown -->
+<!-- AGENTS: run the snippet below from src/compose-setup/, display output as Markdown -->
 
 ```bash
-printf '| Function | Description |\n| --- | --- |\n'; for f in fn/*.sh; do name=$(basename "$f" .sh); desc=$(grep -m1 '^#' "$f" | sed 's/^# *//'); printf '| `%s` | %s |\n' "$name" "$desc"; done
+printf '| Function | Description |\n| --- | --- |\n'; for f in *.sh; do name=$(basename "$f" .sh); desc=$(grep -m1 '^#' "$f" | sed 's/^# *//'); printf '| `%s` | %s |\n' "$name" "$desc"; done
 ```
