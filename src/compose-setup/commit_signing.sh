@@ -1,6 +1,6 @@
 # shellcheck shell=bash
 # Imports GPG key and configures git signing; skips if no key.
-setup_gpg_signing() {
+commit_signing() {
 	if [[ -z "${GPG_PRIVATE_KEY:-}" ]]; then
 		echo "bin/setup: GPG_PRIVATE_KEY not set, skipping" >&2
 		return 0

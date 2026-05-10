@@ -5,23 +5,27 @@ shopt -s globstar
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PARTS_DIR="$SCRIPT_DIR/../src/compose-setup"
 PROJECTS_DIR="${PROJECTS_DIR:-$(cd "$SCRIPT_DIR/../Desktop" && pwd)}"
+RC_DEFAULT="$HOME/.config/github.com.rthomazel/.composesetuprc"
 
 #----------------#
 
 declare -A FUNCS
 
-FUNCS[server]="setup_toolchain setup_env_file eleanor_go_download setup_gpg_signing fix_run_permissions"
-FUNCS[comms]="setup_toolchain setup_env_file eleanor_go_download setup_gpg_signing"
-FUNCS[scheduling]="setup_toolchain setup_env_file eleanor_go_download setup_gpg_signing"
-FUNCS["go-common"]="setup_toolchain setup_env_file eleanor_go_download setup_gpg_signing"
-FUNCS["member-server"]="setup_toolchain setup_env_file eleanor_go_download setup_gpg_signing"
-FUNCS[client]="setup_toolchain setup_env_file eleanor_node_download setup_gpg_signing"
-FUNCS["member-client"]="setup_toolchain setup_env_file eleanor_node_download setup_gpg_signing"
-FUNCS[go]="setup_toolchain setup_gpg_signing go_download fix_run_permissions"
-FUNCS["go-athenahealth"]="setup_toolchain setup_gpg_signing go_download"
-FUNCS["jail-mcp"]="setup_toolchain setup_gpg_signing fix_run_permissions"
-FUNCS[shared]="setup_toolchain setup_gpg_signing js_install"
-FUNCS["compose-files"]="setup_toolchain setup_gpg_signing fix_run_permissions"
+load_rc() {
+	local rc_file=$1
+	local line project parts
+	if [[ ! -f "$rc_file" ]]; then
+		echo "error: RC file not found: $rc_file" >&2
+		return 1
+	fi
+	while IFS= read -r line || [[ -n "$line" ]]; do
+		[[ -z "$line" || "$line" == \#* ]] && continue
+		project="${line%%:*}"
+		parts="${line#*:}"
+		parts="${parts#"${parts%%[^ ]*}"}"
+		FUNCS["$project"]="$parts"
+	done <"$rc_file"
+}
 
 #----------------#
 
@@ -85,26 +89,26 @@ check_or_commit() {
 }
 
 usage() {
-	cat <<'EOF'
+	cat <<'USAGE'
 Usage: compose-setup [OPTIONS] [PROJECT...]
 
 Assembles bin/setup for one or more projects from canonical function fragments
 and checks for drift against the current file on disk.
 
 Arguments:
-  PROJECT    One or more project names to check (default: all projects).
-             Known projects: client, comms, compose-files, go, go-athenahealth,
-             go-common, jail-mcp, member-client, member-server, scheduling,
-             server, shared.
+  PROJECT      One or more project names to check (default: all projects).
+               See .composesetuprc for the full project list.
 
 Options:
-  --commit   Write the assembled script to <project>/bin/setup and chmod +x.
-             Default (no flag): check-only — reports drift and exits non-zero.
-  -h, --help Print this help text and exit.
-EOF
+  --commit     Write the assembled script to <project>/bin/setup and chmod +x.
+               Default (no flag): check-only — reports drift and exits non-zero.
+  --rc=<path>  RC file to load (default: ~/.config/github.com.rthomazel/.composesetuprc).
+  -h, --help   Print this help text and exit.
+USAGE
 }
 
 main() {
+	local rc="$RC_DEFAULT"
 	local commit=false
 	local projects=()
 	local exit_code=0
@@ -113,6 +117,7 @@ main() {
 	for arg in "$@"; do
 		case $arg in
 		--commit) commit=true ;;
+		--rc=*) rc="${arg#--rc=}" ;;
 		-h | --help)
 			usage
 			return 0
@@ -120,6 +125,8 @@ main() {
 		*) projects+=("$arg") ;;
 		esac
 	done
+
+	load_rc "$rc"
 
 	if [[ ${#projects[@]} -eq 0 ]]; then
 		mapfile -t projects < <(printf '%s\n' "${!FUNCS[@]}" | sort)
