@@ -9,11 +9,23 @@ Assembled by `bin/compose-setup`.
 `bin/compose-setup` assembles a `bin/setup` for each project by concatenating:
 
 1. `header.sh` — shebang, strict mode, `SCRIPT_DIR`, `ENV_FILE`
-2. One function file per entry in `FUNCS[project]`
+2. One function file per entry in `.composesetuprc` for the project
 3. A footer: each function name on its own line, then `echo "setup complete"`
 
 Each function file contains exactly one shell function definition.
 Branch logic lives inside the function — the footer is a flat unconditional call list.
+
+The project → parts mapping lives in
+`~/.config/github.com.rthomazel/.composesetuprc`.
+Each line has the form `project: part1 part2 ...`.
+`toolchain` must always be first because it exports `PATH`.
+
+```
+# .composesetuprc
+my-go-service:  toolchain env_file eleanor_go_download commit_signing
+my-js-app:      toolchain env_file eleanor_node_download commit_signing
+public-tool:    toolchain commit_signing go_download run_permissions
+```
 
 ## Environments
 
@@ -41,6 +53,9 @@ bin/compose-setup --commit
 
 # Deploy specific
 bin/compose-setup --commit server comms
+
+# Use an alternate RC file
+bin/compose-setup --rc=path/to/.composesetuprc
 ```
 
 ## Formatting
@@ -56,7 +71,7 @@ shfmt -w src/compose-setup/*.sh bin/compose-setup
 ## Adding a function
 
 1. Create `<name>.sh` in `src/compose-setup/` with one function definition and a single-line comment above it.
-2. Add `<name>` to `FUNCS[project]` for each project that needs it in `bin/compose-setup`.
+2. Add `<name>` to the relevant project lines in `.composesetuprc`.
 3. Run `bin/compose-setup` to verify, `--commit` to deploy.
 
 Design rules for functions:
@@ -67,7 +82,7 @@ Design rules for functions:
 
 ## Adding a project
 
-1. Add an entry to `FUNCS` in `bin/compose-setup`.
+1. Add a line to `.composesetuprc`: `<project>: toolchain <parts...>`
 2. Run `bin/compose-setup --commit <project>`.
 
 ## Function index
