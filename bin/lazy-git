@@ -86,6 +86,7 @@ commit() {
   fi
 
   subject="${subject,}"
+  subject="${subject%.}"
   local commit_msg="$type($scope): $subject"
   if [[ "$scope" =~ ^.$ ]]; then
     commit_msg="$type: $subject"
