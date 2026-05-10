@@ -58,6 +58,7 @@ words:
   - CIWA
   - CIWAB
   - commitlintrc
+  - composesetuprc
   - Convo
   - coreutils
   - cpio
@@ -159,6 +160,7 @@ words:
   - OBAT
   - ollama
   - openwebui
+  - oxfmt
   - pacu
   - PAWSS
   - pgdialect
@@ -173,6 +175,7 @@ words:
   - rclone
   - ribeiro
   - rocm
+  - rthomazel
   - SEVDSQ
   - SSDT
   - sslmode

@@ -419,6 +419,20 @@ jb() {
 
 #----------------
 
+# jj bookmark set on @ with today's date, e.g. may-3-1423
+jbn() {
+  __jj_bookmark_set "$(date +%b-%-d-%H%M | tr '[:upper:]' '[:lower:]')" @
+}
+
+#----------------
+
+# jj bookmark set on @- with today's date, e.g. may-3-1423
+jbn-() {
+  __jj_bookmark_set "$(date +%b-%-d-%H%M | tr '[:upper:]' '[:lower:]')" @- --allow-backwards
+}
+
+#----------------
+
 # jj bookmark set on @-
 jb-() {
   if [[ $# == 0 ]]; then

@@ -1,0 +1,17 @@
+# compose-setup project → parts mapping
+# Each line: project: part1 part2 ...
+# toolchain must always be first because it exports PATH.
+
+client:          toolchain commit_signing env_file eleanor_node_download
+comms:           toolchain commit_signing env_file eleanor_go_download
+compose-files:   toolchain commit_signing env_file run_permissions
+go:              toolchain commit_signing go_download run_permissions
+go-athenahealth: toolchain commit_signing go_download
+go-common:       toolchain commit_signing env_file eleanor_go_download
+jail-mcp:        toolchain commit_signing run_permissions
+member-client:   toolchain commit_signing env_file eleanor_node_download
+member-server:   toolchain commit_signing env_file eleanor_go_download
+scheduling:      toolchain commit_signing env_file eleanor_go_download
+server:          toolchain commit_signing env_file eleanor_go_download run_permissions
+shared:          toolchain commit_signing js_install
+
