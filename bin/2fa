@@ -1,0 +1,69 @@
+#! /usr/bin/env bash
+# Copyright 2025-present R. Thomazella. All rights reserved.
+# Use of this source code is governed by the BSD-3-Clause
+# license that can be found in the LICENSE file and online
+# at https://opensource.org/license/BSD-3-clause.
+# generate a TOTP code for a service. print and copy to clipboard.
+
+set -euo pipefail
+shopt -s globstar
+trap 'err $LINENO' ERR
+
+### vars ###
+
+check_dependencies() {
+	if [ "${BASH_ENV:-}" == "" ]; then
+		echo "BASH_ENV not set"
+		exit 1
+	fi
+}
+
+TFA_DIR="$HOME/.2fa"
+
+list_services() {
+	find "$TFA_DIR" -maxdepth 1 -type f | sort | while read -r f; do
+		basename "$f" .gpg
+	done
+}
+
+help_exit() {
+	msgln "Usage: 2fa <service>"
+	msgln "valid services:"
+	list_services
+	exit 1
+}
+
+### script ###
+
+check_dependencies
+
+for dep in gpg oathtool wl-copy; do
+	command -v "$dep" >/dev/null || fatal $LINENO "$dep not found"
+done
+
+[ -d "$TFA_DIR" ] || fatal $LINENO "$TFA_DIR not found"
+
+if [ $# -eq 0 ] || requested_help "$*"; then
+	help_exit
+fi
+
+service="$1"
+gpg_file="$TFA_DIR/$service.gpg"
+plain_file="$TFA_DIR/$service"
+
+if [ -f "$gpg_file" ]; then
+	secret=$(gpg --quiet --decrypt "$gpg_file")
+elif [ -f "$plain_file" ]; then
+	warn $LINENO "$service is not encrypted — run 2fa-migrate"
+	secret=$(cat "$plain_file")
+else
+	err $LINENO "$service not found"
+	msgln "valid services:"
+	list_services
+	exit 1
+fi
+
+code=$(oathtool -b --totp - <<<"$secret" | tr -d '\n')
+
+printf '%s\n' "$code"
+printf '%s' "$code" | wl-copy

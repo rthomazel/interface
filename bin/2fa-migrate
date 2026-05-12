@@ -1,0 +1,51 @@
+#! /usr/bin/env bash
+# Copyright 2025-present R. Thomazella. All rights reserved.
+# Use of this source code is governed by the BSD-3-Clause
+# license that can be found in the LICENSE file and online
+# at https://opensource.org/license/BSD-3-clause.
+# one-shot: encrypt plaintext ~/.2fa secrets to your GPG key.
+# run unlock first so gpg-agent has the passphrase cached.
+
+set -euo pipefail
+shopt -s globstar
+trap 'err $LINENO' ERR
+
+### vars ###
+
+check_dependencies() {
+	if [ "${BASH_ENV:-}" == "" ]; then
+		echo "BASH_ENV not set"
+		exit 1
+	fi
+}
+
+TFA_DIR="$HOME/.2fa"
+RECIPIENT="1357rtr@gmail.com"
+
+### script ###
+
+check_dependencies
+
+for dep in gpg shred; do
+	command -v "$dep" >/dev/null || fatal $LINENO "$dep not found"
+done
+
+[ -d "$TFA_DIR" ] || fatal $LINENO "$TFA_DIR not found"
+
+count=0
+
+for file in "$TFA_DIR"/*; do
+	# skip already-encrypted and non-files
+	[[ "$file" == *.gpg ]] && continue
+	[ -f "$file" ] || continue
+
+	name=$(basename "$file")
+	out="$file.gpg"
+
+	log $LINENO "encrypting $name"
+	gpg --encrypt --recipient "$RECIPIENT" --output "$out" "$file" || fatal $LINENO "failed on $name"
+	shred -u "$file"
+	((count++))
+done
+
+log $LINENO "migrated $count files"

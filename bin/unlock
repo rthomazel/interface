@@ -1,0 +1,72 @@
+#! /usr/bin/env bash
+# Copyright 2025-present R. Thomazella. All rights reserved.
+# Use of this source code is governed by the BSD-3-Clause
+# license that can be found in the LICENSE file and online
+# at https://opensource.org/license/BSD-3-clause.
+# load SSH and GPG keys into agents. run once after login.
+
+set -euo pipefail
+shopt -s globstar
+trap 'err $LINENO' ERR
+
+### vars ###
+
+check_dependencies() {
+	if [ "${BASH_ENV:-}" == "" ]; then
+		echo "BASH_ENV not set"
+		exit 1
+	fi
+}
+
+# keygrips: gpg --with-keygrip --list-secret-keys
+KEYGRIP_PERSONAL="AD651305BA6ED38931D70713EAA24FC72CD1728B" # 1357rtr@gmail.com
+KEYGRIP_PRO="9945CA56E213041B873D5A27874FCBD529C580D0"      # thomazella9@gmail.com
+SSH_KEY="$HOME/.ssh/id_rsa"
+PASS_GPG="$HOME/.pass.gpg"
+GPG_PRESET=$(command -v gpg-preset-passphrase 2>/dev/null || echo /usr/lib/gnupg/gpg-preset-passphrase)
+
+askpass=""
+pw_file=""
+
+_cleanup() {
+	[ -f "$askpass" ] && shred -u "$askpass" 2>/dev/null || true
+	[ -f "$pw_file" ] && shred -u "$pw_file" 2>/dev/null || true
+	unset passphrase secrets ssh_pw gpg_pw gpg_pro_pw
+}
+
+### script ###
+
+check_dependencies
+trap '_cleanup' EXIT
+
+for dep in gpg ssh-add shred; do
+	command -v "$dep" >/dev/null || fatal $LINENO "$dep not found"
+done
+
+[ -x "$GPG_PRESET" ] || fatal $LINENO "gpg-preset-passphrase not found at $GPG_PRESET"
+[ -f "$PASS_GPG" ] || fatal $LINENO "$PASS_GPG not found"
+[ -f "$SSH_KEY" ] || fatal $LINENO "$SSH_KEY not found"
+
+read -rsp "passphrase: " passphrase
+echo
+
+secrets=$(gpg --batch --pinentry-mode loopback --passphrase-fd 3 --decrypt "$PASS_GPG" 3<<<"$passphrase")
+
+ssh_pw=$(awk '$1=="ssh" {print $2}' <<<"$secrets")
+gpg_pro_pw=$(awk '$1=="gpg" && $2=="pro" {print $3}' <<<"$secrets")
+gpg_pw=$(awk '$1=="gpg" && $2!="pro" {print $2}' <<<"$secrets")
+
+# SSH_ASKPASS requires a helper script; /dev/shm is RAM-backed, never hits disk
+pw_file=$(mktemp /dev/shm/pw_XXXXXX)
+askpass=$(mktemp /dev/shm/askpass_XXXXXX)
+chmod 600 "$pw_file"
+chmod 700 "$askpass"
+printf '%s' "$ssh_pw" >"$pw_file"
+printf '#!/bin/bash\ncat "%s"\n' "$pw_file" >"$askpass"
+
+SSH_ASKPASS="$askpass" SSH_ASKPASS_REQUIRE=force DISPLAY=: ssh-add "$SSH_KEY"
+
+"$GPG_PRESET" --preset "$KEYGRIP_PERSONAL" <<<"$gpg_pw"
+"$GPG_PRESET" --preset "$KEYGRIP_PRO" <<<"$gpg_pro_pw"
+
+log $LINENO "keys loaded"
