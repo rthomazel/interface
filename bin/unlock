@@ -19,8 +19,11 @@ check_dependencies() {
 }
 
 # keygrips: gpg --with-keygrip --list-secret-keys
-KEYGRIP_PERSONAL="AD651305BA6ED38931D70713EAA24FC72CD1728B" # 1357rtr@gmail.com
-KEYGRIP_PRO="9945CA56E213041B873D5A27874FCBD529C580D0"      # thomazella9@gmail.com
+# preset both primary (SC) and subkey (E) per key — GPG uses each for different ops
+KEYGRIP_PERSONAL="AD651305BA6ED38931D70713EAA24FC72CD1728B"     # 1357rtr@gmail.com [SC]
+KEYGRIP_PERSONAL_SUB="E646642A421E45EED65BAC383947EDD6355010AA" # 1357rtr@gmail.com [E]
+KEYGRIP_PRO="9945CA56E213041B873D5A27874FCBD529C580D0"          # thomazella9@gmail.com [SC]
+KEYGRIP_PRO_SUB="F28EF2165DDDFEABEF30A620B15846630AEE584D"      # thomazella9@gmail.com [E]
 SSH_KEY="$HOME/.ssh/id_rsa"
 PASS_GPG="$HOME/.pass.gpg"
 GPG_PRESET=$(command -v gpg-preset-passphrase 2>/dev/null || echo /usr/lib/gnupg/gpg-preset-passphrase)
