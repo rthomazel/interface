@@ -366,7 +366,7 @@
     "plaintext": false,
     "markdown": false,
     "scminput": false,
-    "go": false,
+    "go": true,
   },
   "[github-actions-workflow]": {
     "editor.defaultFormatter": "redhat.vscode-yaml",
