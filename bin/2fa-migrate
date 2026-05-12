@@ -45,7 +45,7 @@ for file in "$TFA_DIR"/*; do
 	log $LINENO "encrypting $name"
 	gpg --encrypt --recipient "$RECIPIENT" --output "$out" "$file" || fatal $LINENO "failed on $name"
 	shred -u "$file"
-	((count++))
+	((++count))
 done
 
 log $LINENO "migrated $count files"
