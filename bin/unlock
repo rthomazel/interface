@@ -12,10 +12,10 @@ trap 'err $LINENO' ERR
 ### vars ###
 
 check_dependencies() {
-	if [ "${BASH_ENV:-}" == "" ]; then
-		echo "BASH_ENV not set"
-		exit 1
-	fi
+  if [ "${BASH_ENV:-}" == "" ]; then
+    echo "BASH_ENV not set"
+    exit 1
+  fi
 }
 
 # keygrips: gpg --with-keygrip --list-secret-keys
@@ -33,9 +33,9 @@ askpass=""
 pw_file=""
 
 _cleanup() {
-	[ -f "$askpass" ] && shred -u "$askpass" 2>/dev/null || true
-	[ -f "$pw_file" ] && shred -u "$pw_file" 2>/dev/null || true
-	unset passphrase secrets ssh_pw gpg_pw gpg_pro_pw
+  [ -f "$askpass" ] && shred -u "$askpass" 2>/dev/null || true
+  [ -f "$pw_file" ] && shred -u "$pw_file" 2>/dev/null || true
+  unset passphrase secrets ssh_pw gpg_pw gpg_pro_pw
 }
 
 ### script ###
@@ -44,7 +44,7 @@ check_dependencies
 trap '_cleanup' EXIT
 
 for dep in gpg ssh-add shred; do
-	command -v "$dep" >/dev/null || fatal $LINENO "$dep not found"
+  command -v "$dep" >/dev/null || fatal $LINENO "$dep not found"
 done
 
 [ -x "$GPG_PRESET" ] || fatal $LINENO "gpg-preset-passphrase not found at $GPG_PRESET"
