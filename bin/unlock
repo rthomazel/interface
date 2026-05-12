@@ -33,8 +33,8 @@ askpass=""
 pw_file=""
 
 _cleanup() {
-  [ -f "$askpass" ] && shred -u "$askpass" 2>/dev/null || true
-  [ -f "$pw_file" ] && shred -u "$pw_file" 2>/dev/null || true
+  if [ -f "$askpass" ]; then shred -u "$askpass" 2>/dev/null; fi
+  if [ -f "$pw_file" ]; then shred -u "$pw_file" 2>/dev/null; fi
   unset passphrase secrets ssh_pw gpg_pw gpg_pro_pw
 }
 
