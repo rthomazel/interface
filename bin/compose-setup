@@ -71,7 +71,6 @@ check_or_commit() {
   fi
 
   if diff -q "$target" "$tmp" >/dev/null 2>&1; then
-    echo "$project: up to date"
     rm "$tmp"
     return 0
   fi
