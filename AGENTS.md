@@ -12,6 +12,12 @@ See files under doc/ for project structure and documentation (faster than readin
 
 Most of the scripts have no tests, we gotta run them to test.
 
+**Lint and format:** always use the `run` script at the repo root, not tools directly.
+```
+./run lint    # shellcheck on all bash scripts
+./run format  # shfmt on all bash scripts
+```
+
 ## Code Style
 
 Keep comments short and sweet, don't document obvious code.
