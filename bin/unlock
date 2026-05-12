@@ -70,6 +70,8 @@ printf '#!/bin/bash\ncat "%s"\n' "$pw_file" >"$askpass"
 SSH_ASKPASS="$askpass" SSH_ASKPASS_REQUIRE=force DISPLAY=: ssh-add "$SSH_KEY"
 
 "$GPG_PRESET" --preset "$KEYGRIP_PERSONAL" <<<"$gpg_pw"
+"$GPG_PRESET" --preset "$KEYGRIP_PERSONAL_SUB" <<<"$gpg_pw"
 "$GPG_PRESET" --preset "$KEYGRIP_PRO" <<<"$gpg_pro_pw"
+"$GPG_PRESET" --preset "$KEYGRIP_PRO_SUB" <<<"$gpg_pro_pw"
 
 log $LINENO "keys loaded"
