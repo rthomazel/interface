@@ -20,6 +20,7 @@ check_dependencies() {
 
 # keygrips: gpg --with-keygrip --list-secret-keys
 # preset both primary (SC) and subkey (E) per key — GPG uses each for different ops
+# shellcheck disable=SC2034
 KEYGRIP_PERSONAL="AD651305BA6ED38931D70713EAA24FC72CD1728B"     # 1357rtr@gmail.com [SC]
 KEYGRIP_PERSONAL_SUB="E646642A421E45EED65BAC383947EDD6355010AA" # 1357rtr@gmail.com [E]
 KEYGRIP_PRO="9945CA56E213041B873D5A27874FCBD529C580D0"          # thomazella9@gmail.com [SC]
