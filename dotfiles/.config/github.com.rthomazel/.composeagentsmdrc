@@ -1,0 +1,27 @@
+# compose-agents-md project → parts mapping
+# Each line: project: part1 part2 ...
+# Fragments are concatenated in order; header.md is always prepended automatically.
+# arch_ddd, misc_go, misc_db_* have no ## heading -- list them right after their parent section.
+
+# TypeScript projects
+client:          role build_ts style_ts commits misc
+member-client:   role build_ts style_ts commits misc
+shared:          role build_ts style_ts commits misc
+
+# Go projects
+comms:           role build_go arch arch_ddd style_gofumpt commits agent_setup misc misc_go misc_db_schema misc_db_migrations package_docs
+go:              role build_go arch style_gofumpt commits agent_setup misc misc_go package_docs
+go-athenahealth: role build_go style_gofumpt commits misc misc_go package_docs
+go-common:       role arch arch_ddd style_gofumpt commits agent_setup misc misc_go package_docs
+member-server:   role build_go arch arch_ddd style_gofumpt commits agent_setup misc misc_go package_docs
+scheduling:      role build_go arch style_gofumpt commits agent_setup misc misc_go misc_db_migrations package_docs
+server:          role build_go arch arch_ddd style_gofumpt commits agent_setup one_time_jobs misc misc_go misc_db_schema misc_db_migrations misc_db_activity package_docs
+
+# Other
+compose-files:   role style_shell commits
+
+# Unmanaged projects (AGENTS.md too unique for common fragments):
+# interface         -- shell-specific role and style
+# jail-mcp         -- different document structure
+# programming-problems -- entirely different purpose
+# scratchpad       -- freeform, project-specific

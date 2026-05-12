@@ -47,11 +47,11 @@ This repo is managed by Jujutsu. Git is always in detached HEAD. **Never use `gi
 
 **When ready to push:**
 
-1. `jj describe -m "type(scope): message"` — set the message on the tip commit
-2. `jj bookmark create <name>` — create once at push time, never earlier
+1. `jj commit -m "type(scope): message"` — set message and automatically leave a clean working copy (`jj commit` = `jj describe` + `jj new`)
+2. `jj bookmark create <name>` — create once at push time, never earlier; use `jj bookmark set <name>` to move it to `@-` (the committed change)
 3. `jj git push --bookmark <name>` — push to GitHub
 4. `gh pr create --head <name> --base main --title "type(scope): message" --body "..."`
-5. `jj new main` — leave a clean working copy for Thom
+5. `jj new main` — leave a clean working copy for Thom when work is fully done
 
 If you need to push additional commits to an already-open PR, use `jj bookmark set <name>` to move the bookmark forward, then `jj git push --bookmark <name>` again.
 
