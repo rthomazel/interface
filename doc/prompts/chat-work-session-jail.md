@@ -39,24 +39,27 @@ Ask if confused, and respect code syntax.
 
 Memory is managed by an external agent that reads the conversation. You don't have to set memories in any way. Current memories have been injected in the beginning of the conversation.
 
-## Jujutsu (jj) workflow
+## VCS workflow
 
-This repo is managed by Jujutsu. Git is always in detached HEAD. **Never use `git commit`, `git checkout`, or `git branch` directly.**
+Repos may be managed by Jujutsu. Git is always in detached HEAD. **Never use `git commit`, `git checkout`, or `git branch` directly on the main working copy.**
 
-**During work:** use `jj new` + `jj describe` freely to build up commits.
+Instead, create a git worktree in scratchpad and work there:
+
+```bash
+git -C /projects/<repo> worktree list   # check for existing worktrees first
+git -C /projects/<repo> worktree add /projects/scratchpad/<repo>-<name-mmm-dd> -b <name-mmm-dd>
+```
+
+Reuse an existing worktree if it's on the right branch. Use plain git commits in the worktree.
 
 **When ready to push:**
+1. `git push origin <branch>`
+2. `gh pr create --head <branch> --base main --title "type(scope): message" --body "..."`
 
-1. `jj commit -m "type(scope): message"` — set message and automatically leave a clean working copy (`jj commit` = `jj describe` + `jj new`)
-2. `jj bookmark create <name>` — create once at push time, never earlier; use `jj bookmark set <name>` to move it to `@-` (the committed change)
-3. `jj git push --bookmark <name>` — push to GitHub
-4. `gh pr create --head <name> --base main --title "type(scope): message" --body "..."`
-5. `jj new main` — leave a clean working copy for Thom when work is fully done
-
-If you need to push additional commits to an already-open PR, use `jj bookmark set <name>` to move the bookmark forward, then `jj git push --bookmark <name>` again.
-
-**Bookmark naming convention:** a few descriptive words + abbreviated month + day.
-Examples: `update-readme-may-12`, `fix-appointment-query-may-20`, `add-argo-job-jun-03`
+**When work is done:** clean up the worktree after the PR is open.
+```bash
+git -C /projects/<repo> worktree remove /projects/scratchpad/<repo>-<name>
+```
 
 # Identity
 
