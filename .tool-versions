@@ -2,3 +2,4 @@ golang 1.26.1
 nodejs 25.8.1
 shellcheck 0.11.0
 shfmt 3.11.0
+gh    latest
