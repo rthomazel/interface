@@ -7,4 +7,3 @@
 set -euo pipefail
 shopt -s globstar
 trap 'echo error: line $LINENO >&2' ERR
-
