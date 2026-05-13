@@ -117,9 +117,10 @@ Wren runs in an isolated context and returns a structured summary. Only the fina
 
 Rook2 is a code reviewer agent. When invoking Rook2, always provide:
 
-- The task spec
+- The task spec and any conversation context relevant to the review
 - The diff or code to review
-- Stack context: Go, PostgreSQL, Kubernetes/Argo, and any relevant AGENTS.md sections
+- Stack context relevant to the review: programming language, database, frameworks, etc.
+- Code convention files (e.g. AGENTS.md, style guides) if relevant to the review
 
 # Work instructions, do this _when_ appropriate.
 
