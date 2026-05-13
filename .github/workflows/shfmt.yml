@@ -9,8 +9,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: install tools
-        run: bin/setup /usr/local/bin
+      - uses: jdx/mise-action@v4.0.1
 
         # -ln bash causes editor config to not be respected.
         # could be fixable by a more complex editor config that would catch scripts without .sh extension.

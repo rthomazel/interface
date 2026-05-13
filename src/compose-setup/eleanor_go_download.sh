@@ -1,7 +1,9 @@
 # shellcheck shell=bash
 # Configures GOPRIVATE and git HTTPS auth for Eleanor Health Go projects, then runs go mod download. Humans: use SSH instead of GITHUB_TOKEN.
 eleanor_go_download() {
-  local ENV_FILE="$SCRIPT_DIR/../.env"
+  local script_dir
+  script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+  local ENV_FILE="$script_dir/../.env"
   # shellcheck disable=SC1090
   [[ -z "${GITHUB_TOKEN:-}" && -f "$ENV_FILE" ]] && . "$ENV_FILE"
 

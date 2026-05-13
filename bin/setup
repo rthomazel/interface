@@ -3,124 +3,71 @@
 # Use of this source code is governed by the BSD-3-Clause
 # license that can be found in the LICENSE file and online
 # at https://opensource.org/license/BSD-3-clause.
-#
-# Installs development tools required by this repo.
-# Self-contained: does not require $BASH_ENV.
-# Interactive shell: prints install instructions and exits.
-# Non-interactive: downloads and installs binaries from GitHub releases.
 
 set -euo pipefail
 shopt -s globstar
+trap 'echo error: line $LINENO >&2' ERR
 
-### vars and functions ###
-
-msgln() { echo -e "$*"; }
-log() { echo -e "INFO ($0:${1}) ${*:2}" >&2; }
-err() { echo -e "ERROR ($0:${1})" >&2; }
-fatal() {
-  err "$1" "${*:2}"
-  exit 1
+# shellcheck shell=bash
+# Installs mise if missing, runs mise install, activates shims in PATH. Always call first.
+toolchain() {
+  if ! command -v mise &>/dev/null; then
+    curl https://mise.run | sh
+    export PATH="$HOME/.local/bin:$PATH"
+  fi
+  mise install
+  export PATH="$HOME/.local/share/mise/shims:$PATH"
 }
 
-trap 'err $LINENO' ERR
+# shellcheck shell=bash
+# Imports GPG key and configures git signing; skips if no key.
+commit_signing() {
+  if [[ -z "${GPG_PRIVATE_KEY:-}" ]]; then
+    echo "bin/setup: GPG_PRIVATE_KEY not set, skipping" >&2
+    return 0
+  fi
 
-readonly install_dir="${1:-/root/bin}"
+  mkdir -p ~/.gnupg && chmod 700 ~/.gnupg
+  echo "allow-loopback-pinentry" >~/.gnupg/gpg-agent.conf
+  gpg-connect-agent reloadagent /bye >/dev/null 2>&1 || true
 
-run_privileged() {
-  if [ "$(id -u)" = "0" ]; then
-    "$@"
+  if [[ -n "${GPG_PASSPHRASE:-}" ]]; then
+    echo "${GPG_PRIVATE_KEY}" | base64 --decode |
+      gpg --batch --passphrase "${GPG_PASSPHRASE}" --pinentry-mode loopback --import
   else
-    sudo "$@"
-  fi
-}
-
-print_manual_instructions() {
-  msgln "Some tools are missing. Please install them manually:"
-  msgln
-  msgln "  shfmt:      https://github.com/mvdan/sh/releases/latest"
-  msgln "  shellcheck: https://github.com/koalaman/shellcheck/releases/latest"
-  msgln
-  msgln "On Arch:  sudo pacman -S shfmt shellcheck"
-  msgln "On macOS: brew install shfmt shellcheck"
-}
-
-latest_version() {
-  local repo=$1
-
-  curl -sf "https://api.github.com/repos/$repo/releases/latest" |
-    grep '"tag_name"' |
-    sed -E 's/.*"tag_name": "(.*)".*/\1/'
-}
-
-install_shfmt() {
-  local version os arch url tmp
-
-  log $LINENO "fetching latest shfmt version"
-  version=$(latest_version mvdan/sh)
-
-  os=$(uname -s | tr '[:upper:]' '[:lower:]')
-  arch=$(uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/')
-  url="https://github.com/mvdan/sh/releases/download/${version}/shfmt_${version}_${os}_${arch}"
-  tmp=$(mktemp)
-
-  log $LINENO "downloading shfmt $version"
-  curl -sfL "$url" -o "$tmp"
-  chmod +x "$tmp"
-  run_privileged mv "$tmp" "$install_dir/shfmt"
-  log $LINENO "shfmt installed to $install_dir/shfmt"
-}
-
-install_shellcheck() {
-  local version os arch tarball url tmp_dir
-
-  log $LINENO "fetching latest shellcheck version"
-  version=$(latest_version koalaman/shellcheck)
-
-  os=$(uname -s | tr '[:upper:]' '[:lower:]')
-  arch=$(uname -m)
-  tarball="shellcheck-${version}.${os}.${arch}.tar.xz"
-  url="https://github.com/koalaman/shellcheck/releases/download/${version}/${tarball}"
-  tmp_dir=$(mktemp -d)
-
-  log $LINENO "downloading shellcheck $version"
-  curl -sfL "$url" | tar -xJ -C "$tmp_dir"
-  run_privileged mv "$tmp_dir/shellcheck-${version}/shellcheck" "$install_dir/shellcheck"
-  rm -rf "$tmp_dir"
-  log $LINENO "shellcheck installed to $install_dir/shellcheck"
-}
-
-install_tool() {
-  local tool=$1 install_fn=$2
-
-  if command -v "$tool" >/dev/null 2>&1; then
-    log $LINENO "$tool already installed"
-    return
+    echo "${GPG_PRIVATE_KEY}" | base64 --decode | gpg --batch --import
   fi
 
-  "$install_fn"
+  FINGERPRINT=$(gpg --list-secret-keys --with-colons |
+    awk -F: '/^fpr:/{print $10; exit}')
+
+  git config --global user.signingkey "${FINGERPRINT}"
+  git config --global commit.gpgsign true
+  git config --global gpg.format openpgp
+  git config --global gpg.program gpg
+
+  if [[ -n "${GPG_PASSPHRASE:-}" ]]; then
+    cat >/usr/local/bin/gpg-passphrase-wrapper <<'WRAPPER'
+#!/usr/bin/env bash
+exec gpg --batch --passphrase "${GPG_PASSPHRASE}" --pinentry-mode loopback "$@"
+WRAPPER
+    chmod +x /usr/local/bin/gpg-passphrase-wrapper
+    git config --global gpg.program /usr/local/bin/gpg-passphrase-wrapper
+  fi
+
+  echo "bin/setup: GPG signing configured (${FINGERPRINT})" >&2
 }
 
-### script ###
+# shellcheck shell=bash
+# Makes run and bin/setup executable; no-op if run is absent.
+run_permissions() {
+  local script_dir
+  script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+  chmod u+x "$script_dir/../run" "$script_dir/setup" 2>/dev/null || true
+}
 
-missing=false
+toolchain
+commit_signing
+run_permissions
 
-command -v shfmt >/dev/null 2>&1 || missing=true
-command -v shellcheck >/dev/null 2>&1 || missing=true
-
-if ! $missing; then
-  log $LINENO "all tools already installed"
-  exit 0
-fi
-
-# todo: runing script as user doesn't trigger this
-# interactive shell: just tell the user
-if [[ $- == *i* ]]; then
-  print_manual_instructions
-  exit 0
-fi
-
-# non-interactive: download and install
-install_tool shfmt install_shfmt
-install_tool shellcheck install_shellcheck
-
-msgln "setup complete"
+echo "setup complete"

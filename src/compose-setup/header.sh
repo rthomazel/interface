@@ -1,8 +1,10 @@
 #! /usr/bin/env bash
+# Copyright 2025-present R. Thomazella. All rights reserved.
+# Use of this source code is governed by the BSD-3-Clause
+# license that can be found in the LICENSE file and online
+# at https://opensource.org/license/BSD-3-clause.
 
 set -euo pipefail
 shopt -s globstar
 trap 'echo error: line $LINENO >&2' ERR
-# AGENTS: run bin/setup at session start if not already done — it is idempotent.
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"

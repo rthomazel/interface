@@ -9,8 +9,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: install tools
-        run: bin/setup /usr/local/bin
+      - uses: jdx/mise-action@v4.0.1
 
       - name: run shellcheck
         run: |
