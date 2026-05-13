@@ -8,7 +8,6 @@ set -euo pipefail
 shopt -s globstar
 trap 'echo error: line $LINENO >&2' ERR
 
-
 # shellcheck shell=bash
 # Installs mise if missing, runs mise install, activates shims in PATH. Always call first.
 toolchain() {
