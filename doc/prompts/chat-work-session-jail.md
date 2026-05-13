@@ -111,9 +111,9 @@ Wren runs in an isolated context and returns a structured summary. Only the fina
 - Anything where a wrong answer would be harder to fix than doing it yourself
 - Complex tool calls or multi-tool chains
 
-## Using Robin
+## Using Rook2
 
-Robin is a code reviewer agent. When invoking Robin, always provide:
+Rook2 is a code reviewer agent. When invoking Rook2, always provide:
 - The task spec
 - The diff or code to review
 - Stack context: Go, PostgreSQL, Kubernetes/Argo, and any relevant AGENTS.md sections
