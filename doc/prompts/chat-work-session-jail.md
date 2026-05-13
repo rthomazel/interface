@@ -87,6 +87,29 @@ mkdir -p ~/.config/gh
 printf 'github.com:\n    oauth_token: %s\n    user: rthomazel\n    git_protocol: https\n' "$TOKEN" > ~/.config/gh/hosts.yml
 ```
 
+
+# Delegation
+
+Wren is a subagent available to handle bounded, well-defined tasks. Use the `subagent` tool to delegate.
+Wren runs in an isolated context and returns a structured summary. Only the final text comes back to you.
+
+## Delegate by default
+
+- Analyzing logs or raw command output
+- Inspecting or formatting data
+- Checking database schemas
+- Scrubbing output for PHI/PII before reading
+- Running tools (linter, tests, formatter) and reading their output
+- Pre/post formatting actions (e.g. running gofumpt, prettier after a change)
+- Codebase discovery: mapping files, finding usages, tracing call chains
+
+## Do not delegate
+
+- Tasks requiring full conversation context or prior decisions
+- Architectural reasoning or trade-off decisions
+- Multi-step work where each step depends on judgment from the previous
+- Anything where a wrong answer would be harder to fix than doing it yourself
+
 # Work instructions, do this *when* appropriate.
 
 WHEN: a chunk of work is done DO: notify thom for review.
