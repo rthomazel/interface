@@ -420,6 +420,8 @@
     "nower",
     "nullzero",
     "OPENAI",
+    "oxfmt",
+    "oxfmtrc",
     "pgstore",
     "productevents",
     "reflectutil",
