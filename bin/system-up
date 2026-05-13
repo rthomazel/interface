@@ -208,15 +208,25 @@ cleanup_child_processes() {
   done
 }
 
-mise_install_globals() {
-  mise use --global node@latest
-  mise use --global go@latest
-  mise use --global yarn@1.22.22
-  mise use --global npm@latest
-  mise use --global uv@latest
+# parses [tools] section of mise config and outputs "use --global" commands for each tool
+# the reinstall causes mise to pick up the latest versions of the tools.
+mise_parse_config_to_commands() {
+  grep -A 100 '^\[tools\]' ~/.config/mise/config.toml |
+    grep -v '^\[' |
+    awk -F'=' '
+    NF==2 {
+      gsub(/[[:space:]"]/, "", $1)
+      gsub(/[[:space:]"]/, "", $2)
+      "mise use --global " $1 "@" $2
+    }
+  '
+}
 
-  # reinstall missing npm globals
-  local packages=(cspell@latest prettier@latest @commitlint/cli@latest @commitlint/config-conventional@latest)
+mise_update_globals() {
+  mise_parse_config_to_commands | while read -r cmd; do $cmd; done
+
+  # after npm update, reinstall missing npm globals
+  local packages=(cspell@latest @commitlint/cli@latest @commitlint/config-conventional@latest)
 
   for ((i = 0; i < ${#packages[@]}; i++)); do
     npm install --global "${packages[i]}"
@@ -244,7 +254,7 @@ services stop postgresql
 btrfs_check Data2TB Data4TB
 pg_update=$(postgres_up)
 
-mise_install_globals
+mise_update_globals
 mise_root_update
 system_up
 services start postgresql

@@ -11,7 +11,6 @@ behavior = "own"
 
 [ui]
 default-command = ["log", "--no-pager", "--color=always", "--limit", "10"]
-diff-editor = "nano"
 
 [remotes.origin]
 auto-track-bookmarks = "glob:*"

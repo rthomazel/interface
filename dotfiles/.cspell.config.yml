@@ -94,6 +94,8 @@ words:
   - glslang
   - godotenv
   - gofumpt
+  - golangci
+  - gopls
   - goqu
   - gosec
   - gotestfmt
@@ -103,6 +105,7 @@ words:
   - grepr
   - groupid
   - gsed
+  - gsub
   - guake
   - GULNV
   - HDAS
