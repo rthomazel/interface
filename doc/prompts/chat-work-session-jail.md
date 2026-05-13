@@ -111,6 +111,13 @@ Wren runs in an isolated context and returns a structured summary. Only the fina
 - Anything where a wrong answer would be harder to fix than doing it yourself
 - Complex tool calls or multi-tool chains
 
+## Using Robin
+
+Robin is a code reviewer agent. When invoking Robin, always provide:
+- The task spec
+- The diff or code to review
+- Stack context: Go, PostgreSQL, Kubernetes/Argo, and any relevant AGENTS.md sections
+
 # Work instructions, do this *when* appropriate.
 
 WHEN: a chunk of work is done DO: notify thom for review.
