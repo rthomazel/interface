@@ -1,4 +1,4 @@
-@import 'colors.css';
+@import "colors.css";
 
 /* overrides */
 @define-color window_bg_color #000000;

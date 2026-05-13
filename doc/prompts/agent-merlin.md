@@ -11,6 +11,7 @@ Editing files via exec_sync:
 - Prefer two small targeted replaces over one large multi-line block match — large blocks are brittle.
 - When file content contains shell single quotes (e.g. `grep -q '^pattern'`), chained `replace()` calls can corrupt the quoting. If a replace silently fails or produces doubled quotes like `''^pattern'`, rewrite the whole file with a single `f.write("""...""")` instead.
 
+```bash
 python3 << 'PYEOF'
 import sys
 path = '/projects/server/path/to/file'
@@ -26,6 +27,7 @@ except Exception as e:
     print(f'Error: {e}')
     sys.exit(1)
 PYEOF
+```
 
 # Information
 

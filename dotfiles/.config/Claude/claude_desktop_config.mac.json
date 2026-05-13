@@ -14,43 +14,23 @@
     },
     "local_hub": {
       "command": "uvx",
-      "args": [
-        "pgsql-mcp-server",
-        "--dsn",
-        "postgresql://postgres:@localhost:5432/hub"
-      ]
+      "args": ["pgsql-mcp-server", "--dsn", "postgresql://postgres:@localhost:5432/hub"]
     },
     "local_member": {
       "command": "uvx",
-      "args": [
-        "pgsql-mcp-server",
-        "--dsn",
-        "postgresql://postgres:@localhost:5432/member"
-      ]
+      "args": ["pgsql-mcp-server", "--dsn", "postgresql://postgres:@localhost:5432/member"]
     },
     "local_hub_test": {
       "command": "uvx",
-      "args": [
-        "pgsql-mcp-server",
-        "--dsn",
-        "postgresql://postgres:@localhost:5432/hub_test"
-      ]
+      "args": ["pgsql-mcp-server", "--dsn", "postgresql://postgres:@localhost:5432/hub_test"]
     },
     "local_member_test": {
       "command": "uvx",
-      "args": [
-        "pgsql-mcp-server",
-        "--dsn",
-        "postgresql://postgres:@localhost:5432/member_test"
-      ]
+      "args": ["pgsql-mcp-server", "--dsn", "postgresql://postgres:@localhost:5432/member_test"]
     },
     "local_comms_docker": {
       "command": "uvx",
-      "args": [
-        "pgsql-mcp-server",
-        "--dsn",
-        "postgresql://postgres:password@localhost:3501/comms"
-      ]
+      "args": ["pgsql-mcp-server", "--dsn", "postgresql://postgres:password@localhost:3501/comms"]
     },
     "qa_hub": {
       "command": "uvx",
