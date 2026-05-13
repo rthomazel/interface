@@ -20,7 +20,7 @@
   "test.new": {
     "prefix": "test",
     "body": ["func Test_${1:it}(t *testing.T) {", "\tassert := assert.New(t)", "}"],
-    "description": "Log output to console",
+    "description": "Log output to console"
   },
   "comma-nil": {
     "prefix": "ni",
@@ -44,7 +44,12 @@
   },
   "respond-err-wrapf": {
     "prefix": "ree",
-    "body": ["if err != nil {", "\trespondError(ctx, w, http.StatusInternalServerError, errs.Wrap(err, \"${1:message}\"))$0", "\treturn", "}"],
+    "body": [
+      "if err != nil {",
+      "\trespondError(ctx, w, http.StatusInternalServerError, errs.Wrap(err, \"${1:message}\"))$0",
+      "\treturn",
+      "}"
+    ],
     "description": "comman space nil"
   }
   // "console.log": {

@@ -18,7 +18,7 @@
       "tab.activeBackground": "#000",
       "titleBar.activeBackground": "#000",
       "editorGutter.background": "#000",
-      "breadcrumb.background": "#000",
+      "breadcrumb.background": "#000"
     },
     "activityBarBadge.background": "#FF4081",
     "list.activeSelectionForeground": "#FF4081",
@@ -38,7 +38,7 @@
     "panelTitle.activeBorder": "#FF4081",
     "breadcrumb.activeSelectionForeground": "#FF4081",
     "menu.selectionForeground": "#FF4081",
-    "menubar.selectionForeground": "#FF4081",
+    "menubar.selectionForeground": "#FF4081"
   },
   "editor.tokenColorCustomizations": {
     "[GitHub Dark High Contrast]": {
@@ -46,8 +46,8 @@
       "functions": "#7e7fdd",
       "strings": "#8b907f",
       "keywords": "#c5ad97",
-      "types": "#6abe7f",
-    },
+      "types": "#6abe7f"
+    }
   },
   //
   // - - - - - - - - FONT - - - - - - - - -
@@ -68,52 +68,52 @@
   //
   "eslint.run": "onType",
   "eslint.options": {
-    "resolvePluginsRelativeTo": ".",
+    "resolvePluginsRelativeTo": "."
   },
   "[shellscript]": {
-    "editor.defaultFormatter": "foxundermoon.shell-format",
+    "editor.defaultFormatter": "foxundermoon.shell-format"
   },
   "[typescriptreact]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.defaultFormatter": "oxc.oxc-vscode"
   },
   "[javascript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.defaultFormatter": "oxc.oxc-vscode"
   },
   "[javascriptreact]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.defaultFormatter": "oxc.oxc-vscode"
   },
   "[typescript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.defaultFormatter": "oxc.oxc-vscode"
   },
   "[json]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.defaultFormatter": "oxc.oxc-vscode"
   },
   "[sql]": {
-    "editor.formatOnPaste": false,
+    "editor.formatOnPaste": false
   },
   "[yaml]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.defaultFormatter": "oxc.oxc-vscode"
   },
   "[css]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.defaultFormatter": "oxc.oxc-vscode"
   },
   "[html]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.defaultFormatter": "oxc.oxc-vscode"
   },
   "[jsonc]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.defaultFormatter": "oxc.oxc-vscode"
   },
   "[dockercompose]": {
     "editor.insertSpaces": true,
     "editor.tabSize": 2,
     "editor.autoIndent": "advanced",
-    "editor.defaultFormatter": "redhat.vscode-yaml",
+    "editor.defaultFormatter": "redhat.vscode-yaml"
   },
   "[go]": {
     "editor.formatOnSave": true,
     "editor.codeActionsOnSave": {
-      "source.organizeImports": "explicit",
-    },
+      "source.organizeImports": "explicit"
+    }
   },
   "sql-formatter.uppercase": true,
   //
@@ -144,7 +144,7 @@
   "go.useLanguageServer": true,
   "go.testOnSave": false,
   "go.delveConfig": {
-    "debugAdapter": "dlv-dap",
+    "debugAdapter": "dlv-dap"
   },
   "go.testEnvFile": "${workspaceFolder}/.env",
   "go.testFlags": ["-race"],
@@ -257,7 +257,7 @@
       "ST1023": true,
       "appendclipped": true,
       "shadow": true,
-      "slicesdelete": true,
+      "slicesdelete": true
     },
 
     // "hints": {
@@ -279,7 +279,7 @@
       "run_govulncheck": true,
       "tidy": true,
       "vendor": true,
-      "generate": true,
+      "generate": true
     },
 
     // Format with gofumpt (stricter than gofmt) — requires gofumpt installed
@@ -291,8 +291,8 @@
       "bounds": true, // annotate slice bounds checks
       "escape": true, // annotate heap escapes
       "inline": true, // annotate inlining decisions
-      "nil": true,
-    },
+      "nil": true
+    }
   },
   "go.toolsManagement.autoUpdate": true,
   //
@@ -336,28 +336,28 @@
   "githubPullRequests.queries": [
     {
       "label": "Local Pull Request Branches",
-      "query": "default",
+      "query": "default"
     },
     {
       "label": "Waiting",
-      "query": "repo:${owner}/${repository} is:open review-requested:${user}",
+      "query": "repo:${owner}/${repository} is:open review-requested:${user}"
     },
     {
       "label": "Open",
-      "query": "repo:${owner}/${repository} is:open",
+      "query": "repo:${owner}/${repository} is:open"
     },
     {
       "label": "Assigned",
-      "query": "repo:${owner}/${repository} is:open assignee:${user}",
+      "query": "repo:${owner}/${repository} is:open assignee:${user}"
     },
     {
       "label": "Created",
-      "query": "repo:${owner}/${repository} is:open author:${user}",
+      "query": "repo:${owner}/${repository} is:open author:${user}"
     },
     {
       "label": "All Open",
-      "query": "default",
-    },
+      "query": "default"
+    }
   ],
   "githubPullRequests.fileListLayout": "flat",
   "githubPullRequests.pullBranch": "never",
@@ -366,10 +366,10 @@
     "plaintext": false,
     "markdown": false,
     "scminput": false,
-    "go": true,
+    "go": true
   },
   "[github-actions-workflow]": {
-    "editor.defaultFormatter": "redhat.vscode-yaml",
+    "editor.defaultFormatter": "redhat.vscode-yaml"
   },
   "github.copilot.nextEditSuggestions.enabled": true,
   "github.copilot.nextEditSuggestions.eagerness": "medium",
@@ -444,13 +444,13 @@
     "Unnotified",
     "vamac",
     "Wrapf",
-    "zerolog",
+    "zerolog"
   ],
   "cSpell.maxDuplicateProblems": 2,
   "cSpell.spellCheckDelayMs": 2000,
   "cSpell.maxNumberOfProblems": 5,
   "cSpell.enabledNotifications": {
-    "Lines too Long": false,
+    "Lines too Long": false
   },
   "cSpell.enabledFileTypes": {
     "ruby": true,
@@ -463,7 +463,7 @@
     "css": true,
     "javascript": true,
     "typescript": true,
-    "shellscript": true,
+    "shellscript": true
   },
   "window.commandCenter": false,
   "window.menuBarVisibility": "hidden",
@@ -476,5 +476,5 @@
   "redhat.telemetry.enabled": true,
   "security.workspace.trust.untrustedFiles": "open",
   "explorer.confirmPasteNative": false,
-  "workbench.secondarySideBar.defaultVisibility": "hidden",
+  "workbench.secondarySideBar.defaultVisibility": "hidden"
 }

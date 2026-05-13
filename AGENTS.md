@@ -13,6 +13,7 @@ See files under doc/ for project structure and documentation (faster than readin
 Most of the scripts have no tests, we gotta run them to test.
 
 **Lint and format:** always use the `run` script at the repo root, not tools directly.
+
 ```
 ./run lint    # shellcheck on all bash scripts
 ./run format  # shfmt on all bash scripts
@@ -23,11 +24,13 @@ Most of the scripts have no tests, we gotta run them to test.
 Keep comments short and sweet, don't document obvious code.
 **Formatting:** We use `shfmt`.
 When moving an alias foo to a function add:
+
 ```sh
 # todo: remove
 unalias foo 2>/dev/null
 foo() {
 ```
+
 this fixes weird bash errors when an alias and a function conflict.
 separate functions neatly using #----------------#
 

@@ -23,4 +23,3 @@ links. We found 11 such links, but there may be more.
 
 This happens because this is a personal dotfile repository. You can
 replace the prefix with your own home directory if you wish.
-

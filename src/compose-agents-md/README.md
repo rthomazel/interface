@@ -51,7 +51,7 @@ bin/compose-agents-md --rc=path/to/.composeagentsmdrc
 
 ## Formatting
 
-Prettier is not configured for these files — keep formatting consistent by hand.
+Oxfmt is used
 
 ## Adding a fragment
 

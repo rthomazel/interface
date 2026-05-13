@@ -14,11 +14,7 @@
     },
     "postgres_local": {
       "command": "uvx",
-      "args": [
-        "pgsql-mcp-server",
-        "--dsn",
-        "postgresql://postgres:@localhost:5432/hub"
-      ]
+      "args": ["pgsql-mcp-server", "--dsn", "postgresql://postgres:@localhost:5432/hub"]
     }
   },
   "isUsingBuiltInNodeForMcp": false,
