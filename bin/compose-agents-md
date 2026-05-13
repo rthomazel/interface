@@ -3,13 +3,13 @@
 set -euo pipefail
 shopt -s globstar
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PARTS_DIR="$SCRIPT_DIR/../src/compose-setup"
+PARTS_DIR="$SCRIPT_DIR/../src/compose-agents-md"
 PROJECTS_DIR="${PROJECTS_DIR:-$(cd "$SCRIPT_DIR/../Desktop" && pwd)}"
-RC_DEFAULT="$HOME/.config/github.com.rthomazel/.composesetuprc"
+RC_DEFAULT="$HOME/.config/github.com.rthomazel/.composeagentsmdrc"
 
 #----------------#
 
-declare -A FUNCS
+declare -A PARTS
 
 load_rc() {
   local rc_file=$1
@@ -23,7 +23,7 @@ load_rc() {
     project="${line%%:*}"
     parts="${line#*:}"
     parts="${parts#"${parts%%[^ ]*}"}"
-    FUNCS["$project"]="$parts"
+    PARTS["$project"]="$parts"
   done <"$rc_file"
 }
 
@@ -31,38 +31,32 @@ load_rc() {
 
 assemble() {
   local project=$1
-  local funcs="${FUNCS[$project]}"
-  local fn
+  local parts="${PARTS[$project]}"
+  local part
 
-  cat "$PARTS_DIR/header.sh"
+  cat "$PARTS_DIR/header.md"
   echo
-  for fn in $funcs; do
-    cat "$PARTS_DIR/${fn}.sh"
+  for part in $parts; do
+    cat "$PARTS_DIR/${part}.md"
     echo
   done
-  for fn in $funcs; do
-    echo "$fn"
-  done
-  echo
-  echo 'echo "setup complete"'
 }
 
 check_or_commit() {
   local project=$1
   local commit=$2
-  local target="$PROJECTS_DIR/$project/bin/setup"
+  local target="$PROJECTS_DIR/$project/AGENTS.md"
   local tmp
-  tmp=$(mktemp /tmp/compose-setup.XXXXXX)
+  tmp=$(mktemp /tmp/compose-agents-md.XXXXXX)
 
   assemble "$project" >"$tmp"
 
   if [[ ! -f "$target" ]]; then
     if [[ "$commit" == "true" ]]; then
       cp "$tmp" "$target"
-      chmod +x "$target"
       echo "$project: created"
     else
-      echo "$project: bin/setup not found at $target" >&2
+      echo "$project: AGENTS.md not found at $target" >&2
       rm "$tmp"
       return 1
     fi
@@ -77,7 +71,6 @@ check_or_commit() {
 
   if [[ "$commit" == "true" ]]; then
     cp "$tmp" "$target"
-    chmod +x "$target"
     echo "$project: updated"
   else
     echo "$project: drift detected, review: $tmp"
@@ -89,19 +82,19 @@ check_or_commit() {
 
 usage() {
   cat <<'USAGE'
-Usage: compose-setup [OPTIONS] [PROJECT...]
+Usage: compose-agents-md [OPTIONS] [PROJECT...]
 
-Assembles bin/setup for one or more projects from canonical function fragments
+Assembles AGENTS.md for one or more projects from canonical markdown fragments
 and checks for drift against the current file on disk.
 
 Arguments:
   PROJECT      One or more project names to check (default: all projects).
-               See .composesetuprc for the full project list.
+               See .composeagentsmdrc for the full project list.
 
 Options:
-  --commit     Write the assembled script to <project>/bin/setup and chmod +x.
+  --commit     Write the assembled AGENTS.md to <project>/AGENTS.md.
                Default (no flag): check-only — reports drift and exits non-zero.
-  --rc=<path>  RC file to load (default: ~/.config/github.com.rthomazel/.composesetuprc).
+  --rc=<path>  RC file to load (default: ~/.config/github.com.rthomazel/.composeagentsmdrc).
   -h, --help   Print this help text and exit.
 USAGE
 }
@@ -128,11 +121,11 @@ main() {
   load_rc "$rc"
 
   if [[ ${#projects[@]} -eq 0 ]]; then
-    mapfile -t projects < <(printf '%s\n' "${!FUNCS[@]}" | sort)
+    mapfile -t projects < <(printf '%s\n' "${!PARTS[@]}" | sort)
   fi
 
   for project in "${projects[@]}"; do
-    if [[ -z "${FUNCS[$project]+_}" ]]; then
+    if [[ -z "${PARTS[$project]+_}" ]]; then
       echo "error: unknown project '$project'" >&2
       exit_code=1
       continue
