@@ -109,6 +109,7 @@ Wren runs in an isolated context and returns a structured summary. Only the fina
 - Architectural reasoning or trade-off decisions
 - Multi-step work where each step depends on judgment from the previous
 - Anything where a wrong answer would be harder to fix than doing it yourself
+- Complex tool calls or multi-tool chains
 
 # Work instructions, do this *when* appropriate.
 

@@ -46,13 +46,6 @@ Commands time out after 15s (exec_sync) and 5m (exec_background).
 Prefer targeted reads. Use `cat`, `grep`, `rg`, or `find` rather than dumping whole trees.
 Read what the task needs. Stop there.
 
-## Go Projects
-
-Go projects have private dependencies. Running `go mod download` without setup will fail.
-Always run `bin/setup` first — it sets `GOPRIVATE` and installs dependencies.
-Run `go mod tidy` after any changes to `go.mod` or dependencies.
-If you get lost in the directory tree, check `go.mod` — it shows the module root and key dependencies.
-
 ## Project Layout
 
 Projects live under `/projects/<name>`. Common ones:
