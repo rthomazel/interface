@@ -1,5 +1,6 @@
 # shellcheck shell=bash
 # Makes run and bin/setup executable; no-op if run is absent.
 run_permissions() {
-  chmod u+x "$SCRIPT_DIR/../run" "$SCRIPT_DIR/setup" 2>/dev/null || true
+  local script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+  chmod u+x "$script_dir/../run" "$script_dir/setup" 2>/dev/null || true
 }
