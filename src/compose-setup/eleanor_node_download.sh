@@ -1,7 +1,8 @@
 # shellcheck shell=bash
 # Writes .npmrc and configures git for Eleanor Health Node projects, then installs packages. Detects yarn or npm.
 eleanor_node_download() {
-  local script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+  local script_dir
+  script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
   local ENV_FILE="$script_dir/../.env"
   # shellcheck disable=SC1090
   [[ -z "${GITHUB_TOKEN:-}" && -f "$ENV_FILE" ]] && . "$ENV_FILE"
