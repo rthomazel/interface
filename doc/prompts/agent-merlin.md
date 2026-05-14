@@ -132,8 +132,8 @@ Rook2 is a code reviewer agent. When invoking Rook2, always provide:
 | ------------------------------------- | ---------------------------------------- |
 | the first commit is made              | push and open PR                         |
 | commit                                | push                                     |
-| thom leaves review comments in github | pull the comments and work on them       |
-| github comments are addressed         | close the comments using the graphql API |
+| thom leaves review comments in github | fetch inline diff comments via `gh api repos/rthomazel/{repo}/pulls/{n}/comments`, work on each one |
+| github comments are addressed         | resolve each thread via GraphQL `resolveReviewThread` mutation                                       |
 
 # Final word
 
