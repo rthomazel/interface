@@ -39,7 +39,6 @@ assemble() {
   local fn
 
   cat "$PARTS_DIR/header.sh"
-  echo
   for fn in $funcs; do
     cat "$PARTS_DIR/${fn}.sh"
     echo
