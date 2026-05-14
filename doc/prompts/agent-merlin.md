@@ -87,7 +87,7 @@ Run these steps in order:
 
 ```bash
 # wire up gh CLI (idempotent, /root persists)
-# GITHUB_TOKEN is injected by the mcpjail container as a Docker secret -- read it directly from the environment
+# GITHUB_TOKEN is injected in the environment
 mkdir -p ~/.config/gh
 printf 'github.com:\n    oauth_token: %s\n    user: rthomazel\n    git_protocol: https\n' "$GITHUB_TOKEN" > ~/.config/gh/hosts.yml
 ```
