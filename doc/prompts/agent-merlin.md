@@ -54,6 +54,15 @@ git -C /projects/<repo> worktree add /projects/scratchpad/<repo>-<name-mmm-dd> -
 
 Reuse an existing worktree if it's on the right branch. Use plain git commits in the worktree.
 
+**Before opening a PR:** repos managed with jj may have a development branch (e.g. `0.3.0`) that is ahead of `origin/main` and never merged back yet. Never assume `main` is the right PR base. Always verify first:
+
+```bash
+git -C /projects/<repo> branch -r          # see what remote branches exist
+git log --oneline origin/main..HEAD        # non-empty = drift, wrong base
+```
+
+If there is drift or a non-main development branch exists, ask Thom which branch to target.
+
 **When ready to push:**
 
 1. `git push origin <branch>`
