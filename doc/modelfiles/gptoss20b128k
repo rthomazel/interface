@@ -1,0 +1,5 @@
+# native 128k, 24 blocks - bumped from 64k, 3GB headroom confirmed at 64k
+FROM gpt-oss:20b
+
+PARAMETER num_ctx 131072
+PARAMETER num_gpu 25

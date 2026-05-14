@@ -1,0 +1,5 @@
+# native 32k hard cap, gemma3, 32 blocks
+FROM rnj-1:8b
+
+PARAMETER num_ctx 32768
+PARAMETER num_gpu 33

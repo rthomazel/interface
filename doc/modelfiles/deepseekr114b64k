@@ -1,0 +1,5 @@
+# native 128k capped, qwen2 arch, 48 blocks - 9GB weights, tight
+FROM deepseek-r1:14b
+
+PARAMETER num_ctx 65536
+PARAMETER num_gpu 49

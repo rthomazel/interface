@@ -1,0 +1,5 @@
+# native 256k capped, SSM hybrid, 32 blocks
+FROM qwen3.5:9b
+
+PARAMETER num_ctx 65536
+PARAMETER num_gpu 33

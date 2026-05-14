@@ -1,0 +1,5 @@
+# native 1M capped, GQA 4:1, 40 blocks
+FROM mistral-nemo:12b
+
+PARAMETER num_ctx 65536
+PARAMETER num_gpu 41
