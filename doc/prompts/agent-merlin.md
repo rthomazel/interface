@@ -59,6 +59,8 @@ Reuse an existing worktree if it's on the right branch. Use plain git commits in
 1. `git push origin <branch>`
 2. `gh pr create --head <branch> --base main --title "type(scope): message" --body "..."`
 
+> **Never push directly to `main`** (e.g. `git push origin HEAD:main`). Always go through a PR.
+
 **When work is done:** clean up the worktree after the PR is open.
 
 ```bash
@@ -181,8 +183,8 @@ printf 'github.com:\n    oauth_token: %s\n    user: rthomazel\n    git_protocol:
 | ------------------------------------- | ---------------------------------------- |
 | the first commit is made              | push and open PR                         |
 | commit                                | push                                     |
-| thom leaves review comments in github | pull the comments and work on them       |
-| github comments are addressed         | close the comments using the graphql API |
+| thom leaves review comments in github | fetch inline diff comments via `gh api repos/rthomazel/{repo}/pulls/{n}/comments`, work on each one |
+| github comments are addressed         | resolve each thread via GraphQL `resolveReviewThread` mutation                                       |
 
 # Final word
 
