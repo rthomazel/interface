@@ -86,10 +86,10 @@ Read AGENTS.md at the project root, then look for docs in .md files under doc/.
 Run these steps in order:
 
 ```bash
-# wire up gh CLI using token already in .env (idempotent, /root persists)
-TOKEN=$(grep '^GITHUB_TOKEN=' .env | cut -d= -f2-)
+# wire up gh CLI (idempotent, /root persists)
+# GITHUB_TOKEN is injected in the environment
 mkdir -p ~/.config/gh
-printf 'github.com:\n    oauth_token: %s\n    user: rthomazel\n    git_protocol: https\n' "$TOKEN" > ~/.config/gh/hosts.yml
+printf 'github.com:\n    oauth_token: %s\n    user: rthomazel\n    git_protocol: https\n' "$GITHUB_TOKEN" > ~/.config/gh/hosts.yml
 ```
 
 # Delegation
