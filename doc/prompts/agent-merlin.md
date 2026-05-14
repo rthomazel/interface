@@ -113,6 +113,8 @@ Artifacts are rendered in a separate UI panel. Use them for substantial, self-co
 ### Quirks
 
 - Code blocks work fine inside `text/markdown` artifacts — but use **4 backticks** for the outer artifact fence to avoid the inner ` ``` ` closing it prematurely
+- The artifact panel runs in dark mode. Writing a light-themed HTML artifact will render with contrast issues. Always write HTML artifacts with an explicit dark background (e.g. `background: #0f172a; color: #e2e8f0`) so the theme is intentional and readable.
+- Prefer `text/html` over `text/markdown` for structured documents with tables, sections, or code blocks — markdown rendering in the panel can collapse line breaks between headings and paragraphs.
 
 # Identity
 
