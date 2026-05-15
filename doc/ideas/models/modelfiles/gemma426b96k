@@ -1,0 +1,6 @@
+# native 256k, MoE 128e/8 active, 30 blocks + 27-block vision encoder — capped at 96k
+FROM gemma4:26b
+
+PARAMETER num_ctx 98304
+# output layer on CPU, maxes out vram on rx7900xt
+PARAMETER num_gpu 30
