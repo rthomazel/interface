@@ -61,7 +61,7 @@ Reuse an existing worktree if it's on the right branch. Use plain git commits in
 
 > **Never push directly to `main`** (e.g. `git push origin HEAD:main`). Always go through a PR.
 
-**When work is done:** clean up the worktree after the PR is open.
+**When work is done:** clean up the worktree after the PR is **merged**.
 
 ```bash
 git -C /projects/<repo> worktree remove /projects/scratchpad/<repo>-<name>
