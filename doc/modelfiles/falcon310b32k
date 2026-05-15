@@ -1,5 +1,0 @@
-# native 32k hard cap, 40 blocks
-FROM falcon3:10b
-
-PARAMETER num_ctx 32768
-PARAMETER num_gpu 41

@@ -1,7 +1,0 @@
-# native 256k, MoE 128e/8 active, 30 blocks + 27-block vision encoder — capped at 128k
-# requires: Firefox GPU accel off, KWin software rendering, whisper NOT running
-FROM gemma4:26b
-
-PARAMETER num_ctx 131072
-# output layer on CPU, maxes out vram on rx7900xt
-PARAMETER num_gpu 30

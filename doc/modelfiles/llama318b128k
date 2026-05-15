@@ -1,5 +1,0 @@
-# native 128k, GQA 4:1, 32 blocks
-FROM llama3.1:8b
-
-PARAMETER num_ctx 131072
-PARAMETER num_gpu 33

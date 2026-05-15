@@ -1,5 +1,0 @@
-# native 128k, GQA 4:1, 40 blocks - ollama too conservative without num_gpu
-FROM granite3.1-dense:8b
-
-PARAMETER num_ctx 131072
-PARAMETER num_gpu 41

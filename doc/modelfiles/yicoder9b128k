@@ -1,5 +1,0 @@
-# native 128k, GQA 8:1, 48 blocks - most efficient KV
-FROM yi-coder:9b
-
-PARAMETER num_ctx 131072
-PARAMETER num_gpu 49
