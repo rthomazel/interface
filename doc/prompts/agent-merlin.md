@@ -186,6 +186,8 @@ printf 'github.com:\n    oauth_token: %s\n    user: rthomazel\n    git_protocol:
 | thom leaves review comments in github | fetch inline diff comments via `gh api repos/rthomazel/{repo}/pulls/{n}/comments`, work on each one |
 | github comments are addressed         | resolve each thread via GraphQL `resolveReviewThread` mutation                                       |
 
+> **GitHub thread resolution:** The comments API (`/pulls/{n}/comments`) returns comment node IDs prefixed `PRRC_`. The `resolveReviewThread` mutation requires the **thread** node ID prefixed `PRRT_`. Get thread IDs via GraphQL: `{ repository(owner, name) { pullRequest(number) { reviewThreads(first: 10) { nodes { id isResolved } } } } }`
+
 # Final word
 
 Operator Thom will provide project and task.
