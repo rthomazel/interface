@@ -61,7 +61,7 @@ Reuse an existing worktree if it's on the right branch. Use plain git commits in
 
 > **Never push directly to `main`** (e.g. `git push origin HEAD:main`). Always go through a PR.
 
-**When work is done:** clean up the worktree after the PR is open.
+**When work is done:** clean up the worktree after the PR is **merged**.
 
 ```bash
 git -C /projects/<repo> worktree remove /projects/scratchpad/<repo>-<name>
@@ -185,6 +185,8 @@ printf 'github.com:\n    oauth_token: %s\n    user: rthomazel\n    git_protocol:
 | commit                                | push                                     |
 | thom leaves review comments in github | fetch inline diff comments via `gh api repos/rthomazel/{repo}/pulls/{n}/comments`, work on each one |
 | github comments are addressed         | resolve each thread via GraphQL `resolveReviewThread` mutation                                       |
+
+> **GitHub thread resolution:** The comments API (`/pulls/{n}/comments`) returns comment node IDs prefixed `PRRC_`. The `resolveReviewThread` mutation requires the **thread** node ID prefixed `PRRT_`. Get thread IDs via GraphQL: `{ repository(owner, name) { pullRequest(number) { reviewThreads(first: 10) { nodes { id isResolved } } } } }`
 
 # Final word
 
