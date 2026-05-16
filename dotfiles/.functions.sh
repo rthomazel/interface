@@ -589,8 +589,8 @@ lg() {
 #----------------
 
 jj_bookmark0() {
-  read -ra bookmark _ < <(jj log --revisions 'ancestors(@) & bookmarks()' --template 'bookmarks ++ " "' --no-graph)
-  printf "%s" "${bookmark[0]}"
+  read -ra bookmark _ < <(jj log --revisions '::@ & bookmarks()' --template 'bookmarks ++ " "' --no-graph --color=never)
+  printf "%s" "${bookmark[0]/\*/}"
 }
 
 #----------------
