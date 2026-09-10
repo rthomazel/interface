@@ -13,7 +13,7 @@ vllm bench serve \
   --random-output-len 1024 \
   --max-concurrency 1 \
   --header "Authorization=Bearer $VLLM_API_KEY" \
-  --temperature 1.0 \
+  --temperature 0.6 \
   --top-p 0.95 \
   --top-k 20
 ```
