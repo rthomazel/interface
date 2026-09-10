@@ -193,12 +193,17 @@ def parse_metrics(lines: Iterable[str], all_lines: Iterable[str] | None = None) 
         whole_log_patterns = (
             METRIC_PATTERNS["KV Cache size"],
             METRIC_PATTERNS["KV cache memory"],
-            METRIC_PATTERNS["Model len"],
         )
         lines = [
             *lines,
             *(line for line in all_lines if any(pattern.search(line) for pattern in whole_log_patterns)),
         ]
+        model_len_line = next(
+            (line for line in all_lines if METRIC_PATTERNS["Model len"].search(line)),
+            None,
+        )
+        if model_len_line:
+            lines.append(model_len_line)
     for line in lines:
         for label, pattern in METRIC_PATTERNS.items():
             match = pattern.search(line)
