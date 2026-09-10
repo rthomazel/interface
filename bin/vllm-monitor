@@ -79,7 +79,7 @@ METRIC_PATTERNS = {
     "Generation throughput": re.compile(r"Avg generation throughput:\s*([\d.]+)\s*tokens/s"),
     "KV cache usage": re.compile(r"GPU KV cache usage:\s*([\d.]+)%"),
     "KV Cache size": re.compile(r"GPU KV cache size:\s*([\d,]+)\s+tokens"),
-    "Available KV cache memory": re.compile(r"Available KV cache memory:\s*([\d.]+\s+GiB)"),
+    "KV cache memory": re.compile(r"Available KV cache memory:\s*([\d.]+\s+GiB)"),
     "Prefix hit rate": re.compile(r"Prefix cache hit rate:\s*([\d.]+)%"),
     "Mean acceptance length": re.compile(r"Mean acceptance length:\s*([\d.]+)"),
     "Accepted throughput": re.compile(r"Accepted throughput:\s*([\d.]+)\s*tokens/s"),
@@ -191,7 +191,7 @@ def parse_metrics(lines: Iterable[str], all_lines: Iterable[str] | None = None) 
     if all_lines is not None:
         whole_log_patterns = (
             METRIC_PATTERNS["KV Cache size"],
-            METRIC_PATTERNS["Available KV cache memory"],
+            METRIC_PATTERNS["KV cache memory"],
         )
         lines = [
             *lines,
@@ -241,9 +241,9 @@ def render_table(metrics: dict[str, str], log_path: Path, gpu_lines: Iterable[st
     table.add_column("Metric", style="bold")
     table.add_column("Value", justify="right")
     labels = [
-        "Generation throughput", "KV Cache size", "KV cache usage", "Prefix hit rate", "Mean acceptance length",
+        "Generation throughput", "KV Cache size", "KV cache memory", "KV cache usage", "Prefix hit rate", "Mean acceptance length",
         "Accepted throughput", "Drafted throughput", "Accepted tokens", "Drafted tokens",
-        "Position acceptance", "Draft acceptance", "Available KV cache memory",
+        "Position acceptance", "Draft acceptance",
     ]
     for label in labels:
         table.add_row(label, metrics.get(label, "—"))
