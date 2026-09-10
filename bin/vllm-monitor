@@ -100,9 +100,13 @@ def choose_log(directory: Path) -> Path:
     return max(candidates, key=lambda path: LOG_PATTERN.match(path.name).group(1))
 
 
-def read_tail(path: Path) -> list[str]:
+def read_log(path: Path) -> list[str]:
     with path.open(encoding="utf-8", errors="replace") as log_file:
-        return log_file.readlines()[-TAIL_LINES:]
+        return log_file.readlines()
+
+
+def read_tail(path: Path) -> list[str]:
+    return read_log(path)[-TAIL_LINES:]
 
 
 def format_size(size_mb: int) -> str:
@@ -181,8 +185,11 @@ def wait_for_startup(path: Path, live: Live, directory_monitor: DirectoryMonitor
         time.sleep(STARTUP_POLL_INTERVAL)
 
 
-def parse_metrics(lines: Iterable[str]) -> dict[str, str]:
+def parse_metrics(lines: Iterable[str], all_lines: Iterable[str] | None = None) -> dict[str, str]:
     metrics: dict[str, str] = {}
+    if all_lines is not None:
+        cache_pattern = METRIC_PATTERNS["KV Cache size"]
+        lines = [*lines, *(line for line in all_lines if cache_pattern.search(line))]
     for line in lines:
         for label, pattern in METRIC_PATTERNS.items():
             match = pattern.search(line)
@@ -240,13 +247,14 @@ def render_table(metrics: dict[str, str], log_path: Path, gpu_lines: Iterable[st
 
 def display(console: Console, path: Path) -> None:
     lines = read_tail(path)
+    all_lines = read_log(path)
     errors = error_lines(lines)
     console.clear()
     if errors:
         output = Text(f"ERROR DETECTED\n\n" + "\n".join(errors), style="bold red")
         console.print(Group(Text(f"Monitoring: {path}"), output))
     else:
-        console.print(render_table(parse_metrics(lines), path))
+        console.print(render_table(parse_metrics(lines, all_lines), path))
         console.print("Refreshing every 2 seconds. Press Ctrl-C to exit.", style="dim")
 
 
@@ -264,12 +272,13 @@ def main() -> None:
                 wait_for_startup(log_path, live, directory_monitor)
                 while True:
                     lines = read_tail(log_path)
+                    all_lines = read_log(log_path)
                     errors = error_lines(lines)
                     if errors:
                         renderable = Group(Text(f"Monitoring: {log_path}"), Text("\nERROR DETECTED\n\n" + "\n".join(errors), style="bold red"))
                     else:
                         _, gpu_lines = directory_monitor.snapshot()
-                        renderable = Group(render_table(parse_metrics(lines), log_path, gpu_lines), Text("Refreshing every 2 seconds. Press Ctrl-C to exit.", style="dim"))
+                        renderable = Group(render_table(parse_metrics(lines, all_lines), log_path, gpu_lines), Text("Refreshing every 2 seconds. Press Ctrl-C to exit.", style="dim"))
                     live.update(renderable)
                     time.sleep(2)
         finally:
