@@ -248,11 +248,22 @@ def render_table(metrics: dict[str, str], log_path: Path, gpu_lines: Iterable[st
     table.add_column("Metric", style="bold")
     table.add_column("Value", justify="right")
     labels = [
-        "Generation", "KV size", "KV mem", "KV use", "Model len", "Prefix", "Accept len",
-        "Accept", "Draft", "Accepted", "Drafted", "Position", "Draft accept",
+        ("Generation", "Generation throughput"),
+        ("KV size", "KV Cache size"),
+        ("KV mem", "KV cache memory"),
+        ("KV use", "KV cache usage"),
+        ("Model len", "Model len"),
+        ("Prefix", "Prefix hit rate"),
+        ("Accept len", "Mean acceptance length"),
+        ("Accept", "Accepted throughput"),
+        ("Draft", "Drafted throughput"),
+        ("Accepted", "Accepted tokens"),
+        ("Drafted", "Drafted tokens"),
+        ("Position", "Position acceptance"),
+        ("Draft accept", "Draft acceptance"),
     ]
-    for label in labels:
-        table.add_row(label, metrics.get(label, "—"))
+    for label, metric in labels:
+        table.add_row(label, metrics.get(metric, "—"))
     for gpu_line in gpu_lines:
         table.add_row("GPU", gpu_line)
     return table
