@@ -80,6 +80,7 @@ METRIC_PATTERNS = {
     "KV cache usage": re.compile(r"GPU KV cache usage:\s*([\d.]+)%"),
     "KV Cache size": re.compile(r"GPU KV cache size:\s*([\d,]+)\s+tokens"),
     "KV cache memory": re.compile(r"Available KV cache memory:\s*([\d.]+\s+GiB)"),
+    "Model len": re.compile(r"Using max model len\s+([\d,]+)"),
     "Prefix hit rate": re.compile(r"Prefix cache hit rate:\s*([\d.]+)%"),
     "Mean acceptance length": re.compile(r"Mean acceptance length:\s*([\d.]+)"),
     "Accepted throughput": re.compile(r"Accepted throughput:\s*([\d.]+)\s*tokens/s"),
@@ -192,6 +193,7 @@ def parse_metrics(lines: Iterable[str], all_lines: Iterable[str] | None = None) 
         whole_log_patterns = (
             METRIC_PATTERNS["KV Cache size"],
             METRIC_PATTERNS["KV cache memory"],
+            METRIC_PATTERNS["Model len"],
         )
         lines = [
             *lines,
@@ -241,9 +243,8 @@ def render_table(metrics: dict[str, str], log_path: Path, gpu_lines: Iterable[st
     table.add_column("Metric", style="bold")
     table.add_column("Value", justify="right")
     labels = [
-        "Generation throughput", "KV Cache size", "KV cache memory", "KV cache usage", "Prefix hit rate", "Mean acceptance length",
-        "Accepted throughput", "Drafted throughput", "Accepted tokens", "Drafted tokens",
-        "Position acceptance", "Draft acceptance",
+        "Generation", "KV size", "KV mem", "KV use", "Model len", "Prefix", "Accept len",
+        "Accept", "Draft", "Accepted", "Drafted", "Position", "Draft accept",
     ]
     for label in labels:
         table.add_row(label, metrics.get(label, "—"))
