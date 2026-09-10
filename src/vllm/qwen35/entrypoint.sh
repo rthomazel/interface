@@ -16,7 +16,7 @@ err() {
 VLLM_MONITOR_PATH=${VLLM_MONITOR_PATH:-/usr/local/bin/vllm-monitor}
 VLLM_MONITOR_URL=${VLLM_MONITOR_URL:-https://raw.githubusercontent.com/rthomazel/interface/dev/bin/vllm-monitor}
 TMUX_CONF_PATH=${TMUX_CONF_PATH:-/root/.tmux.conf}
-TMUX_CONF_URL=${TMUX_CONF_URL:-https://raw.githubusercontent.com/rthomazel/interface/dev/dotfiles/.tmux.conf}
+TMUX_CONF_URL=${TMUX_CONF_URL:-https://raw.githubusercontent.com/rthomazel/interface/dev/vps/dotfiles/.tmux.conf}
 
 if [[ ! -x "$VLLM_MONITOR_PATH" ]]; then
   curl -fsSL "$VLLM_MONITOR_URL" -o "$VLLM_MONITOR_PATH"
