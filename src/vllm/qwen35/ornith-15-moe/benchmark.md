@@ -81,9 +81,7 @@ P99 ITL (ms):                            4.95
 ==================================================
 ```
 
-## ornith-ai/Ornith-1.5-35B-A3B-NVFP4 PRO 5000, MTP 2, tok/s 1.5M
-
-temp 1.0
+## ornith-ai/Ornith-1.5-35B-A3B-NVFP4 temp 1 PRO 5000, MTP 2, 263 tok/s 1.5M
 
 ```
 realistic
@@ -123,7 +121,7 @@ Per-position acceptance (%):
 ==================================================
 ```
 
-temp 0.6
+## ornith-ai/Ornith-1.5-35B-A3B-NVFP4 temp .6 PRO 5000, MTP 5, tok/s 1.5M
 
 ```
 realistic
@@ -131,34 +129,82 @@ realistic
 Successful requests:                     8
 Failed requests:                         0
 Maximum request concurrency:             1
-Benchmark duration (s):                  121.69
+Benchmark duration (s):                  118.21
 Total input tokens:                      400000
 Total generated tokens:                  32000
 Request throughput (req/s):              0.07
-Output token throughput (tok/s):         262.96
-Peak output token throughput (tok/s):    104.00
+Output token throughput (tok/s):         270.71
+Peak output token throughput (tok/s):    85.00
 Peak concurrent requests:                2.00
-Total token throughput (tok/s):          3550.01
+Total token throughput (tok/s):          3654.61
 ---------------Time to First Token----------------
-Mean TTFT (ms):                          484.89
-Median TTFT (ms):                        489.08
-P99 TTFT (ms):                           493.09
+Mean TTFT (ms):                          3796.57
+Median TTFT (ms):                        3736.31
+P99 TTFT (ms):                           4281.99
 -----Time per Output Token (excl. 1st token)------
-Mean TPOT (ms):                          3.68
-Median TPOT (ms):                        3.64
-P99 TPOT (ms):                           4.24
+Mean TPOT (ms):                          2.75
+Median TPOT (ms):                        2.54
+P99 TPOT (ms):                           4.13
 ---------------Inter-token Latency----------------
-Mean ITL (ms):                           10.05
-Median ITL (ms):                         10.11
-P99 ITL (ms):                            10.43
+Mean ITL (ms):                           12.32
+Median ITL (ms):                         12.42
+P99 ITL (ms):                            13.08
 ---------------Speculative Decoding---------------
-Acceptance rate (%):                     86.45
-Acceptance length:                       2.73
-Drafts:                                  11727
-Draft tokens:                            23454
-Accepted tokens:                         20277
+Acceptance rate (%):                     69.74
+Acceptance length:                       4.49
+Drafts:                                  7133
+Draft tokens:                            35665
+Accepted tokens:                         24872
 Per-position acceptance (%):
-  Position 0:                            95.66
-  Position 1:                            77.25
+  Position 0:                            91.67
+  Position 1:                            77.86
+  Position 2:                            65.09
+  Position 3:                            59.33
+  Position 4:                            54.73
+==================================================
+```
+
+
+## ornith-ai/Ornith-1.5-35B-A3B-NVFP4 temp .6 PRO 5000, MTP 6, tok/s 1.36M
+
+```
+realistic
+============ Serving Benchmark Result ============
+Successful requests:                     8
+Failed requests:                         0
+Maximum request concurrency:             1
+Benchmark duration (s):                  108.60
+Total input tokens:                      400000
+Total generated tokens:                  32000
+Request throughput (req/s):              0.07
+Output token throughput (tok/s):         294.66
+Peak output token throughput (tok/s):    84.00
+Peak concurrent requests:                2.00
+Total token throughput (tok/s):          3977.96
+---------------Time to First Token----------------
+Mean TTFT (ms):                          3832.42
+Median TTFT (ms):                        3776.36
+P99 TTFT (ms):                           4268.39
+-----Time per Output Token (excl. 1st token)------
+Mean TPOT (ms):                          2.44
+Median TPOT (ms):                        1.96
+P99 TPOT (ms):                           4.28
+---------------Inter-token Latency----------------
+Mean ITL (ms):                           12.56
+Median ITL (ms):                         12.69
+P99 ITL (ms):                            13.49
+---------------Speculative Decoding---------------
+Acceptance rate (%):                     69.33
+Acceptance length:                       5.16
+Drafts:                                  6205
+Draft tokens:                            37230
+Accepted tokens:                         25811
+Per-position acceptance (%):
+  Position 0:                            92.47
+  Position 1:                            84.85
+  Position 2:                            65.16
+  Position 3:                            61.79
+  Position 4:                            58.13
+  Position 5:                            53.57
 ==================================================
 ```
