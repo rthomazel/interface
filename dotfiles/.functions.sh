@@ -826,6 +826,9 @@ vast_bad_host() {
   559731)
     echo "good. good internet"
     ;;
+  474643)
+    echo "good"
+    ;;
   *)
     echo "ok"
     ;;
