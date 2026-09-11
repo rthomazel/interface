@@ -52,8 +52,6 @@ def ensure_dependencies() -> None:
         ) from error
 
 
-ensure_dependencies()
-
 from rich.console import Console, Group  # noqa: E402
 from rich.live import Live  # noqa: E402
 from rich.table import Table  # noqa: E402
@@ -314,4 +312,5 @@ def main() -> None:
 
 
 if __name__ == "__main__":
+    ensure_dependencies()
     main()
