@@ -266,7 +266,10 @@ def render_table(metrics: dict[str, str], log_path: Path, gpu_lines: Iterable[st
         ("Draft accept", "Draft acceptance"),
     ]
     for label, metric in labels:
-        table.add_row(label, metrics.get(metric, "—"))
+        value = metrics.get(metric, "—")
+        if label == "Draft accept":
+            value = f"{value}%"
+        table.add_row(label, value)
     for gpu_line in gpu_lines:
         table.add_row("GPU", gpu_line)
     return table

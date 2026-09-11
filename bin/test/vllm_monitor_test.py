@@ -45,7 +45,7 @@ class TestParseMetrics(unittest.TestCase):
             "Accepted tokens": "103 tok",
             "Drafted tokens": "186 tok",
             "Position acceptance": "72.6%, 51.6%, 41.9%",
-            "Draft acceptance": "55.4",
+            "Draft acceptance": "55.4%",
         }
         self.assertEqual({key: metrics[key] for key in expected}, expected)
 
