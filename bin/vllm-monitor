@@ -207,7 +207,12 @@ def parse_metrics(lines: Iterable[str], all_lines: Iterable[str] | None = None) 
             match = pattern.search(line)
             if match:
                 value = match.group(1)
-                suffix = " tokens/s" if "throughput" in label.lower() else "%" if "rate" in label.lower() or "usage" in label.lower() else ""
+                suffix = (
+                    " tok/s" if "throughput" in label.lower() else
+                    " tok" if "tokens" in label.lower() else
+                    "%" if "rate" in label.lower() or "usage" in label.lower() else
+                    ""
+                )
                 value = value.replace(",", "")
                 metrics[label] = f"{value}{suffix}"
         match = POSITION_PATTERN.search(line)
