@@ -84,7 +84,7 @@ wait_for_proxy() {
             return 1
         fi
 
-        sleep 0.1
+        sleep 0.3
     done
 
     log_error "Timed out waiting for SOCKS5 proxy"
