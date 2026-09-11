@@ -14,7 +14,7 @@ frontmatter, and kept in Git alongside the code.
 - **English** is the human- and agent-readable content.
 - **OKF** provides lightweight structure and metadata.
 - **Git** provides persistence, history, review, and collaboration.
-- **`SPC/`** is the location for specifications and related SDD artifacts.
+- **`spc/`** is the location for specifications and related SDD artifacts.
 
 A specification describes intended behavior and engineering intent. It is not a
 report reconstructed from an existing implementation. Humans and agents may
@@ -27,11 +27,11 @@ Move through these steps in order:
 
 ```text
 Read AGENTS.md
-→ Specify
-→ Plan
-→ Task
-→ Code
-→ Ship
+1 Specify
+2 Plan
+3 Task
+4 Code
+5 Ship
 ```
 
 ### 1. Read `AGENTS.md`
@@ -40,18 +40,11 @@ For SDD purposes, the project constitution is the repository's `AGENTS.md`.
 It contains the high-level guidelines, constraints, conventions, and
 expectations that govern work across the project.
 
-Read it before doing SDD work. Pay particular attention to:
-
-- engineering and quality guidelines;
-- repository structure and conventions;
-- testing and review expectations;
-- OKF frontmatter rules;
-- `SPC/` organization; and
-- branch, pull request, and merge requirements.
+Read it before doing SDD work.
 
 If `AGENTS.md` does not exist, create the project's constitution before
 proceeding. Establish the project's high-level guidelines and SDD/OKF
-conventions first.
+conventions first. Present to operator for review and approval.
 
 ### 2. Specify
 
@@ -76,15 +69,17 @@ Together, the agent and operator should:
 - identify risks and open questions; and
 - create or update the specification.
 
-For new work, create a feature directory under `SPC/`:
+For new work, create a feature directory under `spc/`:
 
 ```text
-SPC/<feature-name>/
+spc/<feature-name>
+spc/<feature-name>/spec.md
 ```
 
 Choose a clear, stable feature name and place the specification and related
-SDD artifacts there. Inspect `SPC/` first to avoid creating a duplicate
-feature directory.
+SDD artifacts there. Inspect `spc/` first to avoid creating a duplicate
+feature directory. The first spec should be called spec.md, there can be
+more than one such as: `this.spec.md`, `that.spec.md`.
 
 All meaningful discussion and investigation should happen in this step. Later
 steps execute and verify the results rather than silently reopening the same
@@ -110,7 +105,7 @@ pull request.
 Create a Markdown checklist in the feature directory, for example:
 
 ```text
-SPC/<feature-name>/tasks.md
+spc/<feature-name>/tasks.md
 ```
 
 Each checklist item must be followed by a short description of the work it
@@ -144,12 +139,10 @@ the operator and update the specification and plan before continuing.
 
 ### 6. Ship
 
-This step is primarily verification and wrap-up. Verify the implementation
+This step is primarily quality assurance. Verify the implementation
 against the specification and acceptance criteria, run relevant tests and
 checks, inspect the final diff, and confirm that the task checklist is
 accurate.
-
-Before wrapping up:
 
 - update affected documentation;
 - update the specification when approved behavior changed;
@@ -157,7 +150,8 @@ Before wrapping up:
 - confirm review and QA status; and
 - ensure the SDD artifacts describe the work that was actually completed.
 
-Shipping may happen later as a separate follow-up after implementation has
+The operator might merge the work with a feature flag off for production,
+shipping may happen later as a separate follow-up after implementation has
 been merged, reviewed, and QA'd. The initial SDD workflow does not require
 final production deployment.
 
@@ -168,18 +162,19 @@ SDD artifacts use OKF-style YAML frontmatter. The only required fields are:
 ```yaml
 ---
 id: account-recovery
-type: feature-spec
+type: spec
 description: Describes account recovery behavior for members who cannot sign in.
-author: merlin
+author: Thom
 ---
 ```
 
 - `id` is the stable identifier for the artifact.
 - `type` is free text for now.
 - `description` briefly states what the artifact represents.
-- `author` identifies who or what created the artifact.
+- `author` identifies who provided the intent for the artifact.
+- `agents` identifies agents involved in producing the artifact.
 
-`reviewed-by` and `reverse-engineered` are optional. Frontmatter may contain
+`reviewed-by` is optional. Frontmatter may contain
 any additional key/value pairs needed by the project. Do not add software
 relationship fields unless the project later adopts them.
 
@@ -190,9 +185,10 @@ A specification can be short when the behavior is simple:
 ````markdown
 ---
 id: account-recovery
-type: feature-spec
+type: spec
 description: Describes account recovery behavior for members who cannot sign in.
-author: merlin
+author: thom
+agents: merlin
 reviewed-by: []
 ---
 
@@ -213,23 +209,30 @@ link expires after one hour and can be used only once.
 
 ## Documentation from existing implementation
 
-A specification cannot be reliably reverse-engineered from code. Intent is
+A specification cannot be reliably written by reading code. Intent is
 known before implementation; a document produced from code describes current
 behavior and is documentation, not a specification.
 
 When documenting an existing implementation:
 
 1. Read the relevant specifications and documentation first.
-2. Create or update the feature directory under `SPC/`:
+2. Create or update the feature directory under `spc/`:
 
 ```text
-SPC/<feature-name>/
+spc/<feature-name>/
+spc/<feature-name>/doc.md
 ```
 
-Create the directory if it does not exist. 3. Inspect the code, tests, configuration, and observed behavior. 4. Describe what the system currently does. 5. Mark the artifact as reverse-engineered when applicable:
+Create the directory if it does not exist.
+The first doc should be called doc.md, there can be
+more than one such as: `this.doc.md`, `that.doc.md`.
+
+3. Inspect the code, tests, configuration, and observed behavior.
+4. Describe what the system currently does.
+5. Mark the artifact as documentation in the frontmatter:
 
 ```yaml
-reverse-engineered: true
+type: documentation
 ```
 
 6. Do not present inferred intent as fact.
