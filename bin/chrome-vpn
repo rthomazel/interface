@@ -68,26 +68,27 @@ start_cloud_shell() {
 }
 
 wait_for_proxy() {
-    log_info "Waiting for SOCKS5 proxy on $PROXY_HOST:$PROXY_PORT..."
+    local timeout_seconds=30
+    local deadline=$((SECONDS + timeout_seconds))
 
-    for _ in {1..100}; do
-        # Check that something is accepting TCP connections.
+    log_info "Waiting $timeout_seconds seconds for SOCKS5 proxy on $PROXY_HOST:$PROXY_PORT..."
+
+    while (( SECONDS < deadline )); do
         if (echo >/dev/tcp/"$PROXY_HOST"/"$PROXY_PORT") 2>/dev/null; then
             log_info "SOCKS5 proxy is available"
             return 0
         fi
 
-        # If gcloud has already exited, don't wait for the timeout.
         if ! kill -0 "$CLOUD_SHELL_PID" 2>/dev/null; then
             log_error "Cloud Shell SSH exited before the SOCKS5 proxy became available"
             wait "$CLOUD_SHELL_PID" 2>/dev/null || true
             return 1
         fi
 
-        sleep 0.3
+        sleep 1
     done
 
-    log_error "Timed out waiting for SOCKS5 proxy"
+    log_error "Timed out after ${timeout_seconds}s waiting for SOCKS5 proxy"
     return 1
 }
 
