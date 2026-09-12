@@ -12,7 +12,7 @@ https://huggingface.co/ornith-ai/Ornith-1.5-35B-A3B-NVFP4
 
 ## image
 
-ghcr.io/rthomazel/interface/vllm/qwen35:v0.0.12 or latest
+ghcr.io/rthomazel/interface/vllm/qwen35:v0.1.0
 
 ## docker flags
 
@@ -56,9 +56,7 @@ TORCHINDUCTOR_CACHE_DIR=/workspace/.cache/torchinductor
 MODEL_NAME=ornith-ai/Ornith-1.5-35B-A3B-NVFP4
 TENSOR_PARALLEL_SIZE=1
 TMUX_START=true
-MAX_NUM_BATCHED_TOKENS=16384
 ALIASES=true
-TOOL_CALL_PARSER=qwen3_xml
 
 > set to debug if needed
 
