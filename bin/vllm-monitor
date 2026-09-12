@@ -324,6 +324,7 @@ def main() -> None:
                     live.stop()
                     directory_monitor.stop()
                     run_benchmark()
+                    return
                 while True:
                     lines = read_tail(log_path)
                     all_lines = read_log(log_path)
