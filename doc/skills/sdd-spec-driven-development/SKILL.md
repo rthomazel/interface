@@ -275,7 +275,7 @@ The files are organized in a directory with the current year under the feature, 
 This is a strategy to capture the semantic history of the project alongside the same repository versioning its implementation.
 Releases.yaml maps change IDs to semantic versioning releases.
 
-### changelog
+### Changelog
 
 The project changelog is a generated document meant to be readable by humans.
 Each change file's body is meant to be added to the changelog.
@@ -305,7 +305,7 @@ CHANGELOG.md — generated project-level projection; not the source of truth.
 Git — retains the exact implementation history.
 refs — connects the semantic change to external/provenance information such as PRs and related specs.
 
-### change files
+### Change files
 
 Changes are markdown files with OKF frontmatter.
 Each file should capture one change, not necessarily one unit of work.
@@ -348,7 +348,7 @@ editing flow.
 - PR: https://github.com/example/project/pull/184
 ```
 
-### releases
+### Releases
 
 A minimum tracking file used to collect refs and programmatically build the project changelog.
 Any type of artifact with an ID can be included.
