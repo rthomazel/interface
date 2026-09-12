@@ -1,16 +1,14 @@
-# ornith-ai/Ornith-1.5-35B-A3B-FP8
-
-https://huggingface.co/ornith-ai/Ornith-1.5-35B-A3B-FP8
+# ornith-ai/Ornith-1.5-35B-A3B-NVFP4
 
 ## links
 
-for a more performant MTP use shisa-ai/Ornith-1.5-35B-A3B-MTP-FP8
-OOM easily on 64Gb, fits with MTP off (lol)
+https://huggingface.co/ornith-ai/Ornith-1.5-35B-A3B-NVFP4
 
 ## hardware
 
-48GB minimum
-2x 5090 recommended
+32GB minimum
+5090 probably too small
+48GB blackwell recommended
 
 ## image
 
@@ -25,38 +23,24 @@ ghcr.io/rthomazel/interface/vllm/qwen35:v0.0.12 or latest
 default is 262k
 
 VLLM_ALLOW_LONG_MAX_MODEL_LEN=1
-max-model-len 1000000
-"rope_type": "yarn"
-"factor": 4.0
-"original_max_position_embeddings": 262144
-
-### thinking tuning per request
-
-add to litellm JSON params
-
-```
-## control thinking on/off
-"extra_body": {
-    "chat_template_kwargs": {
-        "enable_thinking": false
-    }
-}
-```
+HF_OVERRIDES=true
+FACTOR=2
 
 ## default generation config
 
 TEMPERATURE=0.6
-TOP_P=0.95
-TOP_K=20
-MIN_P=0.0
-PRESENCE_PENALTY=0.0
-REPETITION_PENALTY=1.0
 
 ## disk
 
-model 39Gb
+model 23Gb
 disk 10Gb
-volume 42Gb
+volume 26Gb
+
+## Speculative decoding
+
+built in MTP head
+
+SC_NUM_SPECULATIVE_TOKENS=7
 
 ## env
 
@@ -69,6 +53,12 @@ TORCH_HOME=/workspace/.cache/torch
 TRITON_CACHE_DIR=/workspace/.cache/triton
 FLASHINFER_WORKSPACE_DIR=/workspace/.cache/flashinfer
 TORCHINDUCTOR_CACHE_DIR=/workspace/.cache/torchinductor
+MODEL_NAME=ornith-ai/Ornith-1.5-35B-A3B-NVFP4
+TENSOR_PARALLEL_SIZE=1 
+TMUX_START=true
+MAX_NUM_BATCHED_TOKENS=16384
+ALIASES=true
+TOOL_CALL_PARSER=qwen3_xml
 
 > set to debug if needed
 
