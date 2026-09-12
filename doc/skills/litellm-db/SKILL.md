@@ -11,7 +11,7 @@ LiteLLM is the LLM proxy sitting in front of model providers for the LGA stack (
 project state memory). It serves two purposes relevant to querying:
 
 1. **Proxy logs** — every completion/tool call routed through it is recorded in Postgres.
-2. **Memory API** — the `/v1/memory` HTTP endpoint backs the `chatui-memory` skill; those entries
+2. **Memory API** — the `/v1/memory` HTTP endpoint backs the `lga-memory` skill; those entries
    also live in this same Postgres database, just accessed via HTTP instead of SQL.
 
 Compose service names (see `lga` project state): `litellm` (proxy, port 4000) and `litellm-db`
@@ -51,7 +51,7 @@ plain-named aggregate views (`MonthlyGlobalSpend`, `DailyTagSpend`, `Last30dMode
 ### Memory API (HTTP)
 
 For memory entries specifically, prefer the `/v1/memory` HTTP API over raw SQL against
-`LiteLLM_MemoryTable` — see the `chatui-memory` skill for the full read/write/delete pattern and
+`LiteLLM_MemoryTable` — see the `lga-memory` skill for the full read/write/delete pattern and
 auth header. Querying the table directly is fine for one-off inspection but the API enforces the
 key-prefix namespacing convention and scoping the memory skill relies on.
 
@@ -60,13 +60,13 @@ key-prefix namespacing convention and scoping the memory skill relies on.
 | Table                                                                                                          | Contains                                                                                                              |
 | -------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
 | `LiteLLM_SpendLogs`                                                                                            | Per-call log: every completion/tool call, cost, tokens, timing — see Logs section below                               |
-| `LiteLLM_MemoryTable`                                                                                          | Backs `/v1/memory` — prefer the HTTP API (see `chatui-memory`) over querying this directly                            |
+| `LiteLLM_MemoryTable`                                                                                          | Backs `/v1/memory` — prefer the HTTP API (see `lga-memory`) over querying this directly                            |
 | `LiteLLM_VerificationToken`                                                                                    | API keys (virtual keys), budgets, rate limits, scoping to team/user                                                   |
 | `LiteLLM_UserTable`                                                                                            | Proxy user records                                                                                                    |
 | `LiteLLM_TeamTable`                                                                                            | Team records, budget/spend rollups                                                                                    |
 | `LiteLLM_ErrorLogs`                                                                                            | Failed calls — check here first when a call silently fails                                                            |
 | `LiteLLM_ModelTable`                                                                                           | Configured models / deployments                                                                                       |
-| `LiteLLM_AgentsTable`                                                                                          | Agent records known to LiteLLM (distinct from LibreChat's `agents` collection — see `chatui`)                         |
+| `LiteLLM_AgentsTable`                                                                                          | Agent records known to LiteLLM                                                                                        |
 | `MonthlyGlobalSpend`, `DailyTagSpend`, `Last30dModelsBySpend`, `Last30dKeysBySpend`, `Last30dTopEndUsersSpend` | Pre-aggregated spend views — cheaper than aggregating `LiteLLM_SpendLogs` yourself for coarse-grained spend questions |
 
 ## Logs — `LiteLLM_SpendLogs`

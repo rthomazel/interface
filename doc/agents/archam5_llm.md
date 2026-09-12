@@ -304,7 +304,7 @@ Example calls of `web_search`:
 
 ```json
 {
-  "query": "best practices for LibreChat agent skills 2026",
+  "query": "best practices for agent skills 2026",
   "images": false,
   "videos": false
 }

@@ -111,7 +111,6 @@ rm -rf /projects/<repo>
 > Warning: A few projects are permanently cloned
 >
 > - lga: This is the live stack where the workstation runs, if removed db crashes and everything crashes.
-> - librechat-tsc: used in the patching workflow (see skill).
 
 Update if exists or create a memory (see skill) about the state of the project, keep it around 300 words, key should be ${PROJECT_NAME}\_project_state.
 The memory entry is per project, not per feature. If there's more than one entry for the same project, consolidate.
