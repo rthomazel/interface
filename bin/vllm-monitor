@@ -214,6 +214,8 @@ def parse_metrics(lines: Iterable[str], all_lines: Iterable[str] | None = None) 
                     ""
                 )
                 value = value.replace(",", "")
+                if label == "Draft acceptance":
+                    suffix = "%"
                 metrics[label] = f"{value}{suffix}"
         match = POSITION_PATTERN.search(line)
         if match:
@@ -288,9 +290,27 @@ def display(console: Console, path: Path) -> None:
         console.print("Refreshing every 2 seconds. Press Ctrl-C to exit.", style="dim")
 
 
+def run_benchmark() -> None:
+    benchmark_command = [
+        "vllm", "bench", "serve",
+        "--base-url", f"{os.environ.get('VLLM_BASE_URL', 'http://127.0.0.1')}:{os.environ.get('VLLM_PORT', '8000')}",
+        "--model", os.environ["VLLM_MODEL_NAME"],
+        "--num-prompts", os.environ.get("BENCH_NUM_PROMPTS", "8"),
+        "--random-input-len", os.environ.get("BENCH_RANDOM_INPUT", "50000"),
+        "--random-output-len", os.environ.get("BENCH_RANDOM_OUTPUT", "4000"),
+        "--max-concurrency", os.environ.get("BENCH_MAX_CONCURRENCY", "1"),
+        "--header", f"Authorization=Bearer {os.environ.get('VLLM_API_KEY', '')}",
+        "--temperature", os.environ.get("TEMPERATURE", "1"),
+        "--top-p", os.environ.get("TOP_P", "0.95"),
+        "--top-k", os.environ.get("TOP_K", "20"),
+    ]
+    os.execvp(benchmark_command[0], benchmark_command)
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("directory", nargs="?", type=Path, default=DEFAULT_DIRECTORY)
+    parser.add_argument("--benchmark", action="store_true", help="run the benchmark after the server starts")
     args = parser.parse_args()
     try:
         log_path = choose_log(args.directory)
@@ -300,6 +320,10 @@ def main() -> None:
         try:
             with Live(console=console, refresh_per_second=LIVE_REFRESH_PER_SECOND, screen=False) as live:
                 wait_for_startup(log_path, live, directory_monitor)
+                if args.benchmark:
+                    live.stop()
+                    directory_monitor.stop()
+                    run_benchmark()
                 while True:
                     lines = read_tail(log_path)
                     all_lines = read_log(log_path)

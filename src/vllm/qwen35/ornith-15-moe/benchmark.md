@@ -4,7 +4,7 @@
 
 native model context 262K
 average prefix cache hit rate (0.8)
-262*.2 =~ 50K (tokens recomputed from scratch each turn)
+262\*.2 =~ 50K (tokens recomputed from scratch each turn)
 
 ssh into instance
 
@@ -124,3 +124,4 @@ Per-position acceptance (%):
   Position 6:                            46.24
   Position 7:                            41.32
 ==================================================
+```
