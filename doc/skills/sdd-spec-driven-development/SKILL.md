@@ -51,8 +51,8 @@ conventions first. Present to operator for review and approval.
 This is the discussion and investigation phase. Work with the operator to
 understand, explore, and record the intended change before implementation.
 
-When exploring the current system, start with its existing specifications and
-documentation. Then inspect the relevant code, tests, configuration, and
+When exploring the current system, start with its existing specifications
+documentation and change files. Then inspect the relevant code, tests, configuration, and
 observed behavior. Existing artifacts provide context and may reveal
 constraints, gaps, or contradictions that need to be resolved.
 
@@ -72,8 +72,13 @@ Together, the agent and operator should:
 For new work, create a feature directory under `spc/`:
 
 ```text
-spc/<feature-name>
 spc/<feature-name>/spec.md
+```
+
+For changes, also create a change file, see the change files section below.
+
+```text
+spc/<feature-name>/yyyy/<change-id>.md
 ```
 
 Choose a clear, stable feature name and place the specification and related
@@ -85,6 +90,9 @@ All meaningful discussion and investigation should happen in this step. Later
 steps execute and verify the results rather than silently reopening the same
 discovery process. If implementation exposes a requirement conflict or a
 change in intent, stop and return to the operator.
+
+When working on an existing feature, update its spec.
+It is expected to keep the spec updated as a reference throughout the lifetime of the project.
 
 ### 3. Plan
 
@@ -163,49 +171,52 @@ SDD artifacts use OKF-style YAML frontmatter. The only required fields are:
 ---
 id: account-recovery
 type: spec
-description: Describes account recovery behavior for members who cannot sign in.
+summary: Describes account recovery behavior for members who cannot sign in.
 author: Thom
+created: 2026-09-11
 ---
 ```
 
-- `id` is the stable identifier for the artifact.
-- `type` is free text for now.
-- `description` briefly states what the artifact represents.
+- `id` short slug, words only.
+- `type` always spec for specifications, documentation for documentation.
+- `summary` short, machine friendly text.
 - `author` identifies who provided the intent for the artifact.
 - `agents` identifies agents involved in producing the artifact.
+- `created` is the date the artifact was created.
+- `updated` is the date the artifact was last updated.
 
 `reviewed-by` is optional. Frontmatter may contain
-any additional key/value pairs needed by the project. Do not add software
-relationship fields unless the project later adopts them.
+any additional key/value pairs needed by the project.
+Refs section should be a "kind: value" mapping containing links to other documents by ID or external references.
+For pull requests, always use a URL and kind "PR".
 
 ## Specification example
 
 A specification can be short when the behavior is simple:
 
-````markdown
+```markdown
 ---
 id: account-recovery
 type: spec
-description: Describes account recovery behavior for members who cannot sign in.
+summary: Describes account recovery behavior for members who cannot sign in.
 author: thom
+created: 2026-09-11
+updated: 2026-09-15
 agents: merlin
 reviewed-by: []
 ---
 
 # Account recovery
 
+## Description
+
 A member can request a recovery link using their verified email address. The
 link expires after one hour and can be used only once.
 
-## Changelog
+## Refs
 
-```yaml
-- date: 2026-04-20
-  type: created
-  summary: Initial account recovery specification
-  refs: []
+- PR: https://github.com/example/project/pull/184
 ```
-````
 
 ## Documentation from existing implementation
 
@@ -223,7 +234,6 @@ spc/<feature-name>/
 spc/<feature-name>/doc.md
 ```
 
-Create the directory if it does not exist.
 The first doc should be called doc.md, there can be
 more than one such as: `this.doc.md`, `that.doc.md`.
 
@@ -256,3 +266,94 @@ documentation. At the end of work:
 - keep the task checklist synchronized with actual work;
 - record approved changes in the specification's changelog; and
 - do not leave silent drift between intent, artifacts, and implementation.
+
+## Evolution & structure
+
+Changes are documented semantically one change per file for both humans and agents.
+The files are organized in a directory with the current year under the feature, to avoid clutter.
+This is a strategy to capture the semantic history of the project alongside the same repository versioning its implementation.
+Releases.yaml maps change IDs to semantic versioning releases.
+
+### changelog
+
+The project changelog is a generated document meant to be readable by humans.
+Each change file's body is meant to be added to the changelog.
+
+```markdown
+spc/
+├── releases.yaml
+│
+├── account/
+│ ├── spec.md
+│ └── 2026/ <- change directory
+│ ├── remove-avatar.md
+│ └── ...
+│
+└── billing/
+├── doc.md <- feature documented from implementation
+└── 2026/
+└── ...
+
+CHANGELOG.md <- generated from releases.yaml and change files.
+
+spec.md — current authoritative intent for the feature; continuously updated.
+doc.md — current authoritative documentation for the feature; continuously updated.
+YYYY/<slug>.md — immutable semantic change records.
+releases.yaml — maps semantic changes into SemVer releases.
+CHANGELOG.md — generated project-level projection; not the source of truth.
+Git — retains the exact implementation history.
+refs — connects the semantic change to external/provenance information such as PRs and related specs.
+```
+
+### change files
+
+Changes are markdown files with OKF frontmatter.
+
+Required fields:
+
+- id: yyyy-mm-dd-<slug>.
+- created: yyyy-mm-dd.
+- summary: field is short, machine friendly text.
+- description: markdown meant for the changelog for humans to read.
+- type: conventional commit types: feat, fix, refactor, not limited to only these.
+- - The chore type is not very semantic so prefer to specify instead of using it, chore -> infra.
+
+The file should end with a Refs section to link to other artifacts by ID.
+The PR number should go as a URL in refs.
+
+```markdown
+---
+type: refactor
+id: 2026-09-11-remove-avatar
+created: 2026-09-11
+summary: Remove avatar from UserProfile
+---
+
+# Remove avatar from UserProfile
+
+## Description
+
+UserProfile no longer accepts an avatar.
+
+The avatar prop has been removed from UserProfile.
+
+This eliminates the Avatar dependency and simplifies the profile
+editing flow.
+
+## Refs
+
+- PR: https://github.com/example/project/pull/184
+```
+
+### releases
+
+A minimum tracking file used to collect changes and programmatically build the project changelog.
+
+```yaml
+- version: 2.4.0
+  date: 2026-09-15
+  changes:
+    - 2026-09-11-remove-avatar
+    - 2026-09-12-bar
+    - 2026-09-13-foo
+```
