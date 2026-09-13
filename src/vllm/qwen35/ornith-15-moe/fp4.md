@@ -7,12 +7,12 @@ https://huggingface.co/ornith-ai/Ornith-1.5-35B-A3B-NVFP4
 ## hardware
 
 32GB minimum
-5090 probably too small
+5090 too small
 48GB blackwell recommended
 
 ## image
 
-ghcr.io/rthomazel/interface/vllm/qwen35:v0.1.0
+ghcr.io/rthomazel/interface/vllm/qwen35:v0.2.0
 
 ## docker flags
 
@@ -42,6 +42,15 @@ built in MTP head
 
 SC_NUM_SPECULATIVE_TOKENS=7
 
+## startup script
+
+these might have path issues.
+not necessary, only used for b12x backend, not working.
+
+```
+/usr/local/bin/uv pip install --system "vllm[b12x]"
+```
+
 ## env
 
 VLLM_API_KEY=sk-keepit69
@@ -57,6 +66,12 @@ MODEL_NAME=ornith-ai/Ornith-1.5-35B-A3B-NVFP4
 TENSOR_PARALLEL_SIZE=1
 TMUX_START=true
 ALIASES=true
+
+> use optimized moe nvpf4 backend on SM120/SM121, +5%
+> see https://github.com/vllm-project/vllm/pull/52018
+> does NOT work, avoid
+
+EXTRA_ARGS="--moe-backend b12x"
 
 > set to debug if needed
 

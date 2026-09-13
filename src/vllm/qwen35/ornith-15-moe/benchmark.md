@@ -101,7 +101,6 @@ Per-position acceptance (%):
   Position 5:                            46.52
   Position 6:                            46.24
   Position 7:                            41.32
- ==================================================
 ```
 
 ### ornith-ai/Ornith-1.5-35B-A3B-NVFP4 temp .6 PRO 5000, MTP 7, 332tok/s 1.40M
