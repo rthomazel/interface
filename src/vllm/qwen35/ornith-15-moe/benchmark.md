@@ -150,3 +150,48 @@ Parent commit (@-):
   Position 6:                            52.61
 ================================================
 ```
+
+### ornith-ai/Ornith-1.5-35B-A3B-NVFP4 temp .6 2x PRO 4000, MTP 4, 271tok/s 960K
+
+kv 5.4GiB
+mtp 7 215tok/s
+mtp 5 223tok/s
+
+```
+============ Serving Benchmark Result ============
+Successful requests:                     8
+Failed requests:                         0
+Maximum request concurrency:             1
+Benchmark duration (s):                  117.77
+Total input tokens:                      400000
+Total generated tokens:                  32000
+Request throughput (req/s):              0.07
+Output token throughput (tok/s):         271.71
+Peak output token throughput (tok/s):    104.00
+Peak concurrent requests:                2.00
+Total token throughput (tok/s):          3668.08
+---------------Time to First Token----------------
+Mean TTFT (ms):                          4627.25
+Median TTFT (ms):                        4597.27
+P99 TTFT (ms):                           4770.36
+-----Time per Output Token (excl. 1st token)------
+Mean TPOT (ms):                          2.52
+Median TPOT (ms):                        2.46
+P99 TPOT (ms):                           2.94
+---------------Inter-token Latency----------------
+Mean ITL (ms):                           10.28
+Median ITL (ms):                         10.33
+P99 ITL (ms):                            10.87
+---------------Speculative Decoding---------------
+Acceptance rate (%):                     76.86
+Acceptance length:                       4.07
+Drafts:                                  7856
+Draft tokens:                            31424
+Accepted tokens:                         24153
+Per-position acceptance (%):
+  Position 0:                            95.19
+  Position 1:                            85.20
+  Position 2:                            76.74
+  Position 3:                            50.32
+==================================================
+```

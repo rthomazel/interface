@@ -12,7 +12,7 @@ https://huggingface.co/ornith-ai/Ornith-1.5-35B-A3B-NVFP4
 
 ## image
 
-ghcr.io/rthomazel/interface/vllm/qwen35:v0.2.0
+ghcr.io/rthomazel/interface/vllm/qwen35:v0.2.0 or latest
 
 ## docker flags
 
@@ -33,7 +33,7 @@ TEMPERATURE=0.6
 ## disk
 
 model 23Gb
-disk 10Gb
+disk 8Gb
 volume 26Gb
 
 ## Speculative decoding
