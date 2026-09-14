@@ -91,16 +91,46 @@ YAML is chosen to make it parsable and easy to search for.
 
 ## Software modelling
 
-A methodology that produces markdown files with implementation details.
-After sdd is used to produce specs and agents write the code, The next step is to collect details from the code and produce a model document.
-The model document is then reviewed and saved together with the spec.
-It can be used to reason about the software in more detail and inform spec and software changes, allowing easier maintenance and changes over time.
-Agents and humans can navigate the software at a middle level quickly, treating the source code as a compiled representation of the model.
-Human developers no longer need to read code to understand the structure of the software.
-Model file metadata will be authored by agents, Software model, true.
+A methodology that represents the implementation structure in markdown files.
+Software models enable reasoning about the program without excessive details.
+
+#### Motivation
+
+- Enrichment: Complement the spec with the implementation's design, providing documentation for maintenance and usage.
+- Enhanced navigation: Agents and humans can navigate the software at a middle level quickly
+- Code as byproduct: The source code becomes a representation of the model.
+- Human review: Developers can review most changes in natural language, looking at code only when necessary.
+- Flexibility: Specs, changes and the software model enables re-implementation in another stack.
+- Utility: The software can be extended and redesigned with confidence.
+
+After SDD is used to produce specs, the next step is to work on the software model.
+Software patterns, system architecture, data flows and other **concepts and knowledge belong in the spec**, not the model!
+It uses pseudo-code language, to keep it agnostic from any given programming stack.
+Model are colocated with the code file, same path, `.model.md` extension.
+Types, file names, function signatures, database layout, error handling flows, classes, etc... All should be specified in the model.
+Trivial function implementations should be omitted or be just english when non-trivial.
+Async mechanisms, concurrency, implementation complexity, library details, edge cases and black magic should be documented as prose in the relevant function.
+After elaboration the model documents are then reviewed and saved together with the specs.
+
+todo: Model file OKF frontmatter fields
+todo: Define language to represent code in models
 
 ```
-# SDD workflow, including requirements and modelling
+SRC/
+├── account/
+│   ├── UserProfile.model.md
+│   ├── UserProfile.ts
+│   └── ...
+│
+└── billing/
+    ├── BillingService.model.md
+    ├── BillingService.ts
+    └── ...
+```
+
+### SDD workflow, including requirements and modelling
+
+```
 
 | non technical     technical
 |--------------|-----------------|
@@ -119,6 +149,8 @@ Plan
 ↓
 Tasks
 ↓
+Model
+↓
 Code -> Ships
 ├── modules
 ├── functions
@@ -127,8 +159,6 @@ Code -> Ships
 ├── interfaces
 ├── database
 └── tests
-↓
-Model
 ```
 
 | level   | file       | language             |
@@ -139,16 +169,6 @@ Model
 | machine | executable | machine              |
 
 ## Staleness
-
-> Incorrect documentation is worse than no documentation.
-
-The main risk of the methodology is having documentation, specs and models fall out of sync with the code.
-This is mitigated by agents, they can read, check and update the documents as part of their regular work.
-
-- Add explicit prompting and workflow steps to review and correct documents.
-- Treat gaps in documentation as bugs.
-- Start agent workflows by reading documentation.
-- End workflows by updating documentation and models.
 
 Special attention is necessary with model files since they are middle level.
 These documents drift from code more frequently.

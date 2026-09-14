@@ -3,10 +3,10 @@
 | hardware    | cost | volume   | runs      |
 | ----------- | ---- | -------- | --------- |
 | 2x 3090     | .35  | ok       | slow      |
-| 1x a6000    | .45  | very low |           |
+| 1x a6000    | .45  | very low | -         |
 | 2x pro 4000 | .55  | good     | excellent |
-| 6000 ada    | .60  | low      |           |
-| pro 5000    | .75  | good     | excellent |
+| 1x 6000 ada | .60  | low      | decent    |
+| 1x pro 5000 | .75  | good     | excellent |
 
 ## realistic context benchmark
 
@@ -160,8 +160,48 @@ Per-position acceptance (%):
   Position 3:                            50.32
 ```
 
-### ornith-ai/Ornith-1.5-35B-A3B-NVFP4 temp .6 2x 3090, MTP 4, tok/s K
+### ornith-ai/Ornith-1.5-35B-A3B-NVFP4 temp .6 2x 3090, MTP 4, 78tok/s
 
-### ornith-ai/Ornith-1.5-35B-A3B-NVFP4 temp .6 6000 ada, MTP 4, tok/s K
+required env, else crashes with `AssertionError: auto_functionalized was not removed`
+EXTRA_ARGS="--linear-backend marlin"
+not optimized further, maybe dflash, maybe different MTP
 
-### ornith-ai/Ornith-1.5-35B-A3B-NVFP4 temp .6 A6000, MTP 4, tok/s K
+```
+Output token throughput (tok/s):         78.76
+Mean TTFT (ms):                          9824.60
+Mean TPOT (ms):                          10.24
+Mean ITL (ms):                           33.66
+Acceptance rate (%):                     57.12
+Acceptance length:                       3.28
+Drafts:                                  9744
+Draft tokens:                            38976
+Accepted tokens:                         22264
+Per-position acceptance (%):
+  Position 0:                            67.68
+  Position 1:                            60.56
+  Position 2:                            53.14
+  Position 3:                            47.11
+```
+
+### ornith-ai/Ornith-1.5-35B-A3B-NVFP4 temp .6 A6000, MTP 5, 124tok/s 1.5M
+
+kv mem 17.4GiB
+not optimized could try lower MTP
+
+```
+Output token throughput (tok/s): 123.95
+Mean TTFT (ms): 4824.31
+Mean TPOT (ms): 6.86
+Mean ITL (ms): 22.46
+Acceptance rate (%): 45.39
+Acceptance length: 3.27
+Drafts: 9786
+Draft tokens: 48930
+Accepted tokens: 22211
+Per-position acceptance (%):
+Position 0: 82.71
+Position 1: 46.16
+Position 2: 37.25
+Position 3: 32.42
+Position 4: 28.43
+```

@@ -1,5 +1,5 @@
 [Unit]
-Description=lga-maintenance MCP server (bench)
+Description=archam5-maintenance MCP server (bench)
 Documentation=https://github.com/rthomazel/mcp
 After=network.target
 StartLimitIntervalSec=300
@@ -12,6 +12,7 @@ Environment=BENCH_MCP_TRANSPORT=mcp-proxy
 Environment=BENCH_MCP_TIMEOUT=15s
 Environment=BENCH_MCP_BACKGROUND_TIMEOUT=5m
 Environment=BENCH_MCP_EDIT_MAX_LINES=100
+Environment=BENCH_MCP_SHELL_EXPAND_COMMANDS: "false"
 Restart=on-failure
 RestartSec=5
 
