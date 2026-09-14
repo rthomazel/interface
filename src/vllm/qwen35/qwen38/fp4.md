@@ -8,8 +8,7 @@ https://github.com/vllm-project/recipes/blob/main/Qwen/Qwen3.5.md
 
 ## hardware
 
-32GB tight
-48GB recommended
+48GB minimum
 
 ## image
 

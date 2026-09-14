@@ -103,16 +103,39 @@ Software models enable reasoning about the program without excessive details.
 - Flexibility: Specs, changes and the software model enables re-implementation in another stack.
 - Utility: The software can be extended and redesigned with confidence.
 
-After SDD is used to produce specs, the next step is to work on the software model.
-Software patterns, system architecture, data flows and other **concepts and knowledge belong in the spec**, not the model!
-It uses pseudo-code language, to keep it agnostic from any given programming stack.
-Model are colocated with the code file, same path, `.model.md` extension.
-Types, file names, function signatures, database layout, error handling flows, classes, etc... All should be specified in the model.
-Trivial function implementations should be omitted or be just english when non-trivial.
-Async mechanisms, concurrency, implementation complexity, library details, edge cases and black magic should be documented as prose in the relevant function.
-After elaboration the model documents are then reviewed and saved together with the specs.
+#### Spec vs models
 
-todo: Model file OKF frontmatter fields
+Information should not repeat between the two.
+Specs should contain intention, decisions, motivations, use cases, behavior, constraints, concepts and knowledge.
+
+- Software patterns
+- System architecture
+- Data storage
+- Data flows
+
+Models should contain schemas, structure, implementation notes and details.
+
+- Schema
+- Types
+- File names
+- Function signatures
+- Error handling flows
+- API surface
+- Classes
+- Edge cases
+- Implementation complexity
+
+### Models
+
+Always produce models before code and after specs.
+Only produce code after the model is approved.
+It uses pseudo-code language, to keep it agnostic from any given programming stack.
+Models are colocated with the code file, same path, `.model.md` extension, one per file.
+Note: experiment with a model per group of files.
+Trivial function implementations should be omitted or be just english when non-trivial.
+Async mechanisms, concurrency, library details and black magic should be documented as prose in the relevant function.
+After elaboration the model documents are then reviewed and saved together with the code.
+
 todo: Define language to represent code in models
 
 ```
@@ -130,35 +153,26 @@ SRC/
 
 ### SDD workflow, including requirements and modelling
 
-```
+Models are done per task.
 
-| non technical     technical
-|--------------|-----------------|
-Intent         |
-↓              |
-Requirements   |
-↓              |
-Behavior       |
-↓              |
-Design         | Constitution
-↓              | ↓
-----------------
-Spec
-↓
-Plan
-↓
-Tasks
-↓
-Model
-↓
-Code -> Ships
-├── modules
-├── functions
-├── types
-├── public APIs
-├── interfaces
-├── database
-└── tests
+```
+|        non technical         |    technical   |
+|------------------------------|----------------|
+| Intent, Requirements, Design |  Constitution  |
+|               ↓                     ↓         |
+|               |                     |         |
+|               ______________________          |
+|                        Spec                   |
+|                        ↓                      |
+|                        Plan                   |
+|                        ↓                      |
+|                        Tasks                  |
+|                        ↓ ↓ ↓ ...              |
+|                        Models                 |
+|                        ↓ ↓ ↓ ...              |
+|                        Code                   |
+|                        ↓                      |
+|                        Ship                   |
 ```
 
 | level   | file       | language             |
@@ -172,9 +186,12 @@ Code -> Ships
 
 Special attention is necessary with model files since they are middle level.
 These documents drift from code more frequently.
+Regular software engineering workflows, like bug fixes, should always review model files and make updates.
+Continuous integration of documentation and models against the code they document is strongly encouraged.
 
-- Regular software engineering workflows, like bug fixes, should always review model files and make updates.
-- Continuous integration of documentation and models against the code they document is strongly encouraged.
+- Incorrect models are bugs, worse than no model
+- CI check required models to be updated when a code file is updated
+- PRs start by changing only models first, for a clean diff, followed by code in the same PR.
 
 ### tools
 
