@@ -231,31 +231,10 @@ Per-position acceptance (%):
 MAX_NUM_BATCHED_TOKENS=8192 seems to improve TTFT dramatically
 
 ```
-============ Serving Benchmark Result ============
-Successful requests:                     20
-Failed requests:                         0
-Maximum request concurrency:             1
-Benchmark duration (s):                  225.30
-Total input tokens:                      81920
-Total generated tokens:                  20480
-Request throughput (req/s):              0.09
 Output token throughput (tok/s):         90.90
-Peak output token throughput (tok/s):    33.00
-Peak concurrent requests:                2.00
-Total token throughput (tok/s):          454.50
----------------Time to First Token----------------
 Mean TTFT (ms):                          2505.14
-Median TTFT (ms):                        2455.52
-P99 TTFT (ms):                           3440.77
------Time per Output Token (excl. 1st token)------
 Mean TPOT (ms):                          8.56
-Median TPOT (ms):                        7.80
-P99 TPOT (ms):                           11.87
----------------Inter-token Latency----------------
 Mean ITL (ms):                           32.06
-Median ITL (ms):                         31.57
-P99 ITL (ms):                            35.69
----------------Speculative Decoding---------------
 Acceptance rate (%):                     68.80
 Acceptance length:                       3.75
 Drafts:                                  5464
@@ -266,5 +245,4 @@ Per-position acceptance (%):
   Position 1:                            74.34
   Position 2:                            62.76
   Position 3:                            53.75
-==================================================
 ```
