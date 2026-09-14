@@ -182,6 +182,7 @@ fi
 
 # start sshd and vllm server
 echo [INFO] Running image version "${VERSION:-"unknown"}"
+echo [INFO] vLLM version "$(vllm --version)"
 
 /usr/sbin/sshd
 
