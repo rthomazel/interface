@@ -3,7 +3,6 @@
 | hardware    | cost | volume   | runs      |
 | ----------- | ---- | -------- | --------- |
 | 2x 3090     | .35  | ok       | slow      |
-| 1x a6000    | .45  | very low | -         |
 | 2x pro 4000 | .55  | good     | excellent |
 | 1x 6000 ada | .60  | low      | decent    |
 | 1x pro 5000 | .75  | good     | excellent |
