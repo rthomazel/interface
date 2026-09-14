@@ -1,5 +1,13 @@
 # ornith-ai/Ornith-1.5-35B-A3B benchmarks
 
+| hardware    | cost | volume   | runs      |
+| ----------- | ---- | -------- | --------- |
+| 2x 3090     | .35  | ok       | slow      |
+| 1x a6000    | .45  | very low |           |
+| 2x pro 4000 | .55  | good     | excellent |
+| 6000 ada    | .60  | low      |           |
+| pro 5000    | .75  | good     | excellent |
+
 ## realistic context benchmark
 
 native model context 262K
@@ -109,31 +117,10 @@ vllm updated to v0.28 from 0.27.1
 kv mem 16.5GiB
 
 ```
-================================================
-Successful requests:                     8
-Failed requests:                         0
-Maximum request concurrency:             1
-Benchmark duration (s):                  96.19
-Total input tokens:                      400000
-Total generated tokens:                  32000
-Request throughput (req/s):              0.08
 Output token throughput (tok/s):         332.67
-Peak output token throughput (tok/s):    93.00
-Peak concurrent requests:                2.00
-Total token throughput (tok/s):          4491.00
----------------Time to First Token--------------
 Mean TTFT (ms):                          4066.07
-Median TTFT (ms):                        3855.75
-P99 TTFT (ms):                           5456.94
------Time per Output Token (excl. 1st token)----
 Mean TPOT (ms):                          1.99
-Median TPOT (ms):                        1.64
-P99 TPOT (ms):                           3.42
----------------Inter-token Latency--------------
 Mean ITL (ms):                           12.11
-Median ITL (ms):                         12.47
-P99 ITL (ms):                            13.64
----------------Speculative Decoding-------------
 Acceptance rate (%):                     72.29
 Acceptance length:                       6.06
 Drafts:                                  5282
@@ -148,7 +135,6 @@ Parent commit (@-):
   Position 4:                            63.73
   Position 5:                            53.96
   Position 6:                            52.61
-================================================
 ```
 
 ### ornith-ai/Ornith-1.5-35B-A3B-NVFP4 temp .6 2x PRO 4000, MTP 4, 271tok/s 960K
@@ -158,31 +144,10 @@ mtp 7 215tok/s
 mtp 5 223tok/s
 
 ```
-============ Serving Benchmark Result ============
-Successful requests:                     8
-Failed requests:                         0
-Maximum request concurrency:             1
-Benchmark duration (s):                  117.77
-Total input tokens:                      400000
-Total generated tokens:                  32000
-Request throughput (req/s):              0.07
 Output token throughput (tok/s):         271.71
-Peak output token throughput (tok/s):    104.00
-Peak concurrent requests:                2.00
-Total token throughput (tok/s):          3668.08
----------------Time to First Token----------------
 Mean TTFT (ms):                          4627.25
-Median TTFT (ms):                        4597.27
-P99 TTFT (ms):                           4770.36
------Time per Output Token (excl. 1st token)------
 Mean TPOT (ms):                          2.52
-Median TPOT (ms):                        2.46
-P99 TPOT (ms):                           2.94
----------------Inter-token Latency----------------
 Mean ITL (ms):                           10.28
-Median ITL (ms):                         10.33
-P99 ITL (ms):                            10.87
----------------Speculative Decoding---------------
 Acceptance rate (%):                     76.86
 Acceptance length:                       4.07
 Drafts:                                  7856
@@ -193,5 +158,10 @@ Per-position acceptance (%):
   Position 1:                            85.20
   Position 2:                            76.74
   Position 3:                            50.32
-==================================================
 ```
+
+### ornith-ai/Ornith-1.5-35B-A3B-NVFP4 temp .6 2x 3090, MTP 4, tok/s K
+
+### ornith-ai/Ornith-1.5-35B-A3B-NVFP4 temp .6 6000 ada, MTP 4, tok/s K
+
+### ornith-ai/Ornith-1.5-35B-A3B-NVFP4 temp .6 A6000, MTP 4, tok/s K

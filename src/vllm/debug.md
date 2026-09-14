@@ -71,4 +71,6 @@ tar -xf /workspace/cache.tar -C /workspace/.cache
 
 ### copy logs
 
+```
 scp -P 30717 root@154.37.220.220:/workspace/logs/vllm-20260908-004532.log vllm.log
+```
