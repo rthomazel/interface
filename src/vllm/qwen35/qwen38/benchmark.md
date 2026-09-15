@@ -1,5 +1,7 @@
 # Qwen/Qwen3.8-27B benchmarks
 
+all benchmarks are fast
+
 | n   | RTX card    | $/h  | VRAM  | MTP | tok/s | KV   | quant   | status | competitive    |
 | --- | ----------- | ---- | ----- | --- | ----- | ---- | ------- | ------ | -------------- |
 | 2   | PRO 4000 BW | 0.49 | 48 GB | 3   | 66    | 165K | fp8     | done   | no, slow       |
@@ -7,19 +9,7 @@
 | 1   | 4090 48 GB  | 0.59 | 48 GB | 3   | 72    | 514K | nvfp4   | done   | maybe          |
 | 1   | 4090 48 GB  | 0.59 | 48 GB | 4   | 85    | 498K | awqint4 | done   | no, quality    |
 | 1   | PRO 5000 BW | 0.73 | 48 GB | 5   | 83    | 417K | nvfp4   | done   | no, same price |
-| 2   | 5090 BW     | 0.76 | 64 GB | 4   | 91    | 480K | fp8     | done   | yes, best ⭐   |
-
-## best config so far
-
-Qwen/Qwen3.8-27B-FP8 2 RTX 5090, MTP 4, 91tok/s, 480K
-
-### todo
-
-- [ ] 4090 nvfp4 mtp 4
-- [ ] 4000 nvfp4 mtp 4
-- [ ] tweak thinking mode per request
-- [ ] benchmark at 50k context
-- [ ] MAX_NUM_BATCHED_TOKENS=8192
+| 2   | 5090 BW     | 0.76 | 64 GB | 4   | 91    | 480K | fp8     | done   | yes, best ⭐    |
 
 ### fast benchmark
 
@@ -61,7 +51,12 @@ vllm bench serve \
   --top-k 20
 ```
 
-## Qwen/Qwen3.8-27B-FP8 2 RTX PRO 4000, MTP 3, 66tok/s, 165K
+## FP8
+
+best:
+Qwen/Qwen3.8-27B-FP8 2 RTX 5090, MTP 4, 91tok/s, 480K
+
+### Qwen/Qwen3.8-27B-FP8 2 RTX PRO 4000, MTP 3, 66tok/s, 165K
 
 2 and 4 also tested, 3 seemed better
 
@@ -78,98 +73,7 @@ Draft tokens:                            19179
   Position 2:                            64.07
 ```
 
-## unsloth/Qwen3.8-27B-NVFP4 2 RTX PRO 4000, MTP 3, 75tok/s, 432K
-
-GPU utilization 92%
-MTP 2: 10% slower, despite higher acceptance. same acceptance length.
-
-```
-Output token throughput (tok/s):         76.73
-Mean TTFT (ms):                          1300.93
-Mean TPOT (ms):                          11.77
-Mean ITL (ms):                           34.32
-Acceptance rate (%):                     63.97
-Acceptance length:                       2.92
-Draft tokens:                            21054
-  Position 0:                            72.87
-  Position 1:                            62.95
-  Position 2:                            56.10
-```
-
-## unsloth/Qwen3.8-27B-NVFP4 RTX 4090 48Gb, MTP 2, 61tok/s, 522K
-
-Output token throughput (tok/s): 61.58
-Mean TTFT (ms): 1437.58
-Acceptance rate (%): 71.04
-Acceptance length: 2.42
-Per-position acceptance (%):
-Position 0: 76.18
-Position 1: 65.89
-
-## unsloth/Qwen3.8-27B-NVFP4 RTX 4090 48Gb, MTP 3, 72tok/s, 514K
-
-Output token throughput (tok/s): 72.03
-Mean TTFT (ms): 1389.47
-Acceptance rate (%): 66.11
-Acceptance length: 2.98
-Per-position acceptance (%):
-Position 0: 77.93
-Position 1: 64.58
-Position 2: 55.83
-
-## cyankiwi/Qwen3.6-27B-AWQ-INT4 RTX 4090 48Gb, MTP 3, 82tok/s, 511K
-
-Output token throughput (tok/s): 82.01
-Mean TTFT (ms): 1564.14
-Acceptance rate (%): 73.40
-Acceptance length: 3.20
-Per-position acceptance (%):
-Position 0: 84.44
-Position 1: 72.58
-Position 2: 63.18
-
-## cyankiwi/Qwen3.6-27B-AWQ-INT4 RTX 4090 48Gb, MTP 4, 85tok/s, 498K
-
-Output token throughput (tok/s): 84.80
-Mean TTFT (ms): 1598.19
-Mean TPOT (ms): 10.24
-Mean ITL (ms): 36.75
-Acceptance rate (%): 64.85
-Acceptance length: 3.59
-Draft tokens: 22804
-Per-position acceptance (%):
-Position 0: 86.35
-Position 1: 69.53
-Position 2: 58.60
-Position 3: 44.92
-
-## unsloth/Qwen3.8-27B-NVFP4 RTX 5000 48Gb, MTP 3, 78tok/s, 433K
-
-Output token throughput (tok/s): 78.09
-Mean TTFT (ms): 820.51
-Acceptance length: 3.16
-Acceptance rate (%): 71.86
-Per-position acceptance (%):
-Position 0: 79.46
-Position 1: 71.14
-Position 2: 64.98
-
-## unsloth/Qwen3.8-27B-NVFP4 RTX 5000 48Gb, MTP 5, 83tok/s, 417K
-
-Output token throughput (tok/s): 83.27
-Mean TTFT (ms): 786.59
-Mean TPOT (ms): 11.25
-Mean ITL (ms): 40.80
-Acceptance rate (%): 52.68
-Acceptance length: 3.63
-Draft tokens: 28215
-Position 0: 73.12
-Position 1: 59.33
-Position 2: 49.28
-Position 3: 42.94
-Position 4: 38.74
-
-## Qwen/Qwen3.8-27B-FP8 2 RTX 5090, MTP 3, 72tok/s, 550K
+### Qwen/Qwen3.8-27B-FP8 2 RTX 5090, MTP 3, 72tok/s, 550K
 
 Output token throughput (tok/s): 72.10
 Mean TTFT (ms): 2168.54
@@ -182,7 +86,7 @@ Position 0: 76.56
 Position 1: 68.76
 Position 2: 61.10
 
-## Qwen/Qwen3.8-27B-FP8 2 RTX 5090, MTP 5, 90tok/s, 492K
+### Qwen/Qwen3.8-27B-FP8 2 RTX 5090, MTP 5, 90tok/s, 492K
 
 Output token throughput (tok/s): 90.29
 Mean TTFT (ms): 1342.35
@@ -197,7 +101,7 @@ Position 2: 44.69
 Position 3: 39.32
 Position 4: 36.70
 
-## Qwen/Qwen3.8-27B-FP8 fp16 KV, dflash, 8k batch, 2 RTX 5090, MTP 7 eager, 127tok/s, 226K
+### Qwen/Qwen3.8-27B-FP8 fp16 KV, dflash, 8k batch, 2 RTX 5090, MTP 7 eager, 127tok/s, 226K
 
 not good with higher context, feels slower than 70tok/s
 
@@ -226,7 +130,7 @@ Per-position acceptance (%):
   Position 6:                            35.09
 ```
 
-## Qwen/Qwen3.8-27B-FP8 2 RTX 5090, MTP 4, 91tok/s, 480K
+### Qwen/Qwen3.8-27B-FP8 2 RTX 5090, MTP 4, 91tok/s, 480K
 
 MAX_NUM_BATCHED_TOKENS=8192 seems to improve TTFT dramatically
 
@@ -246,3 +150,104 @@ Per-position acceptance (%):
   Position 2:                            62.76
   Position 3:                            53.75
 ```
+
+## FP4 / INT4
+
+todo
+- nvidia/Qwen3.8-27B-NVFP4 -- seems to be 20% faster than other quants
+- 1 4090 48 .6$/h low volume
+- 2 4090 .8$/h low volume
+- 2 pro 4000 .55$/h
+- 2 5090 .95$/h
+- 1 pro 5000 .7$/h
+
+### cyankiwi/Qwen3.6-27B-AWQ-INT4 RTX 4090 48Gb, MTP 3, 82tok/s, 511K
+
+Output token throughput (tok/s): 82.01
+Mean TTFT (ms): 1564.14
+Acceptance rate (%): 73.40
+Acceptance length: 3.20
+Per-position acceptance (%):
+Position 0: 84.44
+Position 1: 72.58
+Position 2: 63.18
+
+### cyankiwi/Qwen3.6-27B-AWQ-INT4 RTX 4090 48Gb, MTP 4, 85tok/s, 498K
+
+Output token throughput (tok/s): 84.80
+Mean TTFT (ms): 1598.19
+Mean TPOT (ms): 10.24
+Mean ITL (ms): 36.75
+Acceptance rate (%): 64.85
+Acceptance length: 3.59
+Draft tokens: 22804
+Per-position acceptance (%):
+Position 0: 86.35
+Position 1: 69.53
+Position 2: 58.60
+Position 3: 44.92
+
+### unsloth/Qwen3.8-27B-NVFP4 2 RTX PRO 4000, MTP 3, 75tok/s, 432K
+
+GPU utilization 92%
+MTP 2: 10% slower, despite higher acceptance. same acceptance length.
+
+```
+Output token throughput (tok/s):         76.73
+Mean TTFT (ms):                          1300.93
+Mean TPOT (ms):                          11.77
+Mean ITL (ms):                           34.32
+Acceptance rate (%):                     63.97
+Acceptance length:                       2.92
+Draft tokens:                            21054
+  Position 0:                            72.87
+  Position 1:                            62.95
+  Position 2:                            56.10
+```
+
+### unsloth/Qwen3.8-27B-NVFP4 RTX 4090 48Gb, MTP 2, 61tok/s, 522K
+
+Output token throughput (tok/s): 61.58
+Mean TTFT (ms): 1437.58
+Acceptance rate (%): 71.04
+Acceptance length: 2.42
+Per-position acceptance (%):
+Position 0: 76.18
+Position 1: 65.89
+
+### unsloth/Qwen3.8-27B-NVFP4 RTX 4090 48Gb, MTP 3, 72tok/s, 514K
+
+Output token throughput (tok/s): 72.03
+Mean TTFT (ms): 1389.47
+Acceptance rate (%): 66.11
+Acceptance length: 2.98
+Per-position acceptance (%):
+Position 0: 77.93
+Position 1: 64.58
+Position 2: 55.83
+
+### unsloth/Qwen3.8-27B-NVFP4 RTX 5000 48Gb, MTP 3, 78tok/s, 433K
+
+Output token throughput (tok/s): 78.09
+Mean TTFT (ms): 820.51
+Acceptance length: 3.16
+Acceptance rate (%): 71.86
+Per-position acceptance (%):
+Position 0: 79.46
+Position 1: 71.14
+Position 2: 64.98
+
+### unsloth/Qwen3.8-27B-NVFP4 RTX 5000 48Gb, MTP 5, 83tok/s, 417K
+
+Output token throughput (tok/s): 83.27
+Mean TTFT (ms): 786.59
+Mean TPOT (ms): 11.25
+Mean ITL (ms): 40.80
+Acceptance rate (%): 52.68
+Acceptance length: 3.63
+Draft tokens: 28215
+Position 0: 73.12
+Position 1: 59.33
+Position 2: 49.28
+Position 3: 42.94
+Position 4: 38.74
