@@ -153,6 +153,8 @@ Per-position acceptance (%):
 
 ## FP4 / INT4
 
+This model is pretty heavy needs Pro 5000 or 2 5090.
+
 todo
 - nvidia/Qwen3.8-27B-NVFP4 -- seems to be 20% faster than other quants
 - 1 4090 48 .6$/h low volume
@@ -254,7 +256,7 @@ Position 4: 38.74
 
 ## nvidia/Qwen3.8-27B-NVFP4 2x pro 4000, MTP 4, 27tok/s, 270K
 
-very low result, wtf.
+very low result, unusual.
 tricky to run, several OOMs. KV size 4.8GiB
 GPU_MEMORY_UTILIZATION=0.81
 PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
