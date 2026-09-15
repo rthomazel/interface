@@ -251,3 +251,28 @@ Position 1: 59.33
 Position 2: 49.28
 Position 3: 42.94
 Position 4: 38.74
+
+## nvidia/Qwen3.8-27B-NVFP4 2x pro 4000, MTP 4, 27tok/s, 270K
+
+very low result, wtf.
+tricky to run, several OOMs. KV size 4.8GiB
+GPU_MEMORY_UTILIZATION=0.81
+PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
+MAX_NUM_BATCHED_TOKENS=32K
+
+```
+Output token throughput (tok/s):         27.45
+Mean TTFT (ms):                          1106.39
+Mean TPOT (ms):                          35.38
+Mean ITL (ms):                           126.35
+Acceptance rate (%):                     64.40
+Acceptance length:                       3.58
+Drafts:                                  5730
+Draft tokens:                            22920
+Accepted tokens:                         14760
+Per-position acceptance (%):
+  Position 0:                            74.76
+  Position 1:                            66.79
+  Position 2:                            62.01
+  Position 3:                            54.03
+```

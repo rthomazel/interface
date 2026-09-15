@@ -45,12 +45,6 @@ Models should contain schemas, structure, implementation notes and details.
 
 Always produce models before code and after specs.
 Only produce code after the model is approved.
-It uses a terser representation of the implementation's language, up to the author;
-It's agnostic enough to be independent, but familiar to the coders and the code.
-Models are colocated with the code file, same path, `.model.md` extension, one per file.
-Note: experiment with a model per group of files.
-Trivial function implementations should be omitted or be just english when non-trivial.
-Async mechanisms, concurrency, library details and black magic should be documented as prose in the relevant function.
 After elaboration the model documents are then reviewed and saved together with the code.
 
 ```
@@ -112,25 +106,31 @@ Continuous integration of documentation and models against the code they documen
 Generic
 
 - File naming: `<basename>.model.md`, replacing the source extension entirely — `response.go` → `response.model.md`.
-- Language: terser version of the source file's own language, per-project choice. Drop keywords, import and anything that detracts from the semantics.
-- Types: remove keywords and tags, fields as a numbered list; Add other details as prose.
+  Models are colocated with the code file, same path, `.model.md` extension, one per file.
+- Language: a terser representation of the implementation's language, up to the author. Drop keywords, import and anything that detracts from the semantics.
+  It's agnostic enough to be independent, but familiar to the coders and the code.
+- Types: type keywords folowed by name, no tags and fields as a numbered list; Add other details as prose.
+- Constants: name = value, with any derived or notable behavior as a trailing clause or prose.
 - Avoid: code fences, backtick-wrapped identifiers, quoted string literals, Refs section
 - Format strings use `{Field}` placeholders.
 
 Functions
 
-- Focus on signatures, always name arguments and return values. `Receiver.Method(args) returnType` dot notation.
+- Signatures, always name arguments and return values.
+- Use `Receiver.Method(args) returnType` for receiver methods.
 - Trivial implementations are one line — a signature followed by a single prose sentence describing what it does.
+- Functions calls use the actual function name, followed by ().
 - Non-trivial function bodies are a numbered step list, one step per line.
 - Branches are nested sub-steps, indented, phrased `if <condition>, <action>, <action> ...`.
 - Rationale and non-obvious behavior are prose paragraphs below the step list, never inline comments.
 - Sub-step numbering restarts at 1 under each parent step; indentation carries the grouping.
 - Describe control structures like loops by their effect.
+  Complex loops may reference an earlier step directly: repeat from step N.
 
 ## Example 1 — `response.model.md`
 
 ```
-errorResponse
+type errorResponse
 
 1. Error string
 2. Message string
@@ -139,9 +139,9 @@ Message is omitted from the response when empty.
 
 writeError(w ResponseWriter, status int, code string, message string)
 
-Builds an errorResponse{code, message} and delegates to writeJSON.
+Builds an errorResponse{code, message} and calls writeJson().
 
-writeJSON(w ResponseWriter, status int, v any)
+writeJson(w ResponseWriter, status int, v any)
 
 1. Set Content-Type: application/json.
 2. Write the status header.
@@ -155,34 +155,61 @@ sent body. This is intentional, not an oversight.
 handleGetAccount(w ResponseWriter, r *Request)
 
 1. Parse the account ID from the request path.
-   1. if parse failure, writeError(400, invalid_id), return.
+   1. if parse failure, call writeError(400, invalid_id), return.
 2. Look up the account by ID in the store.
-   1. if not-found, writeError(404, not_found), return.
-   2. if store error, writeError(500, internal_error), return.
-3. Write the account as JSON, status 200.
+   1. if not-found, call writeError(404, not_found), return.
+   2. if store error, call writeError(500, internal_error), return.
+3. Call writeJson(200, account).
 ```
 
-## Example 2 — `queue_entry_slack_notification_handler.model.md`
+## Example 2 — `event.model.md`
 
 ```
-QueueEntrySlackNotificationHandler.Handle(ctx Context, event *Event) error
+eventWorkerInterval = 5s
+baseBackoff = 30s, doubles per handler failure, capped at 2^9 (~4.5h)
 
-1. Parse the queue entry id from event.Data["id"].
-   1. if parse fails, log and return nil.
-2. Find the queue entry by id in the store.
-   1. if not found, log and return nil.
-3. Normalize the entry's email: trim whitespace, fold case.
-4. Check the normalized email against the handler's ignored list.
-   1. if the email contains any ignored entry, log and return nil.
-5. Build the notification text: New walk-in queue patient: {FirstName} {LastName} ({Email}).
-6. Post the message to the notifier.
-   1. if the post fails, log the error.
-7. Return nil.
+type EventWorker
 
-Handle never returns a non-nil error. The notification is best-effort: every
-failure path (a malformed id, a missing entry, an ignored email, a failed
-post) logs and returns nil rather than propagating the error. This matters
-because the caller treats a returned error as a retry signal — this
-notification should never be retried, so failure here is deliberately
-invisible to the caller.
+1. store Store
+2. handlers map[string][]Handler
+3. interval Duration
+
+NewEventWorker(store Store, handlers map[string][]Handler) *EventWorker
+
+Builds an EventWorker with store, handlers, and interval set to eventWorkerInterval.
+
+EventWorker.Run(ctx Context)
+
+1. Call processOnce().
+2. Wait for ctx to be cancelled or the next tick.
+   1. if ctx is cancelled, return.
+   2. if the tick fires, repeat from step 1.
+
+ProcessOnce runs synchronously here — a run that takes longer than interval
+delays the next tick rather than overlapping with it. Ticks that arrive while
+still processing are dropped, not queued, so a slow pass never causes a burst
+of catch-up runs afterward.
+
+EventWorker.ProcessOnce(ctx Context)
+
+1. Call listPendingEvents() on the store.
+   1. if it fails, log and return.
+2. Call processEvent() for each pending event.
+
+EventWorker.processEvent(ctx Context, event *Event)
+
+1. Look up the handlers registered for event.Type.
+   1. if there are none, return.
+2. Run each handler not already marked successful on this event.
+   1. if the handler already succeeded for this event, skip it.
+   2. if the handler fails, log the error, call recordHandlerFailure() to schedule a retry, mark the event incomplete, continue.
+   3. if recordHandlerSuccess() fails, log the error, mark the event incomplete, continue.
+   4. mark the handler successful on the event.
+3. if every handler succeeded, call completeEvent().
+   1. if it fails, log the error.
+
+A failed handler's retry delay is baseBackoff doubled once per prior failure
+on the event, capped at 9 doublings. Retries are per-handler: a handler that
+already succeeded is skipped on the next pass even if other handlers on the
+same event are still failing.
 ```
