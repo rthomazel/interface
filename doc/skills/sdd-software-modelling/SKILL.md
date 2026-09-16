@@ -101,7 +101,7 @@ Continuous integration of documentation and models against the code they documen
 - CI check required models to be updated when a code file is updated
 - PRs start by changing only models first, for a clean diff, followed by code in the same PR.
 
-## Model syntax rules
+## Model syntax rules (Go)
 
 Generic
 
@@ -109,9 +109,15 @@ Generic
   Models are colocated with the code file, same path, `.model.md` extension, one per file.
 - Language: a terser representation of the implementation's language, up to the author. Drop keywords, import and anything that detracts from the semantics.
   It's agnostic enough to be independent, but familiar to the coders and the code.
+- Structure: top-level headings, in this order: Constants, Vars, Types, Interfaces, Functions each
+  present only if the file has content for it. Each var, type, interface, or function gets its own H2 under its section.
+  Constants stay a flat list under one # Constants heading. A function or method's heading is its full signature verbatim.
 - Types: type keywords folowed by name, no tags and fields as a numbered list; Add other details as prose.
 - Constants: name = value, with any derived or notable behavior as a trailing clause or prose.
-- Avoid: code fences, backtick-wrapped identifiers, quoted string literals, Refs section
+- Interfaces: H2 heading is the interface name, list its methods as a numbered list, same signature format as a function, no receiver. Add other details as prose.
+- Vars: A var's H2 heading is Name = value for a single value (e.g. a sentinel error), or just Name when it's a registry of several values (e.g. a struct literal grouping related constants).
+- Avoid: code fences, backtick-wrapped identifiers, quoted string literals in prose, Refs section.
+  For constants and vars when the value itself is a string, quote it.
 - Format strings use `{Field}` placeholders.
 - These rules are not exhaustive. When a construct doesn't fit them,
   invent notation that stays terse and unambiguous in context rather than forcing it into an ill-fitting rule.
@@ -124,94 +130,151 @@ Functions
 - Functions calls use the actual function name, followed by ().
 - Non-trivial function bodies are a numbered step list, one step per line.
 - Branches are nested sub-steps, indented, phrased `if <condition>, <action>, <action> ...`.
-- Rationale and non-obvious behavior are prose paragraphs below the step list, never inline comments.
 - Sub-step numbering restarts at 1 under each parent step; indentation carries the grouping.
+- A child number (`.N` appended to a step) is only used when that branch is reachable
+  exclusively through the parent's own outcome — nested inside it in the actual code.
+  Independent outcomes of the same statement stay at the same depth.
+- When a function has enough failure branches that inlining them clutters the happy path, pull
+  them into an H4 Errors subsection below the step list instead: a bullet list, one bullet per
+  branch, each bullet's number matching the happy-path step it attaches to (`1.`, `1.2.`, `1.2.1.`
+  for a branch nested under step 1.2). Separate each group of bullets that share a leading step
+  number with a `---` divider, so branches attached to different steps read as visually distinct
+  groups. Keep inline nested branches for functions with only one or two simple guard clauses;
+  reserve the H4 Errors split for functions where the branching is the point.
 - Describe control structures like loops by their effect.
   Complex loops may reference an earlier step directly: repeat from step N.
+- Rationale and non-obvious behavior are prose paragraphs below the step list, never inline comments.
 
-## Example 1 — `response.model.md`
-
-```
-type errorResponse
-
-1. Error string
-2. Message string
-
-Message is omitted from the response when empty.
-
-writeError(w ResponseWriter, status int, code string, message string)
-
-Builds an errorResponse{code, message} and calls writeJson().
-
-writeJson(w ResponseWriter, status int, v any)
-
-1. Set Content-Type: application/json.
-2. Write the status header.
-3. Encode v as JSON into the response body.
-
-Step 3's encoding errors are discarded, not surfaced to the caller. By the
-time step 3 runs, the status header is already written (step 2), so the
-response is committed — there is no correction path left, only a partially
-sent body. This is intentional, not an oversight.
-
-handleGetAccount(w ResponseWriter, r *Request)
-
-1. Parse the account ID from the request path.
-   1. if parse failure, call writeError(400, invalid_id), return.
-2. Look up the account by ID in the store.
-   1. if not-found, call writeError(404, not_found), return.
-   2. if store error, call writeError(500, internal_error), return.
-3. Call writeJson(200, account).
-```
-
-## Example 2 — `event.model.md`
+## Example — `queue_entry.model.md`
 
 ```
-eventWorkerInterval = 5s
-baseBackoff = 30s, doubles per handler failure, capped at 2^9 (~4.5h)
+# Constants
 
-type EventWorker
+postgresForeignKeyViolation = "23503", the Postgres SQLSTATE code for a foreign key violation.
 
-1. store Store
-2. handlers map[string][]Handler
-3. interval Duration
+insertQueueEntrySQL = insert a queue_entries row, ON CONFLICT (client_id, retry_key) DO NOTHING, returning the full row.
+findQueueEntryByClientRetrySQL = select the full row by (client_id, retry_key).
 
-NewEventWorker(store Store, handlers map[string][]Handler) *EventWorker
+# Vars
 
-Builds an EventWorker with store, handlers, and interval set to eventWorkerInterval.
+## ErrInvalidTransition = "invalid state transition"
 
-EventWorker.Run(ctx Context)
+Returned when a state transition is attempted from a status that doesn't allow it, e.g.
+completing an entry that isn't in_progress.
 
-1. Call processOnce().
-2. Wait for ctx to be cancelled or the next tick.
-   1. if ctx is cancelled, return.
-   2. if the tick fires, repeat from step 1.
+## ErrInvalidEnumValue = "invalid enum value"
 
-ProcessOnce runs synchronously here — a run that takes longer than interval
-delays the next tick rather than overlapping with it. Ticks that arrive while
-still processing are dropped, not queued, so a slow pass never causes a burst
-of catch-up runs afterward.
+Returned when a text field is set to a value outside its app-layer validated enum. These columns
+are text in Postgres, not native enums, so validation lives here.
 
-EventWorker.ProcessOnce(ctx Context)
+## Events
 
-1. Call listPendingEvents() on the store.
-   1. if it fails, log and return.
-2. Call processEvent() for each pending event.
+1. Events.QueueEntry.Created = "queue_entry.created"
+2. Events.QueueEntry.StatusChanged = "queue_entry.status_changed"
+3. Events.QueueEntry.PatientLinked = "queue_entry.patient_linked"
 
-EventWorker.processEvent(ctx Context, event *Event)
+Grouped so callers reference domain.Events.QueueEntry.StatusChanged instead of hard-coding string
+literals.
 
-1. Look up the handlers registered for event.Type.
-   1. if there are none, return.
-2. Run each handler not already marked successful on this event.
-   1. if the handler already succeeded for this event, skip it.
-   2. if the handler fails, log the error, call recordHandlerFailure() to schedule a retry, mark the event incomplete, continue.
-   3. if recordHandlerSuccess() fails, log the error, mark the event incomplete, continue.
-   4. mark the handler successful on the event.
-3. if every handler succeeded, call completeEvent().
-   1. if it fails, log the error.
+# Types
 
-A failed handler's retry delay is baseBackoff doubled once per prior failure
-on the event, capped at 9 doublings. Retries are per-handler: a handler that
-already succeeded is skipped on the next pass even if other handlers on the
-same event are still failing.
+## queueEntryRow
+
+1. ID UUID
+2. ClientID UUID
+3. RetryKey string
+4. PatientID *string
+5. StaffID *UUID
+6. Status string
+7. PatientCreationStatus string
+8. Demographics RawMessage
+9. CreatedAt Time
+10. StartedAt *Time
+11. CompletedAt *Time
+12. CancelledAt *Time
+13. CancellationReason *string
+14. CancellationNote *string
+
+# Interfaces
+
+## TokenStore
+
+1. Issue(ctx Context, queueEntryID UUID, ttl Duration) (token string, err error)
+2. Redeem(ctx Context, token string) (queueEntryID UUID, ok bool, err error)
+
+Redeem is single-use: ok is false if the token doesn't exist or was already redeemed. Implemented
+by RedisTokenStore, backed by Redis GETDEL.
+
+# Functions
+
+## queueEntryRow.toDomain() *domain.QueueEntry
+
+1. Build a domain.QueueEntry from the row's fields, converting Status and PatientCreationStatus to their domain enum types.
+2. if CancellationReason is set, convert it to domain.CancellationReason and assign.
+3. if Demographics is non-empty, unmarshal it into the entry's Demographics field, discarding any error.
+4. Return the entry.
+
+## Store.withTx(ctx Context, fn func(tx *Tx) error) error
+
+1. Begin a transaction.
+2. Call fn with the transaction.
+3. Commit the transaction.
+4. Return nil.
+
+#### Errors
+
+- **1.** if beginning fails, return the wrapped error.
+
+---
+
+- **2.** if fn fails, roll back.
+- **2.1.** if the rollback also fails, return both errors combined.
+- **2.2.** otherwise, return fn's original error.
+
+---
+
+- **3.** if committing fails, return the wrapped error.
+
+## Store.AdmitQueueEntry(ctx Context, entry *QueueEntry) (*QueueEntry, bool, error)
+
+1. Run inside withTx:
+   1. Lock the queue state row.
+   2. Confirm the queue is open.
+   3. Marshal entry.Demographics to JSON.
+   4. Insert the row via insertQueueEntrySQL, scanning the result. Mark created.
+   5. Insert a queue_entry.created event for entry.ID.
+   6. Convert the row to a domain entry and store it as the result.
+2. Return the result, created, and nil.
+
+#### Errors
+
+- **1.1.** if locking fails, return the error.
+
+---
+
+- **1.2.** if the open check fails, return the error.
+- **1.2.1.** if the queue is closed, return ErrQueueClosed.
+
+---
+
+- **1.3.** if marshalling fails, return the wrapped error.
+
+---
+
+- **1.4.** if the insert returned no rows (ON CONFLICT hit an existing row), fetch the existing row via findQueueEntryByClientRetrySQL instead of treating it as created.
+- **1.4.1.** if that fetch fails, return the wrapped error.
+- **1.4.2.** if the insert failed with a foreign key violation instead, return ErrClientNotFound.
+- **1.4.3.** if the insert failed for any other reason, return the wrapped error.
+
+---
+
+- **1.5.** if the created event insert fails, return the error.
+
+---
+
+- **2.1.** if withTx returned an error, return nil, false, and the error.
+
+ON CONFLICT (client_id, retry_key) DO NOTHING makes admission idempotent under retries (see
+doc/design.md, "Admission Retry Safety"): a retry with the same client and retry key returns the
+entry's actual current state (step 1.4) rather than erroring or duplicating it.
 ```
