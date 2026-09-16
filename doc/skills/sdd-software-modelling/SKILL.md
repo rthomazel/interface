@@ -43,9 +43,8 @@ Models should contain schemas, structure, implementation notes and details.
 
 ### Models
 
-Always produce models before code and after specs. For trivial files, generated code,
-configuration-only changes, or code outside the modeled scope, an explicit exception
-may be recorded instead of creating a model.
+Always produce models before code and after specs. For generated code,
+configuration-only changes, or code outside the modeled scope, note the exception and skip.
 Only produce code after the model is approved. Approval comes from a human reviewer
 and may be recorded in the model metadata.
 
@@ -57,12 +56,12 @@ In either case, review the final model against the implementation before shippin
 ```
 src/
 ├── account/
-│   ├── UserProfile.model.md
+│   ├── UserProfile.md
 │   ├── UserProfile.ts
 │   └── ...
 │
 └── billing/
-    ├── BillingService.model.md
+    ├── BillingService.md
     ├── BillingService.ts
     └── ...
 ```
@@ -114,8 +113,8 @@ Syntax and examples are flavored for Go but language-independent as concepts; ad
 
 Generic
 
-- File naming: `<basename>.model.md`, replacing the source extension entirely — `response.go` → `response.model.md`.
-  Models are colocated with the code file, same path, `.model.md` extension, one per file.
+- File naming: `<basename>.md`, replacing the source extension entirely — `response.go` → `response.md`.
+  Models are colocated with the code file, same path, `.md` extension, one per file.
 - Language: a terser representation of the implementation's language, up to the author. Drop keywords, import and anything that detracts from the semantics.
   It's agnostic enough to be independent, but familiar to the coders and the code.
 - Structure: top-level headings, in this order: Constants, Vars, Types, Interfaces, Functions each
@@ -154,7 +153,7 @@ Functions
   Complex loops may reference an earlier step directly: repeat from step N.
 - Rationale and non-obvious behavior are prose paragraphs below the step list, never inline comments.
 
-## Example — `queue_entry.model.md`
+## Example — `queue_entry.md`
 
 ```
 # Constants
