@@ -1,11 +1,11 @@
 # ornith-ai/Ornith-1.5-35B-A3B benchmarks
 
-| hardware    | cost | volume   | runs      |
-| ----------- | ---- | -------- | --------- |
-| 2x 3090     | .35  | ok       | slow      |
-| 2x pro 4000 | .55  | good     | excellent |
-| 1x 6000 ada | .60  | low      | decent    |
-| 1x pro 5000 | .75  | good     | excellent |
+| hardware    | cost | volume | runs      |
+| ----------- | ---- | ------ | --------- |
+| 2x 3090     | .35  | ok     | slow      |
+| 2x pro 4000 | .55  | good   | excellent |
+| 1x 6000 ada | .60  | low    | decent    |
+| 1x pro 5000 | .75  | good   | excellent |
 
 ## realistic context benchmark
 
@@ -138,6 +138,7 @@ Parent commit (@-):
 
 ### ornith-ai/Ornith-1.5-35B-A3B-NVFP4 temp .6 2x PRO 4000, MTP 4, 271tok/s 960K
 
+vllm 28 - image 0.1
 kv 5.4GiB
 mtp 7 215tok/s
 mtp 5 223tok/s
@@ -203,4 +204,21 @@ Position 1: 46.16
 Position 2: 37.25
 Position 3: 32.42
 Position 4: 28.43
+```
+
+### ornith-ai/Ornith-1.5-35B-A3B-NVFP4 temp .6 2x PRO 4000, MTP 4, _tok/s _K
+
+vllm 29 - image 0.2
+kv 1.7GiB
+EXTRA_ARGS="--disable-custom-all-reduce"
+GPU_MEMORY_UTILIZATION=0.87
+
+try vllm 28 again
+
+tag: v0.1.0
+MAX_NUM_BATCHED_TOKENS:-32768
+EXTRA_ARGS="--disable-custom-all-reduce --enable-chunked-prefill"
+
+```
+
 ```

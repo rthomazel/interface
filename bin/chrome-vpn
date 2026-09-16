@@ -6,6 +6,7 @@ PROXY_PORT=31337
 PROXY_HOST=127.0.0.1
 
 CLOUD_SHELL_PID=""
+PROXY_TIMEOUT_SEC=${PROXY_TIMEOUT_SEC:-30}
 
 log_info() {
   echo "[INFO] $*"
@@ -43,7 +44,7 @@ kill_chrome() {
   pkill -x google-chrome-stable || true
 
   for _ in {1..50}; do
-    if ! pgrep -x google-chrome-stable >/dev/null; then
+    if ! pgrep -x google-chrome >/dev/null; then
       log_info "Existing Chrome instance terminated"
       return 0
     fi
@@ -68,10 +69,9 @@ start_cloud_shell() {
 }
 
 wait_for_proxy() {
-  local timeout_seconds=30
-  local deadline=$((SECONDS + timeout_seconds))
+  local deadline=$((SECONDS + PROXY_TIMEOUT_SEC))
 
-  log_info "Waiting $timeout_seconds seconds for SOCKS5 proxy on $PROXY_HOST:$PROXY_PORT..."
+  log_info "Waiting $PROXY_TIMEOUT_SEC seconds (override with PROXY_TIMEOUT_SEC) for SOCKS5 proxy on $PROXY_HOST:$PROXY_PORT..."
 
   while ((SECONDS < deadline)); do
     if (echo >/dev/tcp/"$PROXY_HOST"/"$PROXY_PORT") 2>/dev/null; then
@@ -88,7 +88,7 @@ wait_for_proxy() {
     sleep 1
   done
 
-  log_error "Timed out after ${timeout_seconds}s waiting for SOCKS5 proxy"
+  log_error "Timed out after ${PROXY_TIMEOUT_SEC}s waiting for SOCKS5 proxy"
   return 1
 }
 
