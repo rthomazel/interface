@@ -101,7 +101,7 @@ Continuous integration of documentation and models against the code they documen
 - CI check required models to be updated when a code file is updated
 - PRs start by changing only models first, for a clean diff, followed by code in the same PR.
 
-## Model syntax rules (Go)
+## Model syntax rules -- Go flavored
 
 Generic
 
