@@ -83,9 +83,7 @@ spc/<feature-name>/task.md
 ```
 
 `task.md` is optional and contains the implementation checklist when the task list
-would make `spec.md` unnecessarily large. For changes, create a change file later,
-during the Code step, after the implementation has stabilized; see the separate
-change-management skill for its format.
+would make `spec.md` unnecessarily large.
 
 Choose a clear, stable feature name and place the specification and related SDD artifacts there.
 Inspect `spc/` first to avoid creating a duplicate feature directory.
