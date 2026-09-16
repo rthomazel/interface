@@ -5,9 +5,9 @@ description: Use when requested to work with software models, create or update t
 
 # SDD: Spec-Driven Development Software Modelling
 
-> This skill builds upon the SDD spec drive development skill, it's a mandatory read if you haven't already.
+> This skill builds upon the SDD spec-driven development skill, it's a mandatory read if you haven't already.
 
-A methodology that represents the implementation structure in markdown files.
+A methodology that represents the implementation structure in Markdown files.
 Software models enable reasoning about the program without excessive details.
 
 #### Motivation
@@ -16,7 +16,7 @@ Software models enable reasoning about the program without excessive details.
 - Enhanced navigation: Agents and humans can navigate the software at a middle level quickly
 - Code as byproduct: The source code becomes a representation of the model.
 - Human review: Developers can review most changes in natural language, looking at code only when necessary.
-- Flexibility: Specs, changes and the software model enables re-implementation in another stack.
+- Flexibility: Specs, software models, and—when used—change records enable re-implementation in another stack.
 - Utility: The software can be extended and redesigned with confidence.
 
 #### Spec vs models
@@ -43,12 +43,19 @@ Models should contain schemas, structure, implementation notes and details.
 
 ### Models
 
-Always produce models before code and after specs.
-Only produce code after the model is approved.
-After elaboration the model documents are then reviewed and saved together with the code.
+Always produce models before code and after specs. For trivial files, generated code,
+configuration-only changes, or code outside the modeled scope, an explicit exception
+may be recorded instead of creating a model.
+Only produce code after the model is approved. Approval comes from a human reviewer
+and may be recorded in the model metadata.
+
+Begin the implementation PR with the model changes only. After the models are
+approved, implement the code. The model and code may be committed in the same PR
+for convenience, or in separate PRs when that better fits the project's workflow.
+In either case, review the final model against the implementation before shipping.
 
 ```
-SRC/
+src/
 ├── account/
 │   ├── UserProfile.model.md
 │   ├── UserProfile.ts
@@ -62,7 +69,7 @@ SRC/
 
 ### SDD workflow, including requirements and modelling
 
-Models are done per task.
+Create or update models for each implementation task.
 
 ```
 |        non technical         |    technical   |
@@ -98,10 +105,12 @@ Regular software engineering workflows, like bug fixes, should always review mod
 Continuous integration of documentation and models against the code they document is strongly encouraged.
 
 - Incorrect models are bugs, worse than no model
-- CI check required models to be updated when a code file is updated
-- PRs start by changing only models first, for a clean diff, followed by code in the same PR.
+- Projects should consider CI checks that require models to be updated when a covered code file is updated
+- Begin implementation PRs with model changes first for a clean diff; code follows model approval, either in the same PR or a separate one.
 
-## Model syntax rules -- Go flavored
+## Model syntax rules
+
+Syntax and examples are flavored for Go but language-independent as concepts; adapt them when necessary.
 
 Generic
 
@@ -112,7 +121,7 @@ Generic
 - Structure: top-level headings, in this order: Constants, Vars, Types, Interfaces, Functions each
   present only if the file has content for it. Each var, type, interface, or function gets its own H2 under its section.
   Constants stay a flat list under one # Constants heading. A function or method's heading is its full signature verbatim.
-- Types: type keywords folowed by name, no tags and fields as a numbered list; Add other details as prose.
+- Types: type keywords followed by name, no tags and fields as a numbered list; add other details as prose.
 - Constants: name = value, with any derived or notable behavior as a trailing clause or prose.
 - Interfaces: H2 heading is the interface name, list its methods as a numbered list, same signature format as a function, no receiver. Add other details as prose.
 - Vars: A var's H2 heading is Name = value for a single value (e.g. a sentinel error), or just Name when it's a registry of several values (e.g. a struct literal grouping related constants).
