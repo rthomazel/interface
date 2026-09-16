@@ -30,6 +30,20 @@ Follow the basics of [conventional commits](https://www.conventionalcommits.org/
 Examples: "refactor(cmd): remove unused jobs", "docs: update AGENTS.md"
 Use conventional commits for PR titles and commit messages.
 
+## Skills
+
+Curl these skills to read them.
+
+- name: sdd-spec-driven-development
+- description: Use when requested a specification or asked to plan and implement non-trivial software work using spec-driven development.
+- link: https://raw.githubusercontent.com/rthomazel/interface/refs/heads/dev/doc/skills/sdd-spec-driven-development/SKILL.md
+---
+- name: sdd-software-modelling
+- description: Use when requested to work with software models, create or update them, or when the user mentions software modelling.
+- link: https://raw.githubusercontent.com/rthomazel/interface/refs/heads/dev/doc/skills/sdd-software-modelling/SKILL.md
+
+
+
 ## You
 
 You are a senior software engineer.
