@@ -79,13 +79,13 @@ For new work, create a feature directory under `spc/`:
 
 ```text
 spc/<feature-name>/spec.md
+spc/<feature-name>/task.md
 ```
 
-For changes, also create a change file, see the change files section below.
-
-```text
-spc/<feature-name>/yyyy/<change-id>.md
-```
+`task.md` is optional and contains the implementation checklist when the task list
+would make `spec.md` unnecessarily large. For changes, create a change file later,
+during the Code step, after the implementation has stabilized; see the separate
+change-management skill for its format.
 
 Choose a clear, stable feature name and place the specification and related SDD artifacts there.
 Inspect `spc/` first to avoid creating a duplicate feature directory.
@@ -108,14 +108,15 @@ Check the plan against the specification before creating tasks.
 ### 4. Task
 
 Break the plan into coherent units of work. Each task should be small enough
-to review and merge independently where practical. Each task should become a
-pull request.
+to review and merge independently where practical. As guidance, prefer one
+focused pull request per task when that improves reviewability, but group tightly
+coupled tasks into one pull request when splitting them would add noise or make
+the work harder to understand.
 
-Create a Markdown checklist in the spec file.
-Each checklist item must be followed by a short description of the work it
-represents. Keep the checklist synchronized with the actual work and check
-items off as they are completed.
-Include PR links as refs.
+Create a Markdown checklist in the specification or in `task.md` in the same
+feature directory. Each checklist item must be followed by a short description
+of the work it represents. Keep the checklist synchronized with the actual work
+and check items off as they are completed. Include PR links as refs.
 
 ```markdown
 # Tasks
@@ -167,7 +168,7 @@ SDD artifacts use OKF-style YAML frontmatter. The only required fields are:
 
 ```yaml
 ---
-id: account-recovery
+id: 2026-09-11-account-recovery
 type: spec
 summary: Describes account recovery behavior for members who cannot sign in.
 author: Thom
@@ -270,40 +271,9 @@ documentation. At the end of work:
 
 ## Evolution & structure
 
-Changes are documented semantically one change per file for both humans and agents.
-The files are organized in a directory with the current year under the feature, to avoid clutter.
-This is a strategy to capture the semantic history of the project alongside the same repository versioning its implementation.
-Releases.yaml maps change IDs to semantic versioning releases.
-
-### Changelog
-
-The project changelog is a generated document meant to be readable by humans.
-Each change file's body is meant to be added to the changelog.
-
-```text
-spc/
-├── releases.yaml
-│
-├── account/
-│ ├── spec.md
-│ └── 2026/ <- change directory
-│ ├── remove-avatar.md
-│ └── ...
-│
-└── billing/
-├── doc.md <- feature documented from implementation
-└── 2026/
-
-CHANGELOG.md <- generated from releases.yaml and change files.
-```
-
-spec.md — current authoritative intent for the feature; continuously updated.
-doc.md — current authoritative documentation for the feature; continuously updated.
-YYYY/<slug>.md — change records.
-releases.yaml — maps semantic changes into SemVer releases.
-CHANGELOG.md — generated project-level projection; not the source of truth.
-Git — retains the exact implementation history.
-refs — connects the semantic change to external/provenance information such as PRs and related specs.
+Specifications and implementation documentation are maintained as living artifacts.
+For semantic change records, changelogs, and release tracking, use the separate
+change-management skill. Those artifacts are optional to spec-driven development itself.
 
 ### Change files
 
