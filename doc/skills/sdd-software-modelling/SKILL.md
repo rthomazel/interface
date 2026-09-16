@@ -113,6 +113,8 @@ Generic
 - Constants: name = value, with any derived or notable behavior as a trailing clause or prose.
 - Avoid: code fences, backtick-wrapped identifiers, quoted string literals, Refs section
 - Format strings use `{Field}` placeholders.
+- These rules are not exhaustive. When a construct doesn't fit them,
+  invent notation that stays terse and unambiguous in context rather than forcing it into an ill-fitting rule.
 
 Functions
 

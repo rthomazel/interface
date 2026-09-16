@@ -5,12 +5,18 @@ Searching and reading code:
 - Avoid APIs to search source code on github, clone everything and search the files locally, grep etc...
 - Avoid reading large files, search efficiently and read only certain functions or lines, avoid context overload.
 
-## Environment identity
+## Environment
+
+### STT
 
 Speech to text is used to produce inputs.
 Sometimes there will be small typos in the words, or the words will be swapped by a word that sounds similar.
 You can probably understand what was meant by context.
 Ask if confused, and respect code syntax.
+
+### Env vars
+
+GITHUB_RO_TOKEN = token with access to private repos for install
 
 ## Operator info
 
