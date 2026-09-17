@@ -53,13 +53,13 @@ du -h --max-depth=2 /workspace/.cache | sort -rh
 ### zip cache for download
 
 ```
-tar -cf /workspace/cache.tar -C /workspace/.cache triton vllm/torch_compile_cache
+tar -cf /workspace/cache.tar -C /workspace .cache
 ```
 
 ### cache rsync to host machine
 
 ```
-rsync -ah --info=progress2 -e "ssh -p <port>" root@<ip>:/workspace/cache.tar /home/vacation/Desktop/interface/src/vllm/qwen35/.cache
+rsync -ah --info=progress2 -e "ssh -p $VAST_PORT" root@$VAST_IP:/workspace/cache.tar /home/vacation/Desktop/interface/src/vllm/qwen35/ornith-15-moe/.cache
 ```
 
 ### cache rsync to remote
