@@ -98,6 +98,9 @@ EXTRA_ARGS=--disable-custom-all-reduce
 | 1x 6000 ada | .60  | low    | decent    |
 | 1x pro 5000 | .75  | good   | excellent |
 
+best GPU: 1 RTX pro 5000
+pro 5000 runs 30% faster than pro 4000 and only 10% more expensive
+
 ### realistic context benchmark
 
 native model context 262K
