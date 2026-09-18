@@ -128,6 +128,9 @@ Generic
 - Avoid: code fences, backtick-wrapped identifiers, quoted string literals in prose, Refs section.
   For constants and vars when the value itself is a string, quote it.
 - Format strings use `{Field}` placeholders.
+- HTTP routes: group routes by authentication, use H3 and describe one route per line, GET /invites/{short_code}
+  If there are query parameters, list them in a sub-bullet list, one per line, with the parameter name, type and description.
+  Within each list, sort alphabetically.
 - These rules are not exhaustive. When a construct doesn't fit them,
   invent notation that stays terse and unambiguous in context rather than forcing it into an ill-fitting rule.
 
