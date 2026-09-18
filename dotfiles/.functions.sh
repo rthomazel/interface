@@ -823,7 +823,7 @@ vast_bad_host() {
   145602)
     echo "shit. slow internet"
     ;;
-  314882 | 24953 | 397138)
+  314882 | 24953 | 397138 | 638459)
     echo "shit. ssh fails"
     ;;
   559731)
