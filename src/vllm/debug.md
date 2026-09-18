@@ -65,7 +65,7 @@ rsync -ah --info=progress2 -e "ssh -p $VAST_PORT" root@$VAST_IP:/workspace/cache
 ### cache rsync to remote
 
 ```
-rsync -ah --info=progress2 -e "ssh -p $VAST_PORT" /home/vacation/Desktop/interface/src/vllm/qwen35/.cache/$VAST_CACHE_FILE root@$VAST_IP:/workspace/cache.tar
+rsync -ah --info=progress2 -e "ssh -p $VAST_PORT" /home/vacation/Desktop/interface/src/vllm/qwen35/ornith-15-moe/.cache/$VAST_CACHE_FILE root@$VAST_IP:/workspace/cache.tar
 tar -xf /workspace/cache.tar -C /workspace/.cache
 ```
 

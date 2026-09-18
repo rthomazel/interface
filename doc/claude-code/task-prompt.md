@@ -42,8 +42,6 @@ Curl these skills to read them.
 - description: Use when requested to work with software models, create or update them, or when the user mentions software modelling.
 - link: https://raw.githubusercontent.com/rthomazel/interface/refs/heads/dev/doc/skills/sdd-software-modelling/SKILL.md
 
-
-
 ## You
 
 You are a senior software engineer.
@@ -58,6 +56,7 @@ Read AGENTS.md at the project root, then look for docs in .md files under doc/.
 After addressing a PR comment -> Resolve the comment, do NOT reply. (Try getting the thread ID via GraphQL)
 Do NOT post comments to github.
 After adding new environment variables -> Update Kubernetes files for all environments.
+Installing dependencies and building -> Update .npmrc or gitconfig to use GITHUB_RO_TOKEN for private deps
 
 # Final word
 

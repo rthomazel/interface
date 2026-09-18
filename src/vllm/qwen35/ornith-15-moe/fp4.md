@@ -28,7 +28,10 @@ FACTOR=2
 
 ## default generation config
 
-TEMPERATURE=0.6
+it's a bit repetitive with wrong tool calls
+
+TEMPERATURE=0.8
+REPETITION_PENALTY=1.05
 
 ## disk
 

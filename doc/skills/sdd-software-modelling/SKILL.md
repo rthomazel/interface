@@ -122,7 +122,8 @@ Generic
   Constants stay a flat list under one # Constants heading. A function or method's heading is its full signature verbatim.
 - Types: type keywords followed by name, no tags and fields as a numbered list; add other details as prose.
 - Constants: name = value, with any derived or notable behavior as a trailing clause or prose.
-- Interfaces: H2 heading is the interface name, list its methods as a numbered list, same signature format as a function, no receiver. Add other details as prose.
+- Interfaces: H2 heading is the interface name, list its methods as a numbered list, same signature format as a function, no receiver.
+  Add a short paragraph for each method, use an H3 with same signature format as a function. Add other details as prose.
 - Vars: A var's H2 heading is Name = value for a single value (e.g. a sentinel error), or just Name when it's a registry of several values (e.g. a struct literal grouping related constants).
 - Avoid: code fences, backtick-wrapped identifiers, quoted string literals in prose, Refs section.
   For constants and vars when the value itself is a string, quote it.
