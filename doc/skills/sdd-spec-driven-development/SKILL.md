@@ -33,9 +33,9 @@ Move through these steps in order:
  3 Plan           │ intent change /
       │           │ drift
       ▼           │
- 4 Task           │
-      │           │
-      ▼           │
+ 4 Tasks          │
+  │  │  │         │
+  ▼  ▼  ▼         │
  5 Code ──────────┘
       │           │
       ▼           │
@@ -56,8 +56,8 @@ Present to operator for review and approval.
 
 ### 2. Specify
 
-This is the discussion and investigation phase. Work with the operator to understand, explore, and record the intended change before implementation.
-
+This is the discussion and investigation phase.
+Work with the operator to understand, explore, and record the intended change before implementation.
 When exploring the current system, start with its existing specifications documentation and change files.
 Then inspect the relevant code, tests, configuration, and observed behavior.
 Existing artifacts provide context and may reveal constraints, gaps, or contradictions that need to be resolved.
@@ -79,51 +79,62 @@ For new work, create a feature directory under `spc/`:
 
 ```text
 spc/<feature-name>/spec.md
-spc/<feature-name>/task.md
 ```
 
-`task.md` is optional and contains the implementation checklist when the task list
-would make `spec.md` unnecessarily large.
-
-Choose a clear, stable feature name and place the specification and related SDD artifacts there.
-Inspect `spc/` first to avoid creating a duplicate feature directory.
-The first spec should be called spec.md, there can be more than one such as: `this.spec.md`, `that.spec.md`.
-
-All meaningful discussion and investigation should happen in this step.
-Later steps execute and verify the results rather than silently reopening the same discovery process.
-If implementation exposes a requirement conflict or a change in intent, stop and return to the operator.
-
-When working on an existing feature, update its spec.
-It is expected to keep the spec updated as a reference throughout the lifetime of the project.
+- The spec is not a technical document, avoid code and code references, document and discuss logical concepts in prose.
+- Choose a clear, stable feature name and place the specification and related SDD artifacts there.
+  Inspect `spc/` first to avoid creating a duplicate feature directory.
+  The first spec should be called spec.md, there can be more than one such as: `this.spec.md`, `that.spec.md`.
+- All meaningful discussion and investigation should happen in this step.
+  Later steps execute and verify the results rather than silently reopening the same discovery process.
+- If implementation exposes a requirement conflict or a change in intent, stop and return to the operator.
+- When working on an existing feature, update its spec.
+  It is expected to keep the spec updated as a reference throughout the lifetime of the project.
 
 ### 3. Plan
 
-Capture the output of the discussion and investigation in a durable plan.
-The plan is not a generic formula: it records the entirety of step 2 and the conclusions that should guide execution.
+While the spec captures the intent and the discussion, it doesn't organize how to implement the features.
+Fundamental for complex spec implementation, the plan breaks the work into coherent stages, and identifies dependencies and risks.
+Each step of the plan should have a clear goal, a list of tasks to complete it and feel like a mini project on it's own.
 
-Check the plan against the specification before creating tasks.
+```text
+spc/<feature-name>/plan.md
+```
 
-### 4. Task
+For simple features, a plan may be unnecessary if the tasks can be executed directly from the spec.
 
-Break the plan into coherent units of work. Each task should be small enough
-to review and merge independently where practical. As guidance, prefer one
-focused pull request per task when that improves reviewability, but group tightly
-coupled tasks into one pull request when splitting them would add noise or make
-the work harder to understand.
+### 4. Tasks
 
-Create a Markdown checklist in the specification or in `task.md` in the same
-feature directory. Each checklist item must be followed by a short description
-of the work it represents. Keep the checklist synchronized with the actual work
-and check items off as they are completed. Include PR links as refs.
+```text
+spc/<feature-name>/tasks.md
+```
+
+`tasks.md` contains the implementation work, in order.
+The task list is a technical document, it may include code as needed and other content that would not belong in the specification.
+
+Break the plan, or the small specification, into coherent units of work.
+Each task should be small enough to review and merge independently where practical.
+As guidance, prefer one focused pull request per task when that improves reviewability,
+but group tightly coupled tasks into one pull request when splitting them would add noise or make the work harder to understand.
+
+Create `tasks.md` in the feature directory.
+Each item should be an H2 with a number and checkbox, followed by a technical description of the work it represents.
+Keep the tasks synchronized with the actual work and check items off as they are completed.
+Include PR links as refs.
+Avoid an actual markdown ul/li list.
 
 ```markdown
 # Tasks
 
-- [ ] Add the recovery data model — Store the token and expiry required by the recovery flow.
-- [ ] Implement the recovery endpoint — Accept a verified email and issue a time-limited link.
-- [ ] Add behavior tests — Cover successful recovery, expiry, reuse, and invalid addresses.
-- [ ] Update documentation — Record the user-visible behavior and operational constraints.
-- [ ] Open and review the pull requests — Submit each task as a focused PR and address review feedback.
+## [ ] 1. Add the recovery data model
+
+Store the token and expiry required by the recovery flow.
+Etc...
+
+## [ ] 2. Implement the recovery endpoint
+
+Accept a verified email and issue a time-limited link.
+Etc...
 ```
 
 ### 5. Code
