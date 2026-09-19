@@ -60,16 +60,11 @@ ALIASES=true
 PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 VLLM_MARLIN_USE_ATOMIC_ADD=1
 
-> if it hangs on two gpus
-
-NCCL_P2P_DISABLE=1 # maybe not needed on 1 card
-EXTRA_ARGS=--disable-custom-all-reduce # sometimes needed, sometimes not
-
 # benchmarks
 
 | hardware    | cost | volume | runs |
 | ----------- | ---- | ------ | ---- |
-| 1x pro 5000 | .75  | good   |      |
+| 1x pro 6000 | .75  | good   |      |
 | 2x 5090     | .9   | good   |      |
 
 ### realistic context benchmark
@@ -94,7 +89,29 @@ vllm bench serve \
   --top-k 20
 ```
 
-## 1 RTX PRO 6000
+## 1 RTX PRO 6000 Max Q
+
+kv 42 GiB
+3M context
+MTP 5
+
+```
+Output token throughput (tok/s):         234.40
+Mean TTFT (ms):                          3278.02
+Mean TPOT (ms):                          3.45
+Mean ITL (ms):                           13.17
+Acceptance rate (%):                     56.29
+Acceptance length:                       3.81
+Drafts:                                  8391
+Draft tokens:                            41955
+Accepted tokens:                         23616
+Per-position acceptance (%):
+  Position 0:                            84.60
+  Position 1:                            65.12
+  Position 2:                            55.96
+  Position 3:                            38.65
+  Position 4:                            37.11
+```
 
 ## 2 RTX 5090
 
