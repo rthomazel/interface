@@ -94,7 +94,7 @@ vllm bench serve \
   --top-k 20
 ```
 
-## 1 RTX PRO 5000
+## 1 RTX PRO 6000
 
 ## 2 RTX 5090
 
