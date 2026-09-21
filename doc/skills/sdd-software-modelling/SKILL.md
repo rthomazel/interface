@@ -41,16 +41,19 @@ Models should contain schemas, structure, implementation notes and details.
 - Edge cases
 - Implementation complexity
 
+Avoid long comments in models, prose fits better in the spec.
+Reserve comments on models for implementation notes, and non-obvious behavior.
+
 ### Models
 
-Always produce models before code and after specs. For generated code,
-configuration-only changes, or code outside the modeled scope, note the exception and skip.
-Only produce code after the model is approved. Approval comes from a human reviewer
-and may be recorded in the model metadata.
+Always produce models before code and after specs.
+For generated code, configuration-only changes, or code outside the modeled scope, note the exception and skip.
+Only produce code after the model is approved.
+Approval comes from a human reviewer and may be recorded in the model metadata.
 
-Begin the implementation PR with the model changes only. After the models are
-approved, implement the code. The model and code may be committed in the same PR
-for convenience, or in separate PRs when that better fits the project's workflow.
+Begin the implementation PR with the model changes only.
+After the models are approved, implement the code.
+The model and code may be committed in the same PR for convenience, or in separate PRs when that better fits the project's workflow.
 In either case, review the final model against the implementation before shipping.
 
 ```
@@ -109,7 +112,8 @@ Continuous integration of documentation and models against the code they documen
 
 ## Model syntax rules
 
-Syntax and examples are flavored for Go but language-independent as concepts; adapt them when necessary.
+Syntax and examples are flavored for Go but language-independent as concepts.
+Adapt them when necessary.
 
 Generic
 

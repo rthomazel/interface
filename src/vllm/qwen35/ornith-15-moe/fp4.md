@@ -77,16 +77,6 @@ PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 
 EXTRA_ARGS="--moe-backend b12x"
 
-> set to debug if needed
-
-HF_HUB_VERBOSITY=info
-VLLM_LOGGING_LEVEL=info
-TRANSFORMERS_VERBOSITY=info
-
-> very verbose omit if not debugging
-
-TORCH_LOGS="+inductor"
-
 > if it hangs on two gpus
 
 NCCL_P2P_DISABLE=1 # maybe not needed on 1 card
@@ -374,7 +364,7 @@ scheduling-78bf964c
 ```
 
 242tok/s
-vllm 29 - v0.2
+vllm 29
 287K
 kv 1.72GiB
 GPU_MEMORY_UTILIZATION=0.87

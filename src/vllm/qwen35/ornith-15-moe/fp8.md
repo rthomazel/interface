@@ -67,6 +67,8 @@ VLLM_MARLIN_USE_ATOMIC_ADD=1
 | 1x pro 6000 | .75  | good   |      |
 | 2x 5090     | .9   | good   |      |
 
+This model is much heavier, costs double to run and just a bit smarter, not worth it.
+
 ### realistic context benchmark
 
 native model context 262K
