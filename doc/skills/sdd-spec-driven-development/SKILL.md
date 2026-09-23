@@ -21,26 +21,24 @@ human resolves unresolved questions of intent and scope.
 
 ## Workflow
 
-Move through these steps in order:
+The default path is Spec → Models → Code → QA. Read `AGENTS.md` and relevant
+artifacts first. Feedback returns to the affected phase, not the start of the workflow.
 
 ```text
-1 Read AGENTS.md
-      │
-      ▼
- 2 Specify ◀──────┐
-      │           │
-      ▼           │ conflict /
- 3 Plan           │ intent change /
-      │           │ drift
-      ▼           │
- 4 Tasks          │
-  │  │  │         │
-  ▼  ▼  ▼         │
- 5 Code ──────────┘
-      │           │
-      ▼           │
- 6 Ship ──────────
+Spec → Models → Code → QA
+  ↑       ↑       ↑     │
+  └───────┴───────┴─────┘ feedback
 ```
+
+Use the smallest artifact change and review cycle sufficient for the work.
+For a simple change, aim for one model review cycle before implementation, not
+separate approvals for every artifact or workflow step. Operator-provided intent
+and implementation decisions are established input: bring them up again only
+when confusing or conflicting with constraints. Carry implementation decisions
+into models rather than restating them in task descriptions or asking for approval again.
+Present the changed design, not a repeated explanation of the unchanged feature.
+Update existing artifacts where necessary; do not create redundant summaries,
+plans, or checklists. Keep appropriate verification even when narration is brief.
 
 ### 1. Read `AGENTS.md`
 
@@ -85,40 +83,97 @@ spc/<feature-name>/spec.md
 - Choose a clear, stable feature name and place the specification and related SDD artifacts there.
   Inspect `spc/` first to avoid creating a duplicate feature directory.
   The first spec should be called spec.md, there can be more than one such as: `this.spec.md`, `that.spec.md`.
-- All meaningful discussion and investigation should happen in this step.
-  Later steps execute and verify the results rather than silently reopening the same discovery process.
+- Resolve intent and scope here; resolve software structure during modelling.
+  Discussion and investigation happen in both phases. Modelling may expose
+  questions that require revisiting the specification.
 - If implementation exposes a requirement conflict or a change in intent, stop and return to the operator.
 - When working on an existing feature, update its spec.
   It is expected to keep the spec updated as a reference throughout the lifetime of the project.
 
-### 3. Plan
+### 3. Models
 
-While the spec captures the intent and the discussion, it doesn't organize how to implement the features.
-Fundamental for complex spec implementation, the plan breaks the work into coherent stages, and identifies dependencies and risks.
-Each step of the plan should have a clear goal, a list of tasks to complete it and feel like a mini project on it's own.
+Use the `sdd-software-modelling` skill to create or update models for a coherent
+change. Models are the primary technical review artifact: software structure,
+schemas, signatures, algorithms, and error flows belong there, not in tasks.
+Discuss and resolve design questions during this phase. Present the model diff
+for human approval before implementing it; larger work can repeat this cycle in
+independently understandable increments.
+
+### 4. Code
+
+Implement according to the specification and approved models.
+
+- Keep changes scoped to the specification.
+- Add or update tests.
+- Follow the project's normal PR and review workflow.
+- Keep optional delivery coordination artifacts synchronized when used.
+- Update change files with PR refs when used.
+
+Do not silently redesign the work. If implementation exposes a design problem,
+revise the affected model and seek approval for the changed design. If intent or
+scope must change, return to the operator and update the specification first.
+Routine coding details within the approved model do not require another approval.
+
+### 5. QA
+
+Before handing off, the agent verifies the implementation against the specification,
+models, and acceptance criteria, runs relevant tests and checks, and inspects the
+final diff. Passing these checks means ready for operator QA, not QA complete.
+
+The operator exercises the software and brings feedback. Iterate at the affected level:
+
+- Implementation differs from the approved model: fix code and verify.
+- Software design needs adjustment: update the model, review the change, then code.
+- Intended behavior or scope changes: update the spec, then affected models and code.
+
+Update affected documentation and approved intent/design changes, record unresolved
+follow-ups, and report actual check and operator QA status. Ensure artifacts reflect
+the completed work; confirm checklist accuracy only when a checklist is used.
+
+Merging and production deployment are separate from this QA loop. Work may be
+merged behind a disabled feature flag and deployed later; this workflow does not
+require final production deployment.
+
+## Optional delivery coordination
+
+**Specs and models describe the software. Plans and tasks organize the work.
+Organizing the work must not become a prerequisite for reviewing the software.**
+
+Do not create plans or tasks by default. Neither is a prerequisite for modelling
+or implementation, and they do not introduce mandatory approval rounds. Use them
+when the operator requests them or when they solve the delivery needs below.
+Technical design belongs in models; coordination artifacts reference those models
+rather than duplicating schemas, signatures, algorithms, or error handling.
+
+### Plan
+
+Use a plan when the work is large and needs breaking into coherent delivery stages,
+or when requested by the operator. Record stage goals, dependencies, and delivery
+risks, including rollout sequencing when relevant. A plan does not require a separate
+task document.
 
 ```text
 spc/<feature-name>/plan.md
 ```
 
-For simple features, a plan may be unnecessary if the tasks can be executed directly from the spec.
-
-### 4. Tasks
+### Tasks
 
 ```text
 spc/<feature-name>/tasks.md
 ```
 
-`tasks.md` contains the implementation work, in order.
-The task list is a technical document, it may include code as needed and other content that would not belong in the specification.
+Use tasks when work will be held for later or implemented in batches, or when
+requested by the operator. `tasks.md` records remaining work and its order, with
+references to the relevant models rather than implementation details.
 
 Break the plan, or the small specification, into coherent units of work.
 Each task should be small enough to review and merge independently where practical.
 As guidance, prefer one focused pull request per task when that improves reviewability,
 but group tightly coupled tasks into one pull request when splitting them would add noise or make the work harder to understand.
 
-Create `tasks.md` in the feature directory.
-Each item should be an H2 with a number and checkbox, followed by a technical description of the work it represents.
+When used, create `tasks.md` in the feature directory.
+Each item should be an H2 with a number and checkbox, followed by a brief scope
+description and references to the relevant models.
 Keep the tasks synchronized with the actual work and check items off as they are completed.
 Include PR links as refs.
 Avoid an actual markdown ul/li list.
@@ -128,48 +183,12 @@ Avoid an actual markdown ul/li list.
 
 ## [ ] 1. Add the recovery data model
 
-Store the token and expiry required by the recovery flow.
-Etc...
+Implement the approved recovery storage model. See the affected storage model file.
 
 ## [ ] 2. Implement the recovery endpoint
 
-Accept a verified email and issue a time-limited link.
-Etc...
+Implement the approved recovery handler model. See the affected handler model file.
 ```
-
-### 5. Code
-
-Implement the tasks according to the approved specification and plan.
-
-- Follow the task checklist.
-- Keep changes scoped to the specification.
-- Add or update tests.
-- Update the checklist as tasks are completed.
-- Create the corresponding pull request for each task.
-- Follow the project's normal review workflow.
-- Update change files with PR refs.
-
-This is an execution-focused step, not a second investigation phase. Do not
-silently redesign the work. If the intended behavior must change, return to
-the operator and update the specification and plan before continuing.
-
-### 6. Ship
-
-This step is primarily quality assurance. Verify the implementation
-against the specification and acceptance criteria, run relevant tests and
-checks, inspect the final diff, and confirm that the task checklist is
-accurate.
-
-- update affected documentation;
-- update the specification when approved behavior changed;
-- record unresolved follow-ups;
-- confirm review and QA status; and
-- ensure the SDD artifacts describe the work that was actually completed.
-
-The operator might merge the work with a feature flag off for production,
-shipping may happen later as a separate follow-up after implementation has
-been merged, reviewed, and QA'd. The initial SDD workflow does not require
-final production deployment.
 
 ## OKF frontmatter
 
@@ -274,7 +293,7 @@ documentation. At the end of work:
 - check whether existing artifacts still describe reality;
 - treat contradictions and missing documentation as defects;
 - update affected specifications and documentation;
-- keep the task checklist synchronized with actual work;
+- keep the task checklist synchronized with actual work, when used;
 - record approved changes in the specification's changelog; and
 - do not leave silent drift between intent, artifacts, and implementation.
 

@@ -46,15 +46,27 @@ Reserve comments on models for implementation notes, and non-obvious behavior.
 
 ### Models
 
-Always produce models before code and after specs.
+Create or update models for a coherent change before code and after specs.
+Models are the primary technical review artifact, not a supplement to task descriptions.
+Discussion and investigation continue here to resolve software structure; return to
+the specification when intent or scope needs clarification.
+
+For simple changes, aim for one model review cycle before implementation. Treat
+operator-provided intent and implementation decisions as established input; bring
+them up again only when confusing or conflicting with constraints. Present the
+model delta rather than repeating unchanged design or creating redundant artifacts.
+If the existing approved model already describes the intended behavior, an
+implementation-only correction requires neither a fabricated model edit nor
+renewed approval of unchanged design.
 For generated code, configuration-only changes, or code outside the modeled scope, note the exception and skip.
 Only produce code after the model is approved.
 Approval comes from a human reviewer and may be recorded in the model metadata.
 
-Begin the implementation PR with the model changes only.
+When the design changes, begin the implementation PR with the model changes only.
 After the models are approved, implement the code.
 The model and code may be committed in the same PR for convenience, or in separate PRs when that better fits the project's workflow.
-In either case, review the final model against the implementation before shipping.
+In either case, verify the final model against the implementation before handing
+off for operator QA. Agent checks mean ready for QA, not QA complete.
 
 ```
 src/
@@ -71,26 +83,25 @@ src/
 
 ### SDD workflow, including requirements and modelling
 
-Create or update models for each implementation task.
+Read `AGENTS.md` and relevant artifacts, then follow the default path:
 
+```text
+Spec → Models → Code → QA
+  ↑       ↑       ↑     │
+  └───────┴───────┴─────┘ feedback
 ```
-|        non technical         |    technical   |
-|------------------------------|----------------|
-| Intent, Requirements, Design |  Constitution  |
-|               ↓                     ↓         |
-|               ----------------------          |
-|                        Spec                   |
-|                         ↓                     |
-|                        Plan                   |
-|                         ↓                     |
-|                        Tasks                  |
-|                        ↓ ↓ ↓ ...              |
-|                        Models                 |
-|                        ↓ ↓ ↓ ...              |
-|                        Code                   |
-|                          ↓                    |
-|                        Ship                   |
-```
+
+Review coherent model changes independently of task boundaries. For larger work,
+repeat the model-review-and-implementation cycle in understandable increments.
+Plans and tasks are optional delivery coordination, not prerequisites or mandatory
+review gates. Use the SDD skill's “Optional delivery coordination” section when
+large work needs staging, work is deferred or batched, or the operator requests it.
+Technical design stays in models; tasks reference it rather than duplicate it.
+
+The operator performs QA and brings feedback. Fix implementation mismatches in
+code; review changed software design in models; revisit the spec for changed intent
+or scope. Do not restart unaffected phases. Merging and deployment are separate
+from this feedback loop.
 
 | level   | file       | language             |
 | ------- | ---------- | -------------------- |
@@ -108,7 +119,7 @@ Continuous integration of documentation and models against the code they documen
 
 - Incorrect models are bugs, worse than no model
 - Projects should consider CI checks that require models to be updated when a covered code file is updated
-- Begin implementation PRs with model changes first for a clean diff; code follows model approval, either in the same PR or a separate one.
+- When the design changes, begin implementation PRs with model changes first for a clean diff; code follows model approval, either in the same PR or a separate one.
 
 ## Model syntax rules
 
