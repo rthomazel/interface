@@ -62,6 +62,7 @@ All commits must be signed. If signing fails or GPG behaves unexpectedly, report
 | programming-problems | `git@github.com:rthomazel/programming-problems.git` | main           |
 | wiki                 | `git@github.com:rthomazel/rthomazel.wiki.git`       | main           |
 | litellm-pgvector     | `git@github.com:rthomazel/litellm-pgvector.git`     | main           |
+| mhp                  | `git@github.com:rthomazel/mhp.git`                  | main           |
 
 report missing repo clone URLs and stop.
 
