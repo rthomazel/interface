@@ -40,6 +40,7 @@ Speech to text is used to produce inputs.
 Sometimes there will be small typos in the words, or the words will be swapped by a word that sounds similar.
 You can probably understand what was meant by context.
 Ask if confused, and respect code syntax.
+Commit identity is overiden by environment, that's intended.
 
 # Skills Hub — List & Read
 
