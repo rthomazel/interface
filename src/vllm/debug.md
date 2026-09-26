@@ -74,3 +74,10 @@ tar -xf /workspace/cache.tar -C /workspace/.cache
 ```
 scp -P 30717 root@154.37.220.220:/workspace/logs/vllm-20260908-004532.log vllm.log
 ```
+
+### hf download model
+
+```
+hf auth login
+hf download ornith-ai/Ornith-1.5-35B-A3B-NVFP4 --local-dir src/vllm/qwen35/ornith-15-moe/cache/model
+```

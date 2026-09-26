@@ -17,4 +17,4 @@ dotfiles/**/.uuid
 **/.DS_Store
 dotfiles/.config/jj/repos/*
 .cspell.config.yml
-**/.cache/*
+src/vllm/**/resources/*
