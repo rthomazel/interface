@@ -29,8 +29,7 @@ RUN apt-get update \
 EXPOSE 22 8000
 
 COPY --chmod=755 entrypoint.sh /entrypoint.sh
-COPY --chmod=755 resources/model.tar /opt/resources/model.tar
-COPY --chmod=755 resources/cache.tar /opt/resources/cache.tar
+COPY --chmod=755 resources /opt
 
 ARG VERSION
 ENV VERSION="${VERSION}"
