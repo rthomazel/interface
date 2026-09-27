@@ -9,10 +9,12 @@ cmd="${1:-help}"
 push_vllm_amd64() {
   vllmVersion="${1:-}"
   template="${2:-}"
+  dryrun="${3:-}"
 
   if [[ -z "$vllmVersion" ]] || [[ -z "$template" ]]; then
-    echo "Usage: $0 <vllm_version> <template>"
+    echo "Usage: $0 <vllm_version> <template> <dry_run>"
     echo "Example: $0 v0.27.1 qwen35"
+    echo "Example: $0 v0.27.1 qwen35 true"
     exit 1
   fi
 
@@ -22,7 +24,11 @@ push_vllm_amd64() {
   date="$(date +%Y.%m.%d.%H:%M)"
   dir="src/vllm/$template"
 
-  docker buildx build --platform linux/amd64 \
+  if [ -n "$dryrun" ]; then
+    dryrun="echo"
+  fi
+
+  $dryrun docker buildx build --platform linux/amd64 \
     --build-context default="$dir" \
     --build-arg VLLM_VERSION="${vllmVersion}" \
     --build-arg VERSION="${version}_${commit}_$date" \
