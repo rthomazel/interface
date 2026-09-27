@@ -239,6 +239,54 @@ Parent commit (@-):
   Position 6:                            52.61
 ```
 
+267tok/s
+temp .8
+mtp 4
+context 1.1M
+kv mem 12.4GiB
+
+```
+Output token throughput (tok/s):         267.45
+Mean TTFT (ms):                          3796.48
+Mean TPOT (ms):                          2.79
+Mean ITL (ms):                           9.53
+Acceptance rate (%):                     60.40
+Acceptance length:                       3.42
+Drafts:                                  9369
+Draft tokens:                            37476
+Accepted tokens:                         22637
+Per-position acceptance (%):
+  Position 0:                            88.84
+  Position 1:                            70.70
+  Position 2:                            60.11
+  Position 3:                            21.97
+```
+
+303tok/s
+temp .4
+mtp 6
+context 1.06M
+kv mem 12.3GiB
+
+```
+Output token throughput (tok/s):         303.52
+Mean TTFT (ms):                          3789.63
+Mean TPOT (ms):                          2.35
+Mean ITL (ms):                           10.90
+Acceptance rate (%):                     60.72
+Acceptance length:                       4.64
+Drafts:                                  6893
+Draft tokens:                            41358
+Accepted tokens:                         25113
+Per-position acceptance (%):
+  Position 0:                            88.38
+  Position 1:                            78.56
+  Position 2:                            68.52
+  Position 3:                            55.56
+  Position 4:                            44.60
+  Position 5:                            28.71
+```
+
 ## 2 RTX PRO 4000
 
 mtp 7 215tok/s

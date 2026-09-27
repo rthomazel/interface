@@ -59,13 +59,13 @@ tar -cf /workspace/cache.tar -C /workspace .cache
 ### cache rsync to host machine
 
 ```
-rsync -ah --info=progress2 -e "ssh -p $VAST_PORT" root@$VAST_IP:/workspace/cache.tar /home/vacation/Desktop/interface/src/vllm/qwen35/ornith-15-moe/.cache
+rsync -ah --info=progress2 -e "ssh -p $VAST_PORT" root@$VAST_IP:/workspace/cache.tar /home/vacation/Desktop/interface/src/vllm/qwen35/ornith15/resources/.cache
 ```
 
 ### cache rsync to remote
 
 ```
-rsync -ah --info=progress2 -e "ssh -p $VAST_PORT" /home/vacation/Desktop/interface/src/vllm/qwen35/ornith-15-moe/.cache/$VAST_CACHE_FILE root@$VAST_IP:/workspace/cache.tar
+rsync -ah --info=progress2 -e "ssh -p $VAST_PORT" /home/vacation/Desktop/interface/src/vllm/qwen35/ornith15/resources/$VAST_CACHE_FILE root@$VAST_IP:/workspace/cache.tar
 tar -xf /workspace/cache.tar -C /workspace/.cache
 ```
 
@@ -79,5 +79,5 @@ scp -P 30717 root@154.37.220.220:/workspace/logs/vllm-20260908-004532.log vllm.l
 
 ```
 hf auth login
-hf download ornith-ai/Ornith-1.5-35B-A3B-NVFP4 --local-dir src/vllm/qwen35/ornith-15-moe/cache/model
+hf download ornith-ai/Ornith-1.5-35B-A3B-NVFP4 --local-dir src/vllm/qwen35/ornith15/resources/model
 ```
