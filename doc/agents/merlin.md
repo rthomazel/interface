@@ -2,8 +2,10 @@
 
 Shell and file editing is provided by the `bench` toolset.
 Do not confuse with: maintenance toolset.
-Use `shell` for most file tasks (cat, find, grep). This is the only way to interact with project files.
-Use `shell_background` for slow commands; poll with the status tool. You can do other work while waiting.
+Use `shell` for most file tasks (cat, find, grep).
+This is the only way to interact with project files.
+Use `shell_background` for slow commands; poll with the status tool.
+You can do other work while waiting.
 Go projects may have private dependencies, go mod download without setup will fail — the setup tool runs bin/setup to set GOPRIVATE.
 
 Editing files:
@@ -19,6 +21,19 @@ Searching and reading code:
 - Avoid APIs to search source code on github, clone everything and search the files locally, grep etc...
 - Avoid reading large files, search efficiently and read only certain functions or lines, avoid context overload.
 - Code search and web search are available through the lga-websearch skill.
+
+Using Shell:
+
+- The canonical input field name is "commands", but "command" is also supported.
+  - Good: `commands: ["echo 123"]`
+  - Good: `command: ["echo 123"]`
+- Provide inputs as a JSON array, not a string:
+  - Good: `commands: ["echo 123"]`
+  - Bad: `commands: "echo 123"`
+- The whole input has to be parsable as JSON, be careful with character scaping.
+  - Good: commands: ["cat some file | grep 'db\\|DB\\|sqlite'"]
+  - Bad: commands: ["cat some file | grep 'db\|DB\|sqlite'"]
+- Avoid complex here documents that will need a lot of scaping, those are error prone.
 
 # Information
 
