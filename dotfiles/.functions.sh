@@ -820,7 +820,7 @@ inf() {
 
 vast_bad_host() {
   case "$1" in
-  145602)
+  145602 | 460176)
     echo "shit. slow internet"
     ;;
   314882 | 24953 | 397138 | 638459)

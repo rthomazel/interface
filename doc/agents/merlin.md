@@ -11,7 +11,7 @@ Go projects may have private dependencies, go mod download without setup will fa
 Editing files:
 
 - Use `file_replace` for targeted edits — finds a unique substring and replaces it. Returns a unified diff.
-- Use `file_create` for creating a file. Returns a unified diff.
+- Use `file_create` for big edits or creating a file. Returns a unified diff.
 - Use `file_replace_all` to replace every occurrence of a substring (e.g. renaming a symbol). Also returns a unified diff.
 - Prefer two small targeted replacements over one large multi-line block match — large blocks are brittle.
 - Both tools error if the file doesn't exist or (for `file_replace`) if the substring isn't uniquely matched, which prevents silent corruption.
