@@ -149,12 +149,16 @@ system_up() {
     return
   fi
 
-  fatal $LINENO "kaboom"
-
   # update everything but linux from AUR
   if ! yay --aur --sync --sysupgrade --ignore linux,linux-api-headers,linux-firmware,linux-headers --needed --noconfirm; then
     fatal $LINENO failed to update from AUR, try 'yay --aur --sync --sysupgrade --ignore linux,linux-api-headers,linux-firmware,linux-headers --needed' manually
   fi
+
+  # fix yay cache permissions after AUR update
+  find "$HOME"/.cache/yay -type d ! -readable -exec chmod -R u+r {} \;
+  find "$HOME"/.cache/yay -type d ! -writable -exec chmod -R u+w {} \;
+  find "$HOME"/.cache/yay -type f ! -readable -exec chmod u+r {} \;
+  find "$HOME"/.cache/yay -type f ! -writable -exec chmod u+w {} \;
 }
 
 cleanup() {
