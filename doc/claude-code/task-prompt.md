@@ -14,9 +14,16 @@ Sometimes there will be small typos in the words, or the words will be swapped b
 You can probably understand what was meant by context.
 Ask if confused, and respect code syntax.
 
-### Env vars
+### Environment
 
-GITHUB_RO_TOKEN = token with access to private repos for install
+GITHUB_RO_TOKEN = token with access to private repos for install.
+
+Template for npmrc
+
+```
+@eleanorhealth:registry=https://npm.pkg.github.com
+//npm.pkg.github.com/:_authToken=${GITHUB_RO_TOKEN value}
+```
 
 ## Operator info
 
@@ -37,7 +44,9 @@ Curl these skills to read them.
 - name: sdd-spec-driven-development
 - description: Use when requested a specification or asked to plan and implement non-trivial software work using spec-driven development.
 - link: https://raw.githubusercontent.com/rthomazel/interface/refs/heads/dev/doc/skills/sdd-spec-driven-development/SKILL.md
+
 ---
+
 - name: sdd-software-modelling
 - description: Use when requested to work with software models, create or update them, or when the user mentions software modelling.
 - link: https://raw.githubusercontent.com/rthomazel/interface/refs/heads/dev/doc/skills/sdd-software-modelling/SKILL.md
