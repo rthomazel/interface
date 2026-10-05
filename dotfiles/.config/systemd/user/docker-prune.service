@@ -3,7 +3,7 @@ Description=Prune docker system
 
 [Service]
 Type=oneshot
-ExecStart=/usr/bin/docker system prune -f
-ExecStart=/usr/bin/docker buildx prune -f
+ExecStart=/usr/bin/docker system prune -af
+ExecStart=/usr/bin/docker buildx prune -af
 Restart=no
 RestartSec=10s
