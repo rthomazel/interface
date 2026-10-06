@@ -19,12 +19,13 @@ importance according to [focus.md](../focus.md): [LOW] [MED] [HGH]
 | 8     | large       |
 | 13    | project     |
 
-largest number: 34
+largest number: 36
 
 <!--ideas ------------------------------------------------------------------------------------------------------------------  -->
 
 ## current
 
+- [ ] **[36] [MED] [3]** coverage CI
 - [ ] **[35] [HGH] [3]** trade automation
 - [ ] **[34] [LOW] [3]** personal blog
 - [x] **[33] [MED] [3]** learn Spec Driven Development SDD
