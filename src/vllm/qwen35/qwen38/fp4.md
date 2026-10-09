@@ -79,6 +79,7 @@ EXTRA_ARGS=--disable-custom-all-reduce
 This model is pretty heavy needs Pro 5000 or 2 5090.
 
 todo
+
 - nvidia/Qwen3.8-27B-NVFP4 -- seems to be 20% faster than other quants
 - 1 4090 48 .6$/h low volume
 - 2 4090 .8$/h low volume
@@ -151,32 +152,6 @@ Position 0: 77.93
 Position 1: 64.58
 Position 2: 55.83
 
-### unsloth/Qwen3.8-27B-NVFP4 RTX 5000 48Gb, MTP 3, 78tok/s, 433K
-
-Output token throughput (tok/s): 78.09
-Mean TTFT (ms): 820.51
-Acceptance length: 3.16
-Acceptance rate (%): 71.86
-Per-position acceptance (%):
-Position 0: 79.46
-Position 1: 71.14
-Position 2: 64.98
-
-### unsloth/Qwen3.8-27B-NVFP4 RTX 5000 48Gb, MTP 5, 83tok/s, 417K
-
-Output token throughput (tok/s): 83.27
-Mean TTFT (ms): 786.59
-Mean TPOT (ms): 11.25
-Mean ITL (ms): 40.80
-Acceptance rate (%): 52.68
-Acceptance length: 3.63
-Draft tokens: 28215
-Position 0: 73.12
-Position 1: 59.33
-Position 2: 49.28
-Position 3: 42.94
-Position 4: 38.74
-
 ## nvidia/Qwen3.8-27B-NVFP4 2x pro 4000, MTP 4, 27tok/s, 270K
 
 very low result, unusual.
@@ -200,4 +175,103 @@ Per-position acceptance (%):
   Position 1:                            66.79
   Position 2:                            62.01
   Position 3:                            54.03
+```
+
+## RTX PRO 5000 48GB
+
+### unsloth/Qwen3.8-27B-NVFP4, MTP 3, 78tok/s, 433K
+
+Output token throughput (tok/s): 78.09
+Mean TTFT (ms): 820.51
+Acceptance length: 3.16
+Acceptance rate (%): 71.86
+Per-position acceptance (%):
+Position 0: 79.46
+Position 1: 71.14
+Position 2: 64.98
+
+### unsloth/Qwen3.8-27B-NVFP4, MTP 5, 83tok/s, 417K
+
+Output token throughput (tok/s): 83.27
+Mean TTFT (ms): 786.59
+Mean TPOT (ms): 11.25
+Mean ITL (ms): 40.80
+Acceptance rate (%): 52.68
+Acceptance length: 3.63
+Draft tokens: 28215
+Position 0: 73.12
+Position 1: 59.33
+Position 2: 49.28
+Position 3: 42.94
+Position 4: 38.74
+
+### nvidia/Qwen3.8-27B-NVFP4, MTP 4, vllm 31, 124tok/s, 347K
+
+KV size 347594
+KV mem 12.6 GiB
+GPU_MEMORY_UTILIZATION .83
+
+```
+Output token throughput (tok/s):         124.36
+Mean TTFT (ms):                          10346.03
+Mean TPOT (ms):                          5.46
+Mean ITL (ms):                           25.90
+Acceptance rate (%):                     93.73
+Acceptance length:                       4.75
+Drafts:                                  6739
+Draft tokens:                            26956
+Accepted tokens:                         25265
+Per-position acceptance (%):
+  Position 0:                            95.99
+  Position 1:                            94.21
+  Position 2:                            92.86
+  Position 3:                            91.84
+```
+
+### nvidia/Qwen3.8-27B-NVFP4, vllm 31, 89tok/s, mtp 8
+
+KV size 317332
+KV mem 12.34 GiB
+
+```
+Output token throughput (tok/s):         89.15
+Mean TTFT (ms):                          10232.61
+Mean TPOT (ms):                          8.66
+Mean ITL (ms):                           33.93
+Acceptance rate (%):                     36.52
+Acceptance length:                       3.92
+Drafts:                                  8166
+Draft tokens:                            65328
+Accepted tokens:                         23859
+Per-position acceptance (%):
+  Position 0:                            58.08
+  Position 1:                            50.36
+  Position 2:                            33.28
+  Position 3:                            32.07
+  Position 4:                            30.85
+  Position 5:                            29.88
+  Position 6:                            29.16
+  Position 7:                            28.50
+```
+
+### nvidia/Qwen3.8-27B-NVFP4, MTP 4, vllm 31, 94tok/s
+
+KV size 347332
+KV mem 12.59 GiB
+
+```
+Output token throughput (tok/s):         94.89
+Mean TTFT (ms):                          10511.15
+Mean TPOT (ms):                          7.91
+Mean ITL (ms):                           26.22
+Acceptance rate (%):                     57.89
+Acceptance length:                       3.32
+Drafts:                                  9655
+Draft tokens:                            38620
+Accepted tokens:                         22358
+Per-position acceptance (%):
+  Position 0:                            63.75
+  Position 1:                            58.16
+  Position 2:                            55.71
+  Position 3:                            53.95
 ```
