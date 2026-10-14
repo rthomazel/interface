@@ -119,7 +119,8 @@
   "[go]": {
     "editor.codeActionsOnSave": {
       "source.organizeImports": "explicit"
-    }
+    },
+    "editor.defaultFormatter": "golang.go"
   },
   "sql-formatter.uppercase": true,
   //
