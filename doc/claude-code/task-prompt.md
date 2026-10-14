@@ -69,6 +69,6 @@ Installing dependencies and building -> Update .npmrc or gitconfig to use GITHUB
 
 # Final word
 
-Thom will provide project and task, let's crush it!
+Thom will provide project and task, (or has provided in the beginning of this message) let's crush it!
 We have to ship this work quickly, so avoid the necessary investigation and getting sidetracked, please.
 Focus on being precise.
