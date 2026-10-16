@@ -84,12 +84,6 @@ src_file "$DOTFILES/.functions.sh" "$LINENO"
 src_file "$VPS_DOTFILES/.aliases.linux.vps.sh" "$LINENO"
 src_file "$VPS_DOTFILES/.lscolors.sh" "$LINENO"
 
-# start tmux on login only if not already in a tmux session,
-if [ -z "$TMUX" ]; then
-  tmux attach || tmux new-session
-  tmux source-file "$HOME/.tmux.conf"
-fi
-
 # load key into SSH agent, if not already loaded and interactive
 if [ -S "$SSH_AUTH_SOCK" ]; then
   ssh-add -l | grep -q "$(ssh-keygen -lf ~/.ssh/id_ed25519.pub | awk '{print $2}')" || ssh-add -q
