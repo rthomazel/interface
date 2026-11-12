@@ -455,6 +455,18 @@ average them into one number.
   the Motley Fool URL pattern `fool.com/earnings/call-transcripts/<yyyy>/<mm>/<dd>/<slug>/` worked
   for all of MSFT/GOOGL/AMZN/META/ORCL/TSMC; find the slug via WebSearch.
 
+- **Verifying guidance quotes (Nov 2026):** Motley Fool transcripts matched every cross-check.
+  Official sources, best first:
+  - **SEC 8-K ex-99.1** (find the accession via `data.sec.gov/submissions/CIK<cik>.json`, `items`
+    containing 2.02; index at `sec.gov/Archives/edgar/data/<cik>/<accession-no-dashes>/`). Confirms
+    written actuals for all five (Alphabet $51,355M, Microsoft $39,367M additions to PP&E, Oracle
+    $28,499M) and Meta's written capex outlook. Spoken-only guidance is not in them.
+  - **`*.q4cdn.com` IR files** (Meta transcript PDF, Oracle press release and slides) are
+    reachable; extract with `pdftotext -layout`. Meta's call text matched Fool word for word.
+    Oracle's $90-95B capex / <=$70B net cash guidance is spoken only (not in its slides or release).
+  - **Blocked, 403 from the site itself:** `abc.xyz`, `microsoft.com` IR, `investor.tsmc.com`,
+    Benzinga. Quotes only available there stay labelled secondary (Fool).
+
 ## Reminders
 
 - Don't manufacture precision a source doesn't provide (lead times, CoWoS utilization, HBM
