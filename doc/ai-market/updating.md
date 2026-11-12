@@ -25,6 +25,17 @@ How to keep the indicator sheets current. For the rationale and full indicator d
   CoWoS commentary come with the quarterly earnings call, typically mid-month following quarter
   close.
 
+### Next runs (update this table at the end of every pass)
+
+| Run | Due | What |
+| --- | --- | --- |
+| Monthly | ~2nd week of Dec 2026 | GPU scarcity, HBM, server DRAM, compute market. **Also in this pass:** Oracle FY27 Q2 (quarter ends Nov 30, reports ~Dec 9-11) and Micron FY27 Q1 (ends ~Nov 26, reports ~mid/late Dec) — both offset calendars, so they fall between the quarterly runs. Check TrendForce for the 1Q27 contract forecast (expected around year-end). |
+| Quarterly (Q4 2026) | ~early Feb 2027 | TSMC (~mid Jan), SK Hynix/Samsung (~late Jan; stockanalysis.com lags a few days), MSFT/GOOGL/META/AMZN (~late Jan to early Feb). Wait until all four Big Tech have reported. Alphabet and Meta promised 2027 capex detail on their Q4 calls. |
+| Monthly | ~2nd week of Jan, Feb, ... 2027 | As above. Review whether to drop the ComputeTape median in the Feb 2027 pass (see compute-market.md). |
+
+Confirm exact earnings dates each cycle. If a run slips more than ~2 weeks, say so in the
+dashboard's "Last Updated" cells, not in a silent gap.
+
 > Rough earnings windows only — confirm exact dates each cycle, companies shift by a week or two.
 
 ## Update steps
@@ -38,8 +49,10 @@ How to keep the indicator sheets current. For the rationale and full indicator d
    or composite indices — that's an explicit non-goal across all five sheets.
 4. Refresh [dashboard.md](./dashboard.md): update each row's "Current Read" and "Last Updated",
    and revise the narrative paragraph if the overall picture has shifted.
-5. Commit directly to `dev` (small, recurring, well-defined — no PR needed per the github skill's
-   dev-branch convention): `data(ai-market): <month> <year> update`.
+5. Commit: `data(ai-market): <month> <year> update`. Default is straight to `dev` (small,
+   recurring, well-defined — no PR needed per the github skill's dev-branch convention), unless a
+   rule in the session conflicts (e.g. a mandated working branch) — then follow the session's rule
+   and open a PR. Review the draft with Thom before pushing/opening the PR.
 
 ## Updating Indicator 1 — Big Tech Capex
 
@@ -415,6 +428,9 @@ average them into one number.
   `hourlyPriceUsd`, `providerId`, `availability`. Panel membership changes (6 -> 8 providers in
   Sep 2026): check `n_providers` and compare same-provider prices before reading a median move as a
   market move.
+- **A tool named in this doc but missing from your session** (e.g. `api_keys-vast_ai_mcp_litellm`)
+  belongs to a different agent. Use the documented fallback; if there is none, ask Thom to get the
+  data from that agent rather than working around it.
 - **Vast.ai authenticated tool may be unavailable** — the public `cloud.vast.ai/api/v0/bundles/`
   endpoint still works (it failed once with no response; retry a few times). Pass `limit` (e.g. 1000) in the `q` JSON or you get a truncated list.
 - **Blocked by the sandbox proxy:** investors.micron.com, globenewswire.com, invezz.com, cnbc.com,
@@ -430,6 +446,58 @@ average them into one number.
 - **Stock-price context (e.g. the Jul/Sep 2026 Korean memory selloffs)** has no primary-source
   feed in this workflow; WebSearch results (Seoul Economic Daily, Korea Herald) were enough for a
   qualitative note. Don't turn it into a scored metric.
+
+- **TrendForce: only `trendforce.com/presscenter/news/...` is primary research.**
+  `trendforce.com/news/...` is TrendForce News, a curated feed that relays third-party reports
+  (e.g. Commercial Times) with different bases — don't treat its figures as TrendForce forecasts.
+- **Verify WebSearch summaries against the primary page** before a figure goes in a sheet; they
+  can misattribute a relayed number to the original publisher.
+- **ComputeTape panel shrinkage (Nov 2026):** providers can vanish from `current.json` (7-8 down
+  to 4) with gaps in `history.csv` and no correction notice. Record the per-provider prices and
+  flag the median as composition-driven.
+
+- **stockanalysis.com data is embedded as JS arrays** (Nov 2026): table text no longer parses from
+  the HTML. Read the arrays instead — `datekey:[...]`, `revenue:[...]`, `gp:[...]` in `/financials/`
+  and `inventory:[...]` in `/financials/balance-sheet/` (first match = quarterly, newest first,
+  values in KRW). Re-derive one prior quarter first to confirm the parse reproduces the sheet.
+- **Q3 2026 capex pass:** XBRL derivation reproduced the Q2 rows exactly. Call-cited cash capex can
+  differ slightly from the XBRL line (Amazon $75.9B vs $77.26B; Meta/Microsoft include finance
+  leases) — keep XBRL in the table and note the call figure in the guidance column. Transcripts:
+  the Motley Fool URL pattern `fool.com/earnings/call-transcripts/<yyyy>/<mm>/<dd>/<slug>/` worked
+  for all of MSFT/GOOGL/AMZN/META/ORCL/TSMC; find the slug via WebSearch.
+
+- **Guidance quotes: Motley Fool transcripts are a good source — checking against official
+  transcripts is not required.** In Nov 2026 we spot-checked Meta, Alphabet, Microsoft and TSMC
+  against the official transcripts (IR pages / PDFs) and the quoted passages matched. The only
+  slip seen was an acronym (Fool wrote "CoWoS" where TSMC said "CoPoS"), so double-check
+  acronyms if one matters. Optional cross-checks, best first:
+  - **SEC 8-K ex-99.1** (find the accession via `data.sec.gov/submissions/CIK<cik>.json`, `items`
+    containing 2.02; index at `sec.gov/Archives/edgar/data/<cik>/<accession-no-dashes>/`). Confirms
+    written actuals (Alphabet $51,355M, Microsoft $39,367M additions to PP&E, Oracle $28,499M)
+    and Meta's written capex outlook. Spoken-only guidance (e.g. Oracle's $90-95B capex) is not
+    in them.
+  - **`*.q4cdn.com` IR files** (Meta transcript PDF, Oracle press release and slides) are
+    reachable; extract with `pdftotext -layout`.
+  - **403 from the site itself:** see the headless browser fallback below. Nov 2026:
+    `microsoft.com` IR worked; `abc.xyz`, `investor.tsmc.com` (Cloudflare "Just a moment...") and
+    Benzinga (Cloudflare block) still 403 — a person can paste passages from their own browser.
+
+- **Headless browser fallback for a 403 on a plain `curl`:** Playwright + Chromium are
+  pre-installed (`require('playwright')`, no install). Route through the session proxy, load the
+  page, then read `document.body.innerText` and grep the passages you need:
+
+  ```js
+  const { chromium } = require('playwright');
+  const b = await chromium.launch({ proxy: { server: process.env.HTTPS_PROXY }, args: ['--no-sandbox'] });
+  const ctx = await b.newContext({ ignoreHTTPSErrors: true });
+  const p = await ctx.newPage();
+  await p.goto(url, { waitUntil: 'domcontentloaded' });
+  await p.waitForTimeout(4000);
+  const text = await p.evaluate(() => document.body.innerText);
+  ```
+
+  It gets past some bot checks but not Cloudflare's challenge pages (see above); if the title is
+  "Just a moment..." or "Attention Required", stop and ask Thom for the text.
 
 ## Reminders
 
