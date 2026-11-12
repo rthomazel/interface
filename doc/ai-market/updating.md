@@ -25,6 +25,17 @@ How to keep the indicator sheets current. For the rationale and full indicator d
   CoWoS commentary come with the quarterly earnings call, typically mid-month following quarter
   close.
 
+### Next runs (update this table at the end of every pass)
+
+| Run | Due | What |
+| --- | --- | --- |
+| Monthly | ~2nd week of Dec 2026 | GPU scarcity, HBM, server DRAM, compute market. **Also in this pass:** Oracle FY27 Q2 (quarter ends Nov 30, reports ~Dec 9-11) and Micron FY27 Q1 (ends ~Nov 26, reports ~mid/late Dec) — both offset calendars, so they fall between the quarterly runs. Check TrendForce for the 1Q27 contract forecast (expected around year-end). |
+| Quarterly (Q4 2026) | ~early Feb 2027 | TSMC (~mid Jan), SK Hynix/Samsung (~late Jan; stockanalysis.com lags a few days), MSFT/GOOGL/META/AMZN (~late Jan to early Feb). Wait until all four Big Tech have reported. Alphabet and Meta promised 2027 capex detail on their Q4 calls. |
+| Monthly | ~2nd week of Jan, Feb, ... 2027 | As above. Review whether to drop the ComputeTape median in the Feb 2027 pass (see compute-market.md). |
+
+Confirm exact earnings dates each cycle. If a run slips more than ~2 weeks, say so in the
+dashboard's "Last Updated" cells, not in a silent gap.
+
 > Rough earnings windows only — confirm exact dates each cycle, companies shift by a week or two.
 
 ## Update steps
