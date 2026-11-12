@@ -38,8 +38,10 @@ How to keep the indicator sheets current. For the rationale and full indicator d
    or composite indices — that's an explicit non-goal across all five sheets.
 4. Refresh [dashboard.md](./dashboard.md): update each row's "Current Read" and "Last Updated",
    and revise the narrative paragraph if the overall picture has shifted.
-5. Commit directly to `dev` (small, recurring, well-defined — no PR needed per the github skill's
-   dev-branch convention): `data(ai-market): <month> <year> update`.
+5. Commit: `data(ai-market): <month> <year> update`. Default is straight to `dev` (small,
+   recurring, well-defined — no PR needed per the github skill's dev-branch convention), unless a
+   rule in the session conflicts (e.g. a mandated working branch) — then follow the session's rule
+   and open a PR. Review the draft with Thom before pushing/opening the PR.
 
 ## Updating Indicator 1 — Big Tech Capex
 
@@ -415,6 +417,9 @@ average them into one number.
   `hourlyPriceUsd`, `providerId`, `availability`. Panel membership changes (6 -> 8 providers in
   Sep 2026): check `n_providers` and compare same-provider prices before reading a median move as a
   market move.
+- **A tool named in this doc but missing from your session** (e.g. `api_keys-vast_ai_mcp_litellm`)
+  belongs to a different agent. Use the documented fallback; if there is none, ask Thom to get the
+  data from that agent rather than working around it.
 - **Vast.ai authenticated tool may be unavailable** — the public `cloud.vast.ai/api/v0/bundles/`
   endpoint still works (it failed once with no response; retry a few times). Pass `limit` (e.g. 1000) in the `q` JSON or you get a truncated list.
 - **Blocked by the sandbox proxy:** investors.micron.com, globenewswire.com, invezz.com, cnbc.com,
@@ -430,6 +435,25 @@ average them into one number.
 - **Stock-price context (e.g. the Jul/Sep 2026 Korean memory selloffs)** has no primary-source
   feed in this workflow; WebSearch results (Seoul Economic Daily, Korea Herald) were enough for a
   qualitative note. Don't turn it into a scored metric.
+
+- **TrendForce: only `trendforce.com/presscenter/news/...` is primary research.**
+  `trendforce.com/news/...` is TrendForce News, a curated feed that relays third-party reports
+  (e.g. Commercial Times) with different bases — don't treat its figures as TrendForce forecasts.
+- **Verify WebSearch summaries against the primary page** before a figure goes in a sheet; they
+  can misattribute a relayed number to the original publisher.
+- **ComputeTape panel shrinkage (Nov 2026):** providers can vanish from `current.json` (7-8 down
+  to 4) with gaps in `history.csv` and no correction notice. Record the per-provider prices and
+  flag the median as composition-driven.
+
+- **stockanalysis.com data is embedded as JS arrays** (Nov 2026): table text no longer parses from
+  the HTML. Read the arrays instead — `datekey:[...]`, `revenue:[...]`, `gp:[...]` in `/financials/`
+  and `inventory:[...]` in `/financials/balance-sheet/` (first match = quarterly, newest first,
+  values in KRW). Re-derive one prior quarter first to confirm the parse reproduces the sheet.
+- **Q3 2026 capex pass:** XBRL derivation reproduced the Q2 rows exactly. Call-cited cash capex can
+  differ slightly from the XBRL line (Amazon $75.9B vs $77.26B; Meta/Microsoft include finance
+  leases) — keep XBRL in the table and note the call figure in the guidance column. Transcripts:
+  the Motley Fool URL pattern `fool.com/earnings/call-transcripts/<yyyy>/<mm>/<dd>/<slug>/` worked
+  for all of MSFT/GOOGL/AMZN/META/ORCL/TSMC; find the slug via WebSearch.
 
 ## Reminders
 
