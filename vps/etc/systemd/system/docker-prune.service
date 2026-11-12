@@ -3,4 +3,5 @@ Description=Weekly Docker system prune
 
 [Service]
 Type=oneshot
-ExecStart=/usr/bin/docker system prune -af
+ExecStart=/usr/bin/docker system prune -f
+ExecStart=/usr/bin/docker buildx prune -f

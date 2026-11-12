@@ -109,7 +109,7 @@ curl -s -X POST http://litellm:4000/claude-code/plugins \
   }'
 ```
 
-`LITELLM_API_KEY` lives in `/lga/services/librechat/.env` (see the `chatui-memory` skill for the same
+`LITELLM_API_KEY` lives in `/lga/services/openwebui/.env` (see the `lga-memory` skill for the same
 key/lookup pattern). Re-posting the same `name` with updated fields **updates in place** —
 `{"status": "success", "action": "updated", ...}` — no separate edit endpoint needed.
 

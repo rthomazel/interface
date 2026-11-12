@@ -93,12 +93,13 @@ EOF
 
 refresh_collations() {
   local dbs
-  dbs=$(psql -U postgres -Atc "SELECT datname FROM pg_database;")
+  mapfile -t dbs < <(psql -U postgres -Atc "SELECT datname FROM pg_database WHERE datistemplate = false;")
 
   log $LINENO collation update on "${dbs[*]}"
 
   for db in "${dbs[@]}"; do
-    psql -U postgres -c "alter database $db refresh collation version;" >/dev/null || log $LINENO "refresh failed on $db, ignoring"
+    psql -U postgres -c "ALTER DATABASE \"$db\" REFRESH COLLATION VERSION;" >/dev/null ||
+      log $LINENO "refresh failed on $db, ignoring"
   done
 }
 
@@ -148,12 +149,16 @@ system_up() {
     return
   fi
 
-  fatal $LINENO "kaboom"
-
   # update everything but linux from AUR
   if ! yay --aur --sync --sysupgrade --ignore linux,linux-api-headers,linux-firmware,linux-headers --needed --noconfirm; then
     fatal $LINENO failed to update from AUR, try 'yay --aur --sync --sysupgrade --ignore linux,linux-api-headers,linux-firmware,linux-headers --needed' manually
   fi
+
+  # fix yay cache permissions after AUR update
+  find "$HOME"/.cache/yay -type d ! -readable -exec chmod -R u+r {} \;
+  find "$HOME"/.cache/yay -type d ! -writable -exec chmod -R u+w {} \;
+  find "$HOME"/.cache/yay -type f ! -readable -exec chmod u+r {} \;
+  find "$HOME"/.cache/yay -type f ! -writable -exec chmod u+w {} \;
 }
 
 cleanup() {
@@ -292,6 +297,13 @@ for tool, versions in data.items():
       mise uninstall "${tool}@${v}"
     done
   done
+}
+
+success_message() {
+  msgln "success; consider booting to flashdrive and running 'btrfs check --check-data-csum /dev/disk/by-label/Archlinux'
+    if btrfs checks were started, you can monitor them with pgrep -f 'btrfs check'.
+    You should probably logout and restart SDDM.
+    "
 }
 
 ### script ###

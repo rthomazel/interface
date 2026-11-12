@@ -1,12 +1,12 @@
 ---
-name: chatui-memory
+name: lga-memory
 description: Use when the user asks to remember something, says "remember this", wants to save, update, or delete a memory, or asks what you remember about a topic.
 ---
 
 # Memory Management
 
-Memories are stored in LiteLLM's `/v1/memory` API (Postgres-backed), not in LibreChat's MongoDB.
-See the `eleanor-litellm` / `chatui` skill for stack context if needed.
+Memories are stored in LiteLLM's `/v1/memory` API (Postgres-backed)
+See the `litellm-db` skill for stack context if needed.
 
 ## Tooling
 
@@ -18,12 +18,12 @@ http://litellm:4000/v1/memory
 ```
 
 Auth: `Authorization: Bearer <LITELLM_API_KEY>` — the key lives in
-`/lga/services/librechat/.env` as `LITELLM_API_KEY`. This is a scoped virtual key (not
+`/lga/services/openwebui/.env` as `LITELLM_API_KEY`. This is a scoped virtual key (not
 the master key); memory entries created with it are automatically scoped to its `user_id`/`team_id`
 — never pass `user_id`/`team_id` explicitly in requests.
 
 ```bash
-LITELLM_API_KEY=$(grep LITELLM_API_KEY /lga/services/librechat/.env | cut -d= -f2)
+LITELLM_API_KEY=$(grep LITELLM_API_KEY /lga/services/openwebui/.env | cut -d= -f2)
 ```
 
 ## Key Naming Convention

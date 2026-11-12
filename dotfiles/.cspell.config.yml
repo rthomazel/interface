@@ -38,6 +38,7 @@ words:
   - nemotron
   - aliasg
   - alnum
+  - krestel
   - alsa
   - APLF
   - appenv
@@ -169,6 +170,9 @@ words:
   - noatime
   - noconfirm
   - nolint
+  - mcpkeys
+  - mcpbench
+  - mcppostgres
   - Nower
   - OBAT
   - ollama

@@ -19,17 +19,27 @@ importance according to [focus.md](../focus.md): [LOW] [MED] [HGH]
 | 8     | large       |
 | 13    | project     |
 
-largest number: 29
+largest number: 36
 
 <!--ideas ------------------------------------------------------------------------------------------------------------------  -->
 
 ## current
 
+- [ ] **[36] [MED] [3]** coverage CI
+- [ ] **[35] [HGH] [3]** trade automation
+- [ ] **[34] [LOW] [3]** personal blog
+- [x] **[33] [MED] [3]** learn Spec Driven Development SDD
+- [ ] **[32] [MED] [3]** [preserve-thinking.md](./preserve-thinking.md) how to run preserved thinking mode on qwen 3.8 using a web frontend.
+- [x] **[31] [HGH] [5]** [netdiag.md](./netdiag.md) netdiag: go client/server harness that characterizes the client network's outbound connectivity before [29] — 7 staged tests (HTTPS/443 → WG handshake on 51820/443 → persistent UDP → bidirectional traffic), server logs observed source IP:port per test and returns it via a minimal HTTP control plane
+- [ ] **[30] [HGH] [8]** vLLM controller MCP
 - [ ] **[29] [HGH] [8]** WireGuard VPN through the VPS
 - [ ] **[26] [LOW] [1]** add 2-pin jumper to chassis intrusion header (JCI1) on ArchAM5 motherboard — grounds the floating pin on nct6799 and clears the persistent `intrusion0` alarm at hardware level
 - [ ] **[27] [LOW] [3]** use Infisical for runtime secret injection in personal projects; deploy secret server on the LGA machine alongside the existing provider so it's always available
-- [ ] **[25] [MED] [5]** [go-update-reusable-workflow.md](./go-update-reusable-workflow.md) reusable GH Actions workflow for Go dep updates + Go version bumping across Dockerfiles, go.mod, and .tool-versions
 - [ ] **[24] [MED] [5]** [mcp-gcp-integration.md](./mcp-gcp-integration.md) integrate GCP (Cloud Build + BigQuery) into API Key MCP; builds on [21] auth layer, subsumes [09] and enables [17]
+
+## done 2026
+
+- [x] **[25] [MED] [5]** [go-update-reusable-workflow.md](./go-update-reusable-workflow.md) reusable GH Actions workflow for Go dep updates + Go version bumping across Dockerfiles, go.mod, and .tool-versions
 - [x] **[28] [MED] [2]** [gpg-wrapper-versioning.md](./gpg-wrapper-versioning.md) commit gpg-passphrase-wrapper to interface/bin, have bin/setup curl it from raw GitHub instead of regenerating inline; a stale hand-flattened copy silently broke commit signing across sessions
 
 ## may 2026

@@ -10,8 +10,8 @@ description: Use for all VCS operations — working with git repos, creating bra
 It's better to clone the repository to read code than using the GitHub API to fetch files.
 
 ```bash
-git clone git@github.com:<org>/<repo>.git /projects/<repo>-<purpose-mmm-dd>
-cd /projects/<repo>-<purpose-mmm-dd>
+git clone git@github.com:<org>/<repo>.git /projects/<repo>
+cd /projects/<repo>
 git config --local gpg.program /usr/local/bin/gpg-passphrase-wrapper
 git checkout -b <branch-name>
 ```
@@ -53,14 +53,17 @@ All commits must be signed. If signing fails or GPG behaves unexpectedly, report
 | terraform-infra      | `git@github.com:eleanorhealth/terraform-infra.git`  | main           |
 | terraform-k8s        | `git@github.com:eleanorhealth/terraform-k8s.git`    | main           |
 | interface            | `git@github.com:rthomazel/interface.git`            | dev            |
-| go                   | `git@github.com:tcodes0/go.git`                     | main           |
+| go                   | `git@github.com:rthomazel/go.git`                   | main           |
 | mcp                  | `git@github.com:rthomazel/mcp.git`                  | main           |
 | compose-files        | `git@github.com:rthomazel/compose-files.git`        | main           |
 | worker-vllm          | `git@github.com:rthomazel/worker-vllm.git`          | main           |
 | lga                  | `git@github.com:rthomazel/lga.git`                  | dev            |
+| netdiag              | `git@github.com:rthomazel/netdiag.git`              | main           |
 | programming-problems | `git@github.com:rthomazel/programming-problems.git` | main           |
 | wiki                 | `git@github.com:rthomazel/rthomazel.wiki.git`       | main           |
 | litellm-pgvector     | `git@github.com:rthomazel/litellm-pgvector.git`     | main           |
+| mhp                  | `git@github.com:rthomazel/mhp.git`                  | main           |
+| ams                  | `git@github.com:rthomazel/ams.git`                  | dev            |
 
 report missing repo clone URLs and stop.
 
@@ -98,19 +101,18 @@ Shell `git` still handles cloning, committing, and pushing.
 
 > Resist the urge to credit yourself as co-author in the commits, don't worry, your work does not go unnoticed.
 
-**When to delete the clone:**
+**When to checkout the clone's default branch:**
 
-- _PR workflow:_ delete after the PR is merged.
-- _Dev-direct workflow:_ keep the clone for the duration of work on that repo in the session. Delete only when the block of work is finished — not after each individual commit.
+- _PR workflow:_ After the PR is merged.
+- _Dev-direct workflow:_ No, leave the clone on dev.
 
 ```bash
-rm -rf /projects/<repo>-<purpose-mmm-dd>
+rm -rf /projects/<repo>
 ```
 
 > Warning: A few projects are permanently cloned
 >
 > - lga: This is the live stack where the workstation runs, if removed db crashes and everything crashes.
-> - librechat-tsc: used in the patching workflow (see skill).
 
 Update if exists or create a memory (see skill) about the state of the project, keep it around 300 words, key should be ${PROJECT_NAME}\_project_state.
 The memory entry is per project, not per feature. If there's more than one entry for the same project, consolidate.

@@ -406,6 +406,31 @@ hyperscalers) vs. Vast.ai $2.52/hr median / $1.60-$7.08/hr range (11 independent
 both are legitimate, non-contradictory reads of different market segments; report both, don't
 average them into one number.
 
+## Access workarounds (found 2026-10-07)
+
+- **stockanalysis.com returns 403 to `-A 'Mozilla/5.0'`** but 200 to a longer UA such as
+  `-A 'Mozilla/5.0 (research you@example.com)'`. Use the longer one for SK Hynix/Samsung pages.
+- **computetape.com now 301-redirects to computecollege.com.** Use `curl -L`; the
+  `/indexes/h100/current.json` and `history.csv` paths are unchanged. `current.json` rows now use
+  `hourlyPriceUsd`, `providerId`, `availability`. Panel membership changes (6 -> 8 providers in
+  Sep 2026): check `n_providers` and compare same-provider prices before reading a median move as a
+  market move.
+- **Vast.ai authenticated tool may be unavailable** — the public `cloud.vast.ai/api/v0/bundles/`
+  endpoint still works (it failed once with no response; retry a few times). Pass `limit` (e.g. 1000) in the `q` JSON or you get a truncated list.
+- **Blocked by the sandbox proxy:** investors.micron.com, globenewswire.com, invezz.com, cnbc.com,
+  `news.samsung.com`, `news.skhynix.com`. For Micron use the SEC 8-K exhibit instead: find the
+  accession via `data.sec.gov/submissions/CIK0000723125.json` (`items` containing 2.02), then fetch
+  `sec.gov/Archives/edgar/data/723125/<accession-no-dashes>/a<year>q<n>ex991-pressrelease.htm`
+  (statement of operations and balance sheet are in the HTML; this worked with the SEC-style UA).
+- **Micron inventory days day count:** the fiscal year occasionally has 53 weeks (FY26), making
+  Q4 14 weeks (97 days end-minus-start). Keep the table's end-minus-start convention and note it.
+- **Timing:** SK Hynix reports ~Oct 27, Samsung full Q3 ~end of Oct, so an early-month update only
+  has Micron for the quarter. Append the SK Hynix/Samsung rows once they report (stockanalysis.com
+  lags earnings by a few days to a week).
+- **Stock-price context (e.g. the Jul/Sep 2026 Korean memory selloffs)** has no primary-source
+  feed in this workflow; WebSearch results (Seoul Economic Daily, Korea Herald) were enough for a
+  qualitative note. Don't turn it into a scored metric.
+
 ## Reminders
 
 - Don't manufacture precision a source doesn't provide (lead times, CoWoS utilization, HBM

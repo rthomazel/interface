@@ -815,3 +815,28 @@ inf() {
     infisical "$@"
   fi
 }
+
+#----------------
+
+vast_bad_host() {
+  case "$1" in
+  145602 | 460176)
+    echo "shit. slow internet"
+    ;;
+  314882 | 24953 | 397138 | 638459 | 550251)
+    echo "shit. ssh fails"
+    ;;
+  559731 | 602663)
+    echo "good. good internet"
+    ;;
+  474643)
+    echo "good"
+    ;;
+  71705)
+    echo "best internet"
+    ;;
+  *)
+    echo "ok"
+    ;;
+  esac
+}

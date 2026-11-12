@@ -16,7 +16,7 @@ err() {
 VLLM_MONITOR_PATH=${VLLM_MONITOR_PATH:-/usr/local/bin/vllm-monitor}
 VLLM_MONITOR_URL=${VLLM_MONITOR_URL:-https://raw.githubusercontent.com/rthomazel/interface/dev/bin/vllm-monitor}
 TMUX_CONF_PATH=${TMUX_CONF_PATH:-/root/.tmux.conf}
-TMUX_CONF_URL=${TMUX_CONF_URL:-https://raw.githubusercontent.com/rthomazel/interface/dev/dotfiles/.tmux.conf}
+TMUX_CONF_URL=${TMUX_CONF_URL:-https://raw.githubusercontent.com/rthomazel/interface/dev/vps/dotfiles/.tmux.conf}
 
 if [[ ! -x "$VLLM_MONITOR_PATH" ]]; then
   curl -fsSL "$VLLM_MONITOR_URL" -o "$VLLM_MONITOR_PATH"
@@ -41,23 +41,27 @@ export TZ
 
 MODEL_NAME=${MODEL_NAME:-"Qwen/Qwen3.8-27B-FP8"}
 GPU_MEMORY_UTILIZATION=${GPU_MEMORY_UTILIZATION:-0.9}
-MAX_NUM_BATCHED_TOKENS=${MAX_NUM_BATCHED_TOKENS:-2048}
+MAX_NUM_BATCHED_TOKENS=${MAX_NUM_BATCHED_TOKENS:-32768}
 MAX_MODEL_LEN=${MAX_MODEL_LEN:-auto}
 TENSOR_PARALLEL_SIZE=${TENSOR_PARALLEL_SIZE:-2}
 REASONING_PARSER=${REASONING_PARSER:-"qwen3"}
-TOOL_CALL_PARSER=${TOOL_CALL_PARSER:-"qwen3_coder"}
+TOOL_CALL_PARSER=${TOOL_CALL_PARSER:-"qwen3_xml"}
 KV_CACHE_DTYPE=${KV_CACHE_DTYPE:-"fp8"}
 EXTRA_ARGS=${EXTRA_ARGS:-""}
+MAX_NUM_SEQS=${MAX_NUM_SEQS:-32}
 
 # booleans
 ENABLE_PREFIX_CACHING=${ENABLE_PREFIX_CACHING:-true}
 ENFORCE_EAGER=${ENFORCE_EAGER:-false}
 LANGUAGE_MODEL_ONLY=${LANGUAGE_MODEL_ONLY:-true}
+ENABLE_CHUNKED_PREFILL=${ENABLE_CHUNKED_PREFILL:-true}
 
 # speculative config
 SPECULATIVE_CONFIG=${SPECULATIVE_CONFIG:-true}
 SC_NUM_SPECULATIVE_TOKENS=${SC_NUM_SPECULATIVE_TOKENS:-2}
-SC_METHOD=${SC_METHOD:-"qwen3_5_mtp"} # 3_5 is correct, it's the architecture
+SC_MODEL=${SC_MODEL:-""}
+SC_ENFORCE_EAGER=${SC_ENFORCE_EAGER:-"false"}
+SC_METHOD=${SC_METHOD:-"mtp"}
 
 # generation config
 OVERRIDE_GENERATION_CONFIG=${OVERRIDE_GENERATION_CONFIG:-true}
@@ -95,18 +99,24 @@ ARGS=(
   --reasoning-parser "$REASONING_PARSER"
   --tool-call-parser "$TOOL_CALL_PARSER"
   --kv-cache-dtype "$KV_CACHE_DTYPE"
+  --max-num-seqs "$MAX_NUM_SEQS"
 )
 
 [[ "$ENABLE_PREFIX_CACHING" == true ]] && ARGS+=(--enable-prefix-caching)
 [[ "$ENFORCE_EAGER" == true ]] && ARGS+=(--enforce-eager)
 [[ "$LANGUAGE_MODEL_ONLY" == true ]] && ARGS+=(--language-model-only)
+[[ "$ENABLE_CHUNKED_PREFILL" == true ]] && ARGS+=(--enable-chunked-prefill)
 
 # build compound configs
 if [[ "$SPECULATIVE_CONFIG" == true ]]; then
-  ARGS+=(
-    --speculative-config
-    "{\"method\":\"$SC_METHOD\",\"num_speculative_tokens\":$SC_NUM_SPECULATIVE_TOKENS}"
-  )
+
+  SPEC_CONFIG="{\"method\":\"$SC_METHOD\",\"num_speculative_tokens\":$SC_NUM_SPECULATIVE_TOKENS,\"enforce_eager\":$SC_ENFORCE_EAGER}"
+
+  [[ -n "$SC_MODEL" ]] &&
+    SPEC_CONFIG="${SPEC_CONFIG%\}},\"model\":\"$SC_MODEL\"}"
+
+  ARGS+=(--speculative-config "$SPEC_CONFIG")
+
 fi
 
 if [[ "$OVERRIDE_GENERATION_CONFIG" == true ]]; then
@@ -137,10 +147,25 @@ fi
 
 # .bashrc setup
 if [[ -n "${VLLM_API_KEY:-}" ]]; then
-  printf 'export VLLM_API_KEY=%q\n' "$VLLM_API_KEY" >>/root/.bashrc
+  {
+    printf 'export VLLM_API_KEY=%q\n' "$VLLM_API_KEY"
+  } >>/root/.bashrc
 fi
 
 printf 'export VLLM_MODEL_NAME=%q\n' "$MODEL_NAME" >>/root/.bashrc
+
+ALIASES=${ALIASES:-false}
+
+if [[ "$ALIASES" == true ]]; then
+  {
+    printf 'alias g=grep\n'
+    printf 'alias l=less\n'
+    printf 'alias t=cat\n'
+    printf 'alias ls="ls -ph --color=always"\n'
+    printf 'alias la="ls -A"\n'
+    printf 'alias ll="ls -lSAi"\n'
+  } >>/root/.bashrc
+fi
 
 TMUX_START=${TMUX_START:-false}
 
@@ -157,7 +182,10 @@ fi
 
 # start sshd and vllm server
 echo [INFO] Running image version "${VERSION:-"unknown"}"
+echo [INFO] vLLM version "$(vllm --version)"
 
 /usr/sbin/sshd
+
+printf 'export VLLM_CMD_LINE=%q\n' "${ARGS[*]}" >>/root/.bashrc
 
 exec vllm serve "$MODEL_NAME" "${ARGS[@]}"
