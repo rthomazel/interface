@@ -464,8 +464,29 @@ average them into one number.
   - **`*.q4cdn.com` IR files** (Meta transcript PDF, Oracle press release and slides) are
     reachable; extract with `pdftotext -layout`. Meta's call text matched Fool word for word.
     Oracle's $90-95B capex / <=$70B net cash guidance is spoken only (not in its slides or release).
-  - **Blocked, 403 from the site itself:** `abc.xyz`, `microsoft.com` IR, `investor.tsmc.com`,
-    Benzinga. Quotes only available there stay labelled secondary (Fool).
+  - **403 from the site itself:** try the pre-installed headless Chromium before giving up (below).
+    Nov 2026 results: `microsoft.com` IR **worked** (full official transcript, status 200);
+    `abc.xyz`, `investor.tsmc.com` (Cloudflare "Just a moment...") and Benzinga (Cloudflare
+    "Sorry, you have been blocked") still 403 in the browser. For those, a person opens the page in
+    their own browser and pastes the relevant passages; otherwise quotes stay labelled secondary
+    (Fool).
+
+- **Headless browser fallback for a 403 on a plain `curl`:** Playwright + Chromium are
+  pre-installed (`require('playwright')`, no install). Route through the session proxy, load the
+  page, then read `document.body.innerText` and grep the passages you need:
+
+  ```js
+  const { chromium } = require('playwright');
+  const b = await chromium.launch({ proxy: { server: process.env.HTTPS_PROXY }, args: ['--no-sandbox'] });
+  const ctx = await b.newContext({ ignoreHTTPSErrors: true });
+  const p = await ctx.newPage();
+  await p.goto(url, { waitUntil: 'domcontentloaded' });
+  await p.waitForTimeout(4000);
+  const text = await p.evaluate(() => document.body.innerText);
+  ```
+
+  It gets past some bot checks but not Cloudflare's challenge pages (see above); if the title is
+  "Just a moment..." or "Attention Required", stop and ask Thom for the text.
 
 ## Reminders
 
