@@ -455,21 +455,21 @@ average them into one number.
   the Motley Fool URL pattern `fool.com/earnings/call-transcripts/<yyyy>/<mm>/<dd>/<slug>/` worked
   for all of MSFT/GOOGL/AMZN/META/ORCL/TSMC; find the slug via WebSearch.
 
-- **Verifying guidance quotes (Nov 2026):** Motley Fool transcripts matched every cross-check.
-  Official sources, best first:
+- **Guidance quotes: Motley Fool transcripts are a good source — checking against official
+  transcripts is not required.** In Nov 2026 we spot-checked Meta, Alphabet, Microsoft and TSMC
+  against the official transcripts (IR pages / PDFs) and the quoted passages matched. The only
+  slip seen was an acronym (Fool wrote "CoWoS" where TSMC said "CoPoS"), so double-check
+  acronyms if one matters. Optional cross-checks, best first:
   - **SEC 8-K ex-99.1** (find the accession via `data.sec.gov/submissions/CIK<cik>.json`, `items`
     containing 2.02; index at `sec.gov/Archives/edgar/data/<cik>/<accession-no-dashes>/`). Confirms
-    written actuals for all five (Alphabet $51,355M, Microsoft $39,367M additions to PP&E, Oracle
-    $28,499M) and Meta's written capex outlook. Spoken-only guidance is not in them.
+    written actuals (Alphabet $51,355M, Microsoft $39,367M additions to PP&E, Oracle $28,499M)
+    and Meta's written capex outlook. Spoken-only guidance (e.g. Oracle's $90-95B capex) is not
+    in them.
   - **`*.q4cdn.com` IR files** (Meta transcript PDF, Oracle press release and slides) are
-    reachable; extract with `pdftotext -layout`. Meta's call text matched Fool word for word.
-    Oracle's $90-95B capex / <=$70B net cash guidance is spoken only (not in its slides or release).
-  - **403 from the site itself:** try the pre-installed headless Chromium before giving up (below).
-    Nov 2026 results: `microsoft.com` IR **worked** (full official transcript, status 200);
-    `abc.xyz`, `investor.tsmc.com` (Cloudflare "Just a moment...") and Benzinga (Cloudflare
-    "Sorry, you have been blocked") still 403 in the browser. For those, a person opens the page in
-    their own browser and pastes the relevant passages; otherwise quotes stay labelled secondary
-    (Fool).
+    reachable; extract with `pdftotext -layout`.
+  - **403 from the site itself:** see the headless browser fallback below. Nov 2026:
+    `microsoft.com` IR worked; `abc.xyz`, `investor.tsmc.com` (Cloudflare "Just a moment...") and
+    Benzinga (Cloudflare block) still 403 — a person can paste passages from their own browser.
 
 - **Headless browser fallback for a 403 on a plain `curl`:** Playwright + Chromium are
   pre-installed (`require('playwright')`, no install). Route through the session proxy, load the
