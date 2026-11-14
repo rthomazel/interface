@@ -8,6 +8,11 @@ description: Use when building or debugging an integration with the Tiingo API (
 Daily US equity, ETF and mutual fund prices over REST. Docs: https://www.tiingo.com/documentation/end-of-day
 (a JavaScript app, curl returns an empty shell; render it with a headless browser to read it).
 
+**Free vs paid.** The free Starter plan (500 symbols a month, 50 requests an hour, 1,000 a day, 1 GB a month) covers
+a small personal portfolio. The Power plan is $30 a month for individuals and raises the limits (10,000 requests
+an hour, 100,000 a day, 40 GB a month, every symbol). Both are for personal and internal use only; commercial
+use needs a Commercial account. Full table under "Limits and licensing".
+
 Verified against the live API on 2026-11-14 with the free Starter plan unless marked **docs only**.
 
 ## Auth
