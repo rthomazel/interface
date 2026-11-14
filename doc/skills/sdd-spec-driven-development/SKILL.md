@@ -98,6 +98,7 @@ schemas, signatures, algorithms, and error flows belong there, not in tasks.
 Discuss and resolve design questions during this phase. Present the model diff
 for human approval before implementing it; larger work can repeat this cycle in
 independently understandable increments.
+SQL migrations are not modelled: write the SQL directly with rationale in comments and review it as code.
 
 ### 4. Code
 

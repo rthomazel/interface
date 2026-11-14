@@ -31,7 +31,7 @@ Specs should contain intention, decisions, motivations, use cases, behavior, con
 
 Models should contain schemas, structure, implementation notes and details.
 
-- Schema
+- Schema (in-code types and structures; SQL schema is written as SQL, see below)
 - Types
 - File names
 - Function signatures
@@ -59,6 +59,9 @@ If the existing approved model already describes the intended behavior, an
 implementation-only correction requires neither a fabricated model edit nor
 renewed approval of unchanged design.
 For generated code, configuration-only changes, or code outside the modeled scope, note the exception and skip.
+SQL is an exception: do not model SQL migrations or other plain schema definitions.
+Write the SQL directly and review it as code, with the rationale and non-obvious decisions in comments.
+A model of declarative SQL would restate the DDL and drift from it. Modelling still applies to the code that uses the schema.
 Only produce code after the model is approved.
 Approval comes from a human reviewer and may be recorded in the model metadata.
 
