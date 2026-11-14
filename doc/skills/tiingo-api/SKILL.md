@@ -41,9 +41,9 @@ Tickers are case-insensitive (`voo` works).
 | -------------- | --------------------------------------------------------------------------------------------- |
 | `startDate`    | `YYYY-MM-DD`. Unpadded `2026-10-1` also works. Bad format: HTTP 400.                          |
 | `endDate`      | Same. A weekend end date returns rows up to the last trading day.                             |
-| `format`       | `json` (default) or `csv`. CSV is smaller and has plain `YYYY-MM-DD` dates.                   |
+| `format`       | `json` (default) or `csv`. CSV is smaller, keeps exact decimal text and has plain `YYYY-MM-DD` dates. An empty range is the header line only. |
 | `sort`         | `-date` for newest first. Default is oldest first.                                            |
-| `columns`      | Comma list, e.g. `date,close,divCash`.                                                        |
+| `columns`      | Comma list, e.g. `date,close,divCash`. Works for csv too.                                     |
 | `resampleFreq` | `weekly` verified (returns the last trading day of each week); `monthly` is in the docs example. |
 
 Omitting `startDate` returns only the latest row. `startDate=1990-01-01` returns the full history.
@@ -84,6 +84,11 @@ The docs mark it beta.
   decimals, parse them as text (`json.Number` in Go), never through float64.
 - **Date formats differ.** Latest row: `2026-11-13T00:00:00+00:00`. Range rows: `2026-11-13T00:00:00.000Z`.
   CSV: `2026-11-13`. Parse as a timestamp and keep the UTC date.
+- **CSV reports an unknown ticker as HTTP 200.** With `format=csv` the body is a single line
+  `Error: Ticker 'ZZZZNOPE' not found`, not a 404. Check the first line before parsing. The metadata endpoint
+  and JSON prices return 404.
+- **A day can be revised after publishing.** VOO's 2026-11-13 volume changed from 5,521,455 to 5,626,216 within
+  hours of the first fetch. Re-fetch the latest stored day and upsert; do not append only newer rows.
 - **Empty is not an error.** An end before the start, or a start in the future, returns HTTP 200 `[]`.
   Only a malformed date is a 400 (body is a JSON array with a message string).
 - **Symbol format.** Dashes replace periods for share classes: `BRK-B` works, `BRK.B` is 404. Preferred
