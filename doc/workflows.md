@@ -55,7 +55,7 @@ system-up
 3. Optionally runs `btrfs check` on Data2TB and Data4TB (prompts to unmount first).
 4. Checks if PostgreSQL has a major version bump in AUR; if so, runs `pg_upgrade` automatically.
 5. Runs `mise use --global` to update Node, Go, yarn, npm and reinstalls missing npm globals.
-6. Updates Arch packages in order: `archlinux-keyring` → `linux*` → repo packages (non-linux) → AUR packages.
+6. Updates Arch packages in order: `archlinux-keyring` → `linux*` → repo packages (non-linux) → AUR packages. AUR updates are automatic once the package's AUR `LastModified` timestamp (the available age proxy) is at least 15 days old; newer updates are skipped until a later run.
 7. Starts `postgresql`, refreshes collations on all known databases.
 8. Cleans up old postgres data dirs if a major migration happened.
 9. Prompts to `kexec` into the new kernel (fast reboot, no POST).

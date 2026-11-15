@@ -19,6 +19,8 @@ btrfs_check_pids=()
 btrfs_check_log_files=()
 btrfs_check_devs=()
 
+AUR_UPDATE_DELAY_DAYS=15
+
 check_dependencies() {
   if [ -z "$BASH_ENV" ]; then
     echo "This script uses functions defined externally."
@@ -123,6 +125,48 @@ postgres_up() {
   fi
 }
 
+update_aur_packages() {
+  local update_output aur_info package last_modified now cutoff
+  local -a aur_packages eligible_packages query_args
+
+  update_output=$(yay -Qua)
+  mapfile -t aur_packages < <(awk '$1 ~ /^aur\// { sub(/^aur\//, "", $1); print $1 }' <<<"$update_output")
+
+  if [ "${#aur_packages[@]}" -eq 0 ]; then
+    log $LINENO "no AUR updates available"
+    return
+  fi
+
+  for package in "${aur_packages[@]}"; do
+    query_args+=(--data-urlencode "arg[]=$package")
+  done
+
+  aur_info=$(curl --fail --silent --show-error --get "${query_args[@]}" https://aur.archlinux.org/rpc/v5/info)
+  if ! jq -e --argjson expected "${#aur_packages[@]}" '(.results | length) == $expected and all(.results[]; (.LastModified | type == "number") and .LastModified > 0)' <<<"$aur_info" >/dev/null; then
+    fatal $LINENO "could not verify AUR update dates; refusing to update AUR packages"
+  fi
+
+  now=$(date +%s)
+  cutoff=$((now - AUR_UPDATE_DELAY_DAYS * 86400))
+  while IFS=$'\t' read -r package last_modified; do
+    if [ "$last_modified" -le "$cutoff" ]; then
+      eligible_packages+=("$package")
+      log $LINENO "AUR update ready: $package (updated $(date --date="@$last_modified" '+%Y-%m-%d'))"
+    else
+      log $LINENO "delaying AUR update: $package (updated $(date --date="@$last_modified" '+%Y-%m-%d'); wait ${AUR_UPDATE_DELAY_DAYS} days)"
+    fi
+  done < <(jq -r '.results[] | [.Name, .LastModified] | @tsv' <<<"$aur_info")
+
+  if [ "${#eligible_packages[@]}" -eq 0 ]; then
+    log $LINENO "no AUR updates are at least ${AUR_UPDATE_DELAY_DAYS} days old"
+    return
+  fi
+
+  if ! yay --aur --sync --sysupgrade --ignore linux,linux-api-headers,linux-firmware,linux-headers --needed --noconfirm "${eligible_packages[@]}"; then
+    fatal $LINENO "failed to update from AUR; try 'yay --aur --sync --sysupgrade --needed ${eligible_packages[*]}' manually"
+  fi
+}
+
 system_up() {
   mise_update_globals
 
@@ -140,19 +184,12 @@ system_up() {
   # update everything but linux from repositories
   yay --repo --sync --sysupgrade --ignore linux,linux-api-headers,linux-firmware,linux-headers --needed --noconfirm
 
-  if [ "$1" == "skip" ]; then
-    warn $LINENO "skipping AUR update, to run manually:"
-    warn $LINENO "yay --aur --sync --sysupgrade --ignore linux,linux-api-headers,linux-firmware,linux-headers --needed"
-    warn $LINENO "to run script with AUR update: $0 aur"
-    sleep 3
-
+  if [ "${1:-update}" == "skip" ]; then
+    warn $LINENO "skipping AUR updates (run without 'skip' to update eligible packages)"
     return
   fi
 
-  # update everything but linux from AUR
-  if ! yay --aur --sync --sysupgrade --ignore linux,linux-api-headers,linux-firmware,linux-headers --needed --noconfirm; then
-    fatal $LINENO failed to update from AUR, try 'yay --aur --sync --sysupgrade --ignore linux,linux-api-headers,linux-firmware,linux-headers --needed' manually
-  fi
+  update_aur_packages
 
   # fix yay cache permissions after AUR update
   find "$HOME"/.cache/yay -type d ! -readable -exec chmod -R u+r {} \;
@@ -309,7 +346,7 @@ success_message() {
 ### script ###
 
 main() {
-  local aurHandling=${1:-"skip"}
+  local aurHandling=${1:-"update"}
   check_dependencies
 
   do_snapshot
