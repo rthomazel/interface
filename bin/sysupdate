@@ -165,8 +165,8 @@ update_aur_packages() {
     return
   fi
 
-  if ! yay --aur --sync --sysupgrade --ignore linux,linux-api-headers,linux-firmware,linux-headers --needed --noconfirm "${eligible_packages[@]}"; then
-    fatal $LINENO "failed to update from AUR; try 'yay --aur --sync --sysupgrade --needed ${eligible_packages[*]}' manually"
+  if ! yay --aur --sync --ignore linux,linux-api-headers,linux-firmware,linux-headers --needed --noconfirm "${eligible_packages[@]}"; then
+    fatal $LINENO "failed to update from AUR; try 'yay --aur --sync --needed ${eligible_packages[*]}' manually"
   fi
 }
 
