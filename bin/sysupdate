@@ -127,12 +127,15 @@ postgres_up() {
 
 update_aur_packages() {
   local update_output aur_info package last_modified now cutoff
-  local -a aur_packages eligible_packages query_args
+  local -a aur_packages=() eligible_packages=() query_args=()
 
   update_output=$(yay -Qua)
-  mapfile -t aur_packages < <(awk '$1 ~ /^aur\// { sub(/^aur\//, "", $1); print $1 }' <<<"$update_output")
+  mapfile -t aur_packages < <(awk '$3 == "->" { print $1 }' <<<"$update_output")
 
   if [ "${#aur_packages[@]}" -eq 0 ]; then
+    if [ -n "$update_output" ]; then
+      fatal $LINENO "could not parse AUR updates from 'yay -Qua' output"
+    fi
     log $LINENO "no AUR updates available"
     return
   fi
