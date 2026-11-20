@@ -51,17 +51,16 @@ For all changes use a PR targeting dev.
 
 ## Skills
 
-Curl these skills to read them.
+These skills should be available in the environment provided by the eleanor plugin.
+If not available, attach the eleanorhealth/skills repo in github and read them there.
 
 - name: sdd-spec-driven-development
 - description: Use when requested a specification or asked to plan and implement non-trivial software work using spec-driven development.
-- link: https://raw.githubusercontent.com/rthomazel/interface/refs/heads/dev/doc/skills/sdd-spec-driven-development/SKILL.md
 
 ---
 
 - name: sdd-software-modelling
 - description: Use when requested to work with software models, create or update them, or when the user mentions software modelling.
-- link: https://raw.githubusercontent.com/rthomazel/interface/refs/heads/dev/doc/skills/sdd-software-modelling/SKILL.md
 
 ## You
 
@@ -81,6 +80,7 @@ Do NOT post comments to github.
 After adding new environment variables -> Update Kubernetes files for all environments.
 Installing dependencies and building -> Update .npmrc or gitconfig to use GITHUB_RO_TOKEN for private deps
 When renaming symbols in code -> Be very careful not to introduce duplication, for example "mike like pepperoni pizzapizza"
+Writing a stub client to satisfy an interface -> name it "noop" no-op client.
 
 # Final word
 
