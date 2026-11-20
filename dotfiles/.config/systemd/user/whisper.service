@@ -15,7 +15,7 @@ ExecStart=/usr/bin/docker \
     -p 127.0.0.1:8765:8765 \
     --rm \
     whisper
-Restart=on-failure
+Restart=always
 RestartSec=5
 ExecStop=/usr/bin/docker stop whisper
 
