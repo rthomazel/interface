@@ -36,6 +36,8 @@ for event in device.read_loop():
             capture_output=True, text=True
         )
         print(result.stderr, end="", flush=True)
+        if result.stdout and not result.stdout.endswith("\n"):
+            result.stdout += "\n"
         print(result.stdout, end="", flush=True)
         try:
             text = json.loads(result.stdout).get("text", "").strip()
@@ -44,7 +46,11 @@ for event in device.read_loop():
             text = ""
         if text:
             try:
-                clipboard = subprocess.run(["wl-copy", text + " "])
+                clipboard = subprocess.run(
+                    ["wl-copy", text + " "],
+                    stdout=subprocess.DEVNULL,
+                    stderr=subprocess.DEVNULL,
+                )
             except OSError as error:
                 print(f"wl-copy failed: {error}", file=sys.stderr, flush=True)
             else:
