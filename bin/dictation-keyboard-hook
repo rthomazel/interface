@@ -36,6 +36,7 @@ for event in device.read_loop():
             capture_output=True, text=True
         )
         print(result.stderr, end="", flush=True)
+        # End the journal record; otherwise systemd may hold it until the stream closes.
         if result.stdout and not result.stdout.endswith("\n"):
             result.stdout += "\n"
         print(result.stdout, end="", flush=True)
@@ -46,6 +47,7 @@ for event in device.read_loop():
             text = ""
         if text:
             try:
+                # wl-copy stays alive to own the clipboard; don't let it inherit journal pipes.
                 clipboard = subprocess.run(
                     ["wl-copy", text + " "],
                     stdout=subprocess.DEVNULL,
