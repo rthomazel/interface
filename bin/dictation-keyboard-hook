@@ -43,8 +43,23 @@ for event in device.read_loop():
             print(f"whisper parse error: {result.stdout}", flush=True)
             text = ""
         if text:
-            subprocess.run(["wl-copy", text + " "])
-            # ctrl+v keycodes, 1 is keydown
-            subprocess.run(["ydotool", "key", "29:1", "47:1", "47:0", "29:0"])
+            try:
+                clipboard = subprocess.run(
+                    ["wl-copy", text + " "], capture_output=True, text=True
+                )
+            except OSError as error:
+                print(f"wl-copy failed: {error}", file=sys.stderr, flush=True)
+            else:
+                if clipboard.returncode:
+                    detail = clipboard.stderr.strip()
+                    print(
+                        f"wl-copy failed ({clipboard.returncode})"
+                        + (f": {detail}" if detail else ""),
+                        file=sys.stderr,
+                        flush=True,
+                    )
+                else:
+                    # ctrl+v keycodes, 1 is keydown
+                    subprocess.run(["ydotool", "key", "29:1", "47:1", "47:0", "29:0"])
         os.unlink(wav)
         wav = None
