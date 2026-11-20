@@ -44,9 +44,7 @@ for event in device.read_loop():
             text = ""
         if text:
             try:
-                clipboard = subprocess.run(
-                    ["wl-copy", text + " "], capture_output=True, text=True
-                )
+                clipboard = subprocess.run(["wl-copy", text + " "])
             except OSError as error:
                 print(f"wl-copy failed: {error}", file=sys.stderr, flush=True)
             else:
