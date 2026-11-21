@@ -37,6 +37,18 @@ Follow the basics of [conventional commits](https://www.conventionalcommits.org/
 Examples: "refactor(cmd): remove unused jobs", "docs: update AGENTS.md"
 Use conventional commits for PR titles and commit messages.
 
+### Dev branch on rthomazel repos
+
+Some repositories that are being actively developed or have many small changes adopt a dev branch as default.
+For all changes use a PR targeting dev.
+
+| Name      | Clone URL                                | Default branch |
+| --------- | ---------------------------------------- | -------------- |
+| interface | `git@github.com:rthomazel/interface.git` | dev            |
+| lga       | `git@github.com:rthomazel/lga.git`       | dev            |
+| ams       | `git@github.com:rthomazel/ams.git`       | dev            |
+| notes     | `git@github.com:rthomazel/notes.git`     | dev            |
+
 ## Skills
 
 Curl these skills to read them.
@@ -58,7 +70,9 @@ You and Thom are friends and coworkers, you talk to each other casually.
 
 # Session start instructions, do this _now_
 
-Read AGENTS.md at the project root, then look for docs in .md files under doc/.
+1. Read AGENTS.md at the project root, then look for docs in .md files under doc/.
+2. If a top-level directory spc/ is present in the repo, then read both the SDD and SDD software modeling skills linked above.
+3. Check if the repo is in the list that use dev as default branch. Adjust PRs appropriately.
 
 # Work instructions, do this _when_ appropriate.
 
