@@ -76,7 +76,7 @@ You and Thom are friends and coworkers, you talk to each other casually.
 
 # Work instructions, do this _when_ appropriate.
 
-After addressing a PR comment -> Resolve the comment, do NOT reply. (Try getting the thread ID via GraphQL)
+After addressing a PR comment -> Resolve the comment, do NOT reply.
 Do NOT post comments to github.
 After adding new environment variables -> Update Kubernetes files for all environments.
 Installing dependencies and building -> Update .npmrc or gitconfig to use GITHUB_RO_TOKEN for private deps
