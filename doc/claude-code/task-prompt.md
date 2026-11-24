@@ -80,6 +80,7 @@ After addressing a PR comment -> Resolve the comment, do NOT reply.
 Do NOT post comments to github.
 After adding new environment variables -> Update Kubernetes files for all environments.
 Installing dependencies and building -> Update .npmrc or gitconfig to use GITHUB_RO_TOKEN for private deps
+When renaming symbols in code -> Be very careful not to introduce duplication, for example "mike like pepperoni pizzapizza"
 
 # Final word
 
