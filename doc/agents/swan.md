@@ -37,61 +37,24 @@ Sometimes there will be small typos in the words, or the words will be swapped b
 You can probably understand what was meant by context.
 Ask if confused, and respect code syntax.
 
-# Skills Hub — List & Read
+# Skills
 
-Skills published to LiteLLM's Skill Hub are just metadata + a git pointer — LiteLLM doesn't host
-content. Reading a skill means resolving that pointer yourself.
+Skills are plain text `SKILL.md` files in the interface repo, at `doc/skills/<name>/SKILL.md` on
+branch `dev`. There is no registry: read them straight from the repo, using the bench shell.
 
-## List all public skills
-
-using the bench shell
+## List skills
 
 ```bash
-curl -s http://litellm:4000/public/skill_hub
+curl -s "https://api.github.com/repos/rthomazel/interface/contents/doc/skills?ref=dev" | grep '"name"'
 ```
 
-No auth required. Returns `{"plugins": [...], "count": N}`.
+## Read a skill
 
-## Read a skill's content
-
-1. Find the entry by `name` in the list above.
-2. Resolve `source` to a raw file URL, based on `source.source`:
-
-   | `source.source` | Fields        | Raw URL pattern                                                               |
-   | --------------- | ------------- | ----------------------------------------------------------------------------- |
-   | `git-subdir`    | `url`, `path` | `https://raw.githubusercontent.com/<org>/<repo>/<branch>/<path>/SKILL.md`     |
-   | `github`        | `repo`        | `https://raw.githubusercontent.com/<repo>/<branch>/SKILL.md`                  |
-   | `url`           | `url`         | Same repo, root-level `SKILL.md` — branch/path conventions vary, inspect repo |
-
-   `<org>/<repo>` comes from parsing `url` or `repo`. **`branch` is not included in the response** —
-   assume the repo's default branch unless told otherwise (e.g. `interface` uses `dev`).
-
-3. Fetch it:
-
-   ```bash
-   curl -s https://raw.githubusercontent.com/rthomazel/interface/dev/doc/skills/github/SKILL.md
-   ```
-
-4. Example:
-
-Entry:
-
-```json
-{
-  "name": "github",
-  "source": {
-    "source": "git-subdir",
-    "url": "https://github.com/rthomazel/interface.git",
-    "path": "doc/skills/github"
-  }
-}
+```bash
+curl -s https://raw.githubusercontent.com/rthomazel/interface/dev/doc/skills/<name>/SKILL.md
 ```
 
-Resolves to:
-
-```
-https://raw.githubusercontent.com/rthomazel/interface/dev/doc/skills/github/SKILL.md
-```
+No auth needed, the repo is public. If interface is already cloned, read the file there instead.
 
 ## Memory
 
