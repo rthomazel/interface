@@ -24,6 +24,10 @@ cat > /root/.claude/settings.json <<'EOF'
           },
           {
             "type": "command",
+            "command": "bash /root/.claude/hooks/tailscale.sh"
+          },
+          {
+            "type": "command",
             "command": "bash /root/.claude/hooks/load-context.sh"
           }
         ]
@@ -92,6 +96,68 @@ fi
 
 # Explicitly keep this key out of remote auth: not added to ssh-agent,
 # not referenced in ~/.ssh/config as an IdentityFile.
+EOF
+
+# Joins the tailnet and exposes the LGA LiteLLM MCP gateway on localhost:4000.
+cat > /root/.claude/hooks/tailscale.sh <<'EOF'
+#!/bin/bash
+# SessionStart hook for Claude Code cloud sessions: join the tailnet in userspace
+# mode and expose the LGA LiteLLM gateway on localhost:4000.
+#
+# Installed by the environment setup script (not committed as a repo hook).
+# See doc/infra/claude-cloud-mcp.md. Idempotent: it also runs on "compact".
+# Never fails the session: any problem is logged and the hook exits 0.
+
+TS_VERSION="1.104.7"
+TS_DIR="/opt/tailscale"
+TS_SOCK="/var/run/tailscale-ccr.sock"
+TS_STATE="/var/lib/tailscale-ccr"
+LOG="/var/log/tailscale-ccr.log"
+LGA_HOST="100.113.111.37" # LiteLLM host on the tailnet
+LGA_PORT="4000"
+
+[ -n "${TAILSCALE_AUTH_KEY:-}" ] || exit 0
+
+(
+  set -eu
+
+  command -v socat >/dev/null 2>&1 || { apt-get update -qq && apt-get install -y -qq socat; }
+
+  if [ ! -x "$TS_DIR/tailscaled" ]; then
+    tmp="$(mktemp -d)"
+    curl -fsS -m 120 -o "$tmp/ts.tgz" "https://pkgs.tailscale.com/stable/tailscale_${TS_VERSION}_amd64.tgz"
+    mkdir -p "$TS_DIR"
+    tar -xzf "$tmp/ts.tgz" -C "$tmp"
+    cp "$tmp/tailscale_${TS_VERSION}_amd64/tailscale" "$tmp/tailscale_${TS_VERSION}_amd64/tailscaled" "$TS_DIR/"
+    rm -rf "$tmp"
+  fi
+
+  ts() { "$TS_DIR/tailscale" --socket="$TS_SOCK" "$@"; }
+
+  if ! pgrep -x tailscaled >/dev/null 2>&1; then
+    mkdir -p "$TS_STATE"
+    # Userspace networking: no TUN device or root routes needed. tailscaled picks up
+    # HTTPS_PROXY on its own, which is how it reaches the control plane and DERP.
+    TS_NO_LOGS_NO_SUPPORT=true nohup "$TS_DIR/tailscaled" --tun=userspace-networking \
+      --statedir="$TS_STATE" --socket="$TS_SOCK" >>"$LOG" 2>&1 &
+    for _ in $(seq 1 20); do [ -S "$TS_SOCK" ] && break; sleep 0.5; done
+  fi
+
+  if ! ts status >/dev/null 2>&1 || ts status 2>&1 | grep -q "Logged out"; then
+    # ephemeral=true: the node disappears from the tailnet when the session ends.
+    ts up --authkey="${TAILSCALE_AUTH_KEY}?ephemeral=true&preauthorized=true" \
+      --hostname="ccr-$(hostname)" --accept-dns=false --accept-routes=false --timeout=60s
+  fi
+
+  # localhost:4000 -> LiteLLM over the tailnet. Userspace mode has no kernel route,
+  # so bridge each connection through `tailscale nc`.
+  if ! pgrep -f "socat TCP-LISTEN:${LGA_PORT}," >/dev/null 2>&1; then
+    nohup socat "TCP-LISTEN:${LGA_PORT},bind=127.0.0.1,fork,reuseaddr" \
+      "EXEC:$TS_DIR/tailscale --socket=$TS_SOCK nc $LGA_HOST $LGA_PORT" >>"$LOG" 2>&1 &
+  fi
+) >>"$LOG" 2>&1 || echo "tailscale hook failed, see $LOG" >&2
+
+exit 0
 EOF
 
 cat > /root/.claude/stop-hook-git-check.sh <<'EOF'
