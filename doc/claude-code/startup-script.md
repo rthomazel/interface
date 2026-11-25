@@ -100,7 +100,7 @@ EOF
 
 # Tailscale + socat are installed here (cached with the environment) so the SessionStart hook is
 # fast: the MCP client connects in parallel with hooks and does not retry a failed first connect.
-# The hook downloads them itself if this step failed. See doc/claude-code/tailscale-mcp.md.
+# The hook downloads them itself if this step failed. See doc/skills/claude-cloud-litellm-mcp/SKILL.md.
 TS_VERSION="1.104.7"
 if ! command -v socat >/dev/null 2>&1; then
   apt-get update -qq && apt-get install -y -qq socat || echo "setup: socat install failed"
@@ -137,7 +137,7 @@ cat > /root/.claude/hooks/tailscale.sh <<'EOF'
 # mode and expose the LGA LiteLLM gateway on localhost:4000.
 #
 # Installed by the environment setup script (not committed as a repo hook).
-# See doc/claude-code/tailscale-mcp.md. Idempotent: it also runs on "compact".
+# See doc/skills/claude-cloud-litellm-mcp/SKILL.md. Idempotent: it also runs on "compact".
 # Never fails the session: any problem is logged and the hook exits 0.
 
 TS_VERSION="1.104.7"
