@@ -160,6 +160,21 @@ LGA_PORT="4000"
 exit 0
 EOF
 
+# User-scope MCP server (all repos): the LiteLLM gateway, reached through the tailscale hook's
+# localhost bridge. ${LITELLM_API_KEY} stays literal here; Claude Code expands it at runtime.
+python3 - <<'PY'
+import json, os
+
+path = "/root/.claude.json"
+config = json.load(open(path)) if os.path.exists(path) else {}
+config.setdefault("mcpServers", {})["litellm"] = {
+    "type": "http",
+    "url": "http://localhost:4000/mcp/",
+    "headers": {"Authorization": "Bearer ${LITELLM_API_KEY}"},
+}
+json.dump(config, open(path, "w"), indent=2)
+PY
+
 cat > /root/.claude/stop-hook-git-check.sh <<'EOF'
 #!/bin/bash
 :
