@@ -41,8 +41,6 @@ shows as failed, reconnect with `/mcp`.
   loses processes, so without `resume` nothing restarts them.
 - The hook returns once the processes run; the node can take a second more to be `Online`.
 - `tailscale ping` (disco/TSMP) succeeds regardless of ACLs. Test ACLs with a TCP connect (see below).
-- `tools/list` through the gateway can take ~40s (SSE keepalives every 15s). Raw curl needs
-  `-m 60` or more. A slow gateway or a short MCP startup timeout can make the client give up.
 
 ## Checks
 
