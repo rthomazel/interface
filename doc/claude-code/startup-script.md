@@ -16,7 +16,7 @@ cat > /root/.claude/settings.json <<'EOF'
   "hooks": {
     "SessionStart": [
       {
-        "matcher": "startup|compact",
+        "matcher": "startup|resume|compact",
         "hooks": [
           {
             "type": "command",
@@ -98,6 +98,38 @@ fi
 # not referenced in ~/.ssh/config as an IdentityFile.
 EOF
 
+# Tailscale + socat are installed here (cached with the environment) so the SessionStart hook is
+# fast: the MCP client connects in parallel with hooks and does not retry a failed first connect.
+# The hook downloads them itself if this step failed. See doc/skills/claude-cloud-litellm-mcp/SKILL.md.
+TS_VERSION="1.104.7"
+if ! command -v socat >/dev/null 2>&1; then
+  apt-get update -qq && apt-get install -y -qq socat || echo "setup: socat install failed"
+fi
+if [ ! -x /opt/tailscale/tailscaled ]; then
+  tmp="$(mktemp -d)"
+  if curl -fsS -m 120 -o "$tmp/ts.tgz" "https://pkgs.tailscale.com/stable/tailscale_${TS_VERSION}_amd64.tgz" &&
+    tar -xzf "$tmp/ts.tgz" -C "$tmp"; then
+    mkdir -p /opt/tailscale
+    cp "$tmp/tailscale_${TS_VERSION}_amd64/tailscale" "$tmp/tailscale_${TS_VERSION}_amd64/tailscaled" /opt/tailscale/
+  else
+    echo "setup: tailscale install failed"
+  fi
+  rm -rf "$tmp"
+fi
+
+# Bridge command for socat: waits for the tailnet to be up, then pipes stdin/stdout to host:port.
+# Lets socat listen before the tailnet is ready; early requests wait instead of being refused.
+cat > /root/.claude/hooks/tailscale-bridge.sh <<'EOF'
+#!/bin/bash
+TS="/opt/tailscale/tailscale --socket=/var/run/tailscale-ccr.sock"
+for _ in $(seq 1 180); do
+  $TS status --json 2>/dev/null | grep -q '"BackendState": "Running"' && break
+  sleep 0.5
+done
+exec $TS nc "$1" "$2"
+EOF
+chmod +x /root/.claude/hooks/tailscale-bridge.sh
+
 # Joins the tailnet and exposes the LGA LiteLLM MCP gateway on localhost:4000.
 cat > /root/.claude/hooks/tailscale.sh <<'EOF'
 #!/bin/bash
@@ -105,7 +137,7 @@ cat > /root/.claude/hooks/tailscale.sh <<'EOF'
 # mode and expose the LGA LiteLLM gateway on localhost:4000.
 #
 # Installed by the environment setup script (not committed as a repo hook).
-# See doc/infra/claude-cloud-mcp.md. Idempotent: it also runs on "compact".
+# See doc/skills/claude-cloud-litellm-mcp/SKILL.md. Idempotent: it also runs on "compact".
 # Never fails the session: any problem is logged and the hook exits 0.
 
 TS_VERSION="1.104.7"
@@ -118,8 +150,11 @@ LGA_PORT="4000"
 
 [ -n "${TAILSCALE_AUTH_KEY:-}" ] || exit 0
 
+log() { echo "$(date -u +%T.%3N) hook: $*"; }
+
 (
   set -eu
+  log "start"
 
   command -v socat >/dev/null 2>&1 || { apt-get update -qq && apt-get install -y -qq socat; }
 
@@ -134,6 +169,14 @@ LGA_PORT="4000"
 
   ts() { "$TS_DIR/tailscale" --socket="$TS_SOCK" "$@"; }
 
+  # Listen first: the MCP client may connect while the tailnet is still coming up.
+  # The bridge script waits for the tailnet before dialing out.
+  if ! pgrep -f "socat TCP-LISTEN:${LGA_PORT}," >/dev/null 2>&1; then
+    nohup socat "TCP-LISTEN:${LGA_PORT},bind=127.0.0.1,fork,reuseaddr" \
+      "EXEC:/root/.claude/hooks/tailscale-bridge.sh $LGA_HOST $LGA_PORT" >>"$LOG" 2>&1 &
+    log "socat listening"
+  fi
+
   if ! pgrep -x tailscaled >/dev/null 2>&1; then
     mkdir -p "$TS_STATE"
     # Userspace networking: no TUN device or root routes needed. tailscaled picks up
@@ -141,20 +184,17 @@ LGA_PORT="4000"
     TS_NO_LOGS_NO_SUPPORT=true nohup "$TS_DIR/tailscaled" --tun=userspace-networking \
       --statedir="$TS_STATE" --socket="$TS_SOCK" >>"$LOG" 2>&1 &
     for _ in $(seq 1 20); do [ -S "$TS_SOCK" ] && break; sleep 0.5; done
+    log "tailscaled started"
   fi
 
   if ! ts status >/dev/null 2>&1 || ts status 2>&1 | grep -q "Logged out"; then
-    # ephemeral=true: the node disappears from the tailnet when the session ends.
-    ts up --authkey="${TAILSCALE_AUTH_KEY}?ephemeral=true&preauthorized=true" \
+    # The key itself must be ephemeral, pre-approved and tagged (a "?ephemeral=true&..." suffix
+    # on the key is rejected as "invalid key").
+    ts up --authkey="${TAILSCALE_AUTH_KEY}" \
       --hostname="ccr-$(hostname)" --accept-dns=false --accept-routes=false --timeout=60s
+    log "tailnet up"
   fi
-
-  # localhost:4000 -> LiteLLM over the tailnet. Userspace mode has no kernel route,
-  # so bridge each connection through `tailscale nc`.
-  if ! pgrep -f "socat TCP-LISTEN:${LGA_PORT}," >/dev/null 2>&1; then
-    nohup socat "TCP-LISTEN:${LGA_PORT},bind=127.0.0.1,fork,reuseaddr" \
-      "EXEC:$TS_DIR/tailscale --socket=$TS_SOCK nc $LGA_HOST $LGA_PORT" >>"$LOG" 2>&1 &
-  fi
+  log "done"
 ) >>"$LOG" 2>&1 || echo "tailscale hook failed, see $LOG" >&2
 
 exit 0
