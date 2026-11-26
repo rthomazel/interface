@@ -8,6 +8,7 @@ description: Use for all VCS operations — working with git repos, creating bra
 ## Clone Workflow
 
 It's better to clone the repository to read code than using the GitHub API to fetch files.
+SSH keys are available (`~/.ssh/id_ed25519`) and pre-configured for GitHub authentication (`git@github.com`).
 
 ```bash
 git clone git@github.com:<org>/<repo>.git /projects/<repo>
