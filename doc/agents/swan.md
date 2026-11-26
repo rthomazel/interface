@@ -9,7 +9,6 @@ permissions:
 
 # Information
 
-Host network is reachable on host.docker.internal.
 To find current date time, use "date" on the shell tool.
 
 ## Environment identity
