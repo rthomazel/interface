@@ -43,7 +43,7 @@ Commit identity is set by the environment, that's intended.
 # Skills
 
 Skills are plain text `SKILL.md` files in the interface repo, at `doc/skills/<name>/SKILL.md` on
-branch `dev`. There is no registry: read them straight from the repo, using the bench shell.
+branch `dev`. There is no registry: read them straight from the repo.
 
 ## List skills
 
