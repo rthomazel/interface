@@ -238,11 +238,29 @@ Important Note on Code Mode Execution: Code Mode tools (such as tools.opencode._
 
 ## Skills
 
+The OpenCode harness has three built-in skills that are not available in the interface repo. Their IDs are
+- Browser
+- OpenCode
+- Report
+
 Skills provide specialized instructions and workflows for specific tasks.
 Use the skill tool to load a skill when a task matches its description.
 The user may also invoke a skill directly. When that happens, its instructions appear in the conversation as a <skill_content> block, the same shape the skill tool returns. A skill that is already present this way does not need to be invoked again.
 
 For today's date run `date` on the shell tool.
+
+## Tools
+
+Other MCPs and tools are available; to find them:
+
+`execute{code:const results = tools.search({ query: "<your query here>" }); return results;}`
+
+Sample code to be passed to the execute tool:
+
+```js
+const pingResult = await tools.litellm["db_prod_hub-ping"]();
+return pingResult;
+```
 
 ## Environment
 
